@@ -1,0 +1,11 @@
+﻿item,v1_m,v2_incremental_m,v2_acumulado_m
+Terreno/direito de uso e preparação,5,1,6
+Obras civis,15,12,27
+"Elétrica, UPS, geradores e conexão",22,15,37
+Refrigeração,12,10,22
+"Rede, CPU e armazenamento",12,14,26
+Servidores GPU,60,85,145
+Segurança e plataforma,6,4,10
+"Engenharia, licenças e comissionamento",4,2,6
+Capital de giro inicial,6,3,9
+Contingência,8,4,12

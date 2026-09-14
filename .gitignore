@@ -1,0 +1,25 @@
+# Lista branca: só infra-as-code entra. Apps (beanshealth/, drhealth-*, etc.) têm repositórios próprios
+# e carregam .env.local com segredos — nunca versionar aqui.
+*
+!.gitignore
+!README.md
+!ALIBABA-HEALTHTECH-2026-09.md
+!RAGMED-PORTAIS-DATASETS-FLUXOS.md
+!deploy/
+!deploy/**
+!shared/
+!shared/**
+!comprovacao/
+!comprovacao/**
+!pesquisas-ia/
+!pesquisas-ia/**
+!estudo-datacenter-beanstech/
+!estudo-datacenter-beanstech/**
+# nunca, mesmo dentro das pastas permitidas
+**/.env
+**/.env.*
+**/*.pem
+**/*.key
+**/*.p12
+**/node_modules/
+deploy/.last-builds.tsv

@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# Roda NA instância (br-apps / medpubr / gpu). Renderiza /etc/healthtech/<app>.env a partir do KMS 3.0
+# usando a RAM role da instância (btech-ecs-runtime) — nenhum AK/SK no disco.
+#
+# Manifesto: /etc/healthtech/<app>.secrets   (uma linha por variável)
+#   DATABASE_URL=HT_DODR_DATABASE_URL        # ENV=NOME_NO_KMS
+#   DASHSCOPE_API_KEY=DASHSCOPE_API_KEY
+#   NEXT_PUBLIC_APP_URL:=https://dodr.ai     # ':=' = literal, não vai ao KMS
+#
+# uso: kms-env <app>            → escreve /etc/healthtech/<app>.env (0600 root)
+set -euo pipefail
+app=${1:?app}
+dir=/etc/healthtech
+manifest="$dir/$app.secrets"
+out="$dir/$app.env"
+[ -f "$manifest" ] || { echo "manifesto ausente: $manifest" >&2; exit 2; }
+
+tmp=$(mktemp); trap 'rm -f "$tmp"' EXIT
+while IFS= read -r line || [ -n "$line" ]; do
+  line=${line%%#*}; line=$(echo "$line" | sed 's/[[:space:]]*$//')
+  [ -z "$line" ] && continue
+  if [[ "$line" == *":="* ]]; then
+    printf '%s=%s\n' "${line%%:=*}" "${line#*:=}" >> "$tmp"
+  else
+    env_name=${line%%=*}; secret=${line#*=}
+    val=$(aliyun --profile ecs kms GetSecretValue --region ap-southeast-1 --SecretName "$secret" 2>/dev/null \
+          | python3 -c 'import sys,json; print(json.load(sys.stdin)["SecretData"], end="")') \
+      || { echo "KMS: falha ao ler $secret (para $env_name)" >&2; exit 3; }
+    printf '%s=%s\n' "$env_name" "$val" >> "$tmp"
+  fi
+done < "$manifest"
+install -m 0600 -o root -g root "$tmp" "$out"
+echo "ok: $out ($(grep -c . "$out") vars)"

@@ -1,0 +1,7 @@
+﻿cenario,vpl_12_m,vpl_15_m,vpl_18_m,tir_modificada_pct,primeiro_payback_descontado_15,fcf_acumulado_m
+adverso_v1,-260.908,-246.612,-234.821,,nao_atingido,-360.886
+adverso_v2,-397.555,-369.637,-346.119,,nao_atingido,-581.449
+referencia_v1,-93.251,-100.135,-105.797,6.175,nao_atingido,-44.196
+referencia_v2,-104.003,-117.561,-127.894,7.33,nao_atingido,10.93
+favoravel_v1,29.928,9.006,-8.284,15.621,10,176.507
+favoravel_v2,114.171,71.254,36.912,18.306,8,439.683

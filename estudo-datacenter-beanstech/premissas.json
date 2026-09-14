@@ -1,0 +1,71 @@
+{
+  "currency": "BRL",
+  "units": "millions except price",
+  "source": "analytical assumptions, not quotations",
+  "discount_rate": 0.15,
+  "tax_proxy": 0.34,
+  "opex_inflation": 0.04,
+  "terminal_value": 0,
+  "scenarios": {
+    "adverso": {
+      "price": 18,
+      "occ": [
+        0.2,
+        0.3,
+        0.4,
+        0.4,
+        0.45,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "services1": 9,
+      "services2": 18,
+      "kwh": 0.85,
+      "pue": 1.5,
+      "decline": 0.08
+    },
+    "referencia": {
+      "price": 30,
+      "occ": [
+        0.25,
+        0.45,
+        0.65,
+        0.6,
+        0.7,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.75
+      ],
+      "services1": 18,
+      "services2": 36,
+      "kwh": 0.65,
+      "pue": 1.35,
+      "decline": 0.05
+    },
+    "favoravel": {
+      "price": 40,
+      "occ": [
+        0.4,
+        0.6,
+        0.75,
+        0.7,
+        0.8,
+        0.85,
+        0.85,
+        0.85,
+        0.85,
+        0.85
+      ],
+      "services1": 24,
+      "services2": 48,
+      "kwh": 0.5,
+      "pue": 1.25,
+      "decline": 0.03
+    }
+  }
+}

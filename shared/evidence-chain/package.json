@@ -1,0 +1,10 @@
+{
+  "name": "@beanstech/evidence-chain",
+  "version": "0.1.0",
+  "description": "Cadeia anti-alucinação (RagMed ES → Model Studio → PolarDB → KMS → medpubr/GPU) para os portais healthtech",
+  "type": "module",
+  "main": "index.ts",
+  "types": "index.ts",
+  "license": "UNLICENSED",
+  "private": true
+}
