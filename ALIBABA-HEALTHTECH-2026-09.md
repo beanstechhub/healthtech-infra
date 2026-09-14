@@ -130,7 +130,8 @@ Taxas derivadas de `QueryInstanceBill` 2026-09 (horas acumuladas ÷ valor): GPU 
 | ACR Enterprise Basic | SG | **555** | — | **candidato a corte**: ACR Personal é grátis e atende 8 repos; economia US$ 555/mês |
 | Tráfego EIP (PayByTraffic ~US$ 0,12/GB SP) | — | ~30–80 | — | proporcional ao público |
 | Model Studio (qwen-plus intl ≈ US$ 0,4/M in · 1,2/M out) | SG | **0 até esgotar SPs** | LLM Inference US$ 4.917 restantes · AI GP US$ 1.000/mês | ordem: cota grátis → pacote → SP → PAYG |
-| Cloudflare Free · Direct Mail · KMS (27) · RAM/ActionTrail | — | ~30 | — | |
+| Cloudflare (só DNS) · Direct Mail · KMS (27) · RAM/ActionTrail | — | ~30 | — | |
+| Snapshots ECS (~300 GB usados, incremental) + OSS backup (~1 GB) | SP/SG | ~15 `[estimativa]` | — | §8 |
 
 **Total com 2 GPUs (pedido):** ≈ **US$ 11.500/mês** (dos quais 8.594 são as GPUs).
 **Alavancas imediatas:** parar `elite-health-2` fora do horário comercial (−2.800) · cortar ACR EE → Personal (−555) · liberar `iZt4nd4zowzp88kkw40xa0Z` (e-c1m2, ociosa em SG; grátis até 2026-12-01, depois ~US$ 60) · SP universal p/ compute BR **só após 30 dias de consumo medido** (§6 do REBUILD).
@@ -159,3 +160,32 @@ Com a cadeia acima, uma resposta "supported" típica (1 pergunta → 20 trechos 
 | 6 | APIs (`api.*`) no mesmo pipeline; `beanshealth-site/api` para DashScope | `apps.tsv` |
 | 7 | Revogar AWS key vazada; apagar `cloudbuild.yaml`/`.gcloudignore`; Code Security nos repos (vence 2026-10-07) | — |
 | 8 | Medir 30 dias → decidir SP universal (compute BR) e SP para GPU; política de desligamento da GPU-2 | `QueryInstanceBill` |
+
+---
+
+## 8. Backup e restauração (configurado 2026-09-14)
+
+| O quê | Como | Destino | Frequência / retenção |
+|---|---|---|---|
+| Discos das 4 ECS BR (sistema + dados, exceto o disco de 4 TB do Elastic) | política `sp-0jx3olklszfj65sbs6rk` | snapshots ECS (sa-east-1) | diária 03:00 BRT · 14 dias |
+| Discos das 2 GPUs SG | política `sp-t4n6nq8skyjj05d22mpj` | snapshots ECS (ap-southeast-1) | semanal dom · 28 dias |
+| `br-apps` ponto de restauração da borda | snapshot manual `s-0jxgltk4xaqm806hpcco` + imagem `elite-health-medical` p/ GPU | — | 30 dias |
+| **PostgreSQL** (12 bancos + roles) | `backup-postgres` no `br-db`: `pg_dump -Fc` por banco + `pg_dumpall --globals-only` + SHA256SUMS | `oss://beanstech-backup-br/postgres/<data>/` | diária 03:30 BRT · 60 dias |
+| Configuração dos 4 hosts (Caddy, manifestos `.secrets`, CA, units systemd, medpubr, compose do ES, postgresql.conf/pg_hba, crontab, inventário docker) | `backup-config` | `oss://beanstech-backup-br/config/<host>/` | diária 03:10 BRT · 90 dias |
+| Elasticsearch (RagJur/RagMed) | snapshot nativo já existente | `oss://beanstech-es-backup/es-snapshots/` | (configurado antes desta sessão) |
+| Ferramental de infra + docs | git | `github.com/beanstechhub/healthtech-infra` (privado) | a cada mudança |
+
+Bucket `beanstech-backup-br`: São Paulo, privado, **versionamento ligado**, lifecycle faz a expiração. A RAM role dos hosts só tem `Put/Get/List` — **sem delete** (um host comprometido não apaga o histórico). Upload pelo endpoint interno (sem custo de tráfego). Os `.env` renderizados **não** são copiados: são reproduzíveis a partir do KMS.
+
+### Restaurar
+
+```bash
+# 1) host inteiro: criar ECS a partir do snapshot/imagem, anexar RAM role btech-ecs-runtime, rodar deploy/host-bootstrap.sh
+# 2) um banco:
+ossutil64 cp oss://beanstech-backup-br/postgres/<data>/ht_dodr.dump /tmp/ && sudo -u postgres pg_restore -d ht_dodr --clean --if-exists /tmp/ht_dodr.dump
+# 3) roles/senhas globais: zcat globals.sql.gz | sudo -u postgres psql
+# 4) config de um host: ossutil64 cp oss://beanstech-backup-br/config/br-apps/<arquivo>.tar.gz /tmp/ && tar -xzf ... -C /  (depois: kms-env <app> para cada app e systemctl reload caddy)
+# 5) apps: git clone healthtech-infra && ./acr-build.sh <app> && ./ecs-deploy.sh <app>   (imagens ficam no ACR)
+```
+
+Teste de restauração ainda **não** foi executado — agendar um ensaio (restaurar `ht_dodr` num banco `ht_dodr_teste`) antes do primeiro cliente.

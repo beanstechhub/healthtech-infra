@@ -60,3 +60,7 @@ Parar sem cobrar compute: `aliyun ecs StopInstance --InstanceId <id> --StoppedMo
 for d in dodr.ai exame.tech prontuario.tech petiq.tech drhealth.tech beanshealth.com.br drogaria.tech; do
   printf '%-20s %s\n' $d "$(curl -s -o /dev/null -w '%{http_code}' -m 20 https://$d/)"; done
 ```
+
+## Backup (§8 do plano)
+
+`./instance/install-backup.sh` (via `ecs_run`) instala `ossutil64` (RAM role) + cron: `backup-config` 03:10 BRT em todos os hosts, `backup-postgres` 03:30 BRT no `br-db`. Destino `oss://beanstech-backup-br` (versionado, sem delete pela role). Logs em `/var/log/backup-*.log`.
