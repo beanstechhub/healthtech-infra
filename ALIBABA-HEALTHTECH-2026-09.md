@@ -188,4 +188,4 @@ ossutil64 cp oss://beanstech-backup-br/postgres/<data>/ht_dodr.dump /tmp/ && sud
 # 5) apps: git clone healthtech-infra && ./acr-build.sh <app> && ./ecs-deploy.sh <app>   (imagens ficam no ACR)
 ```
 
-Teste de restauração ainda **não** foi executado — agendar um ensaio (restaurar `ht_dodr` num banco `ht_dodr_teste`) antes do primeiro cliente.
+**Ensaio de restauração executado em 2026-09-14:** dump `ht_dodr` baixado do OSS → checksum SHA-256 OK → `pg_restore` em `ht_dodr_restore_test` → extensões e estrutura idênticas ao original → banco de teste removido. `globals.sql.gz` contém os 8 roles `ht_*`. Repetir o ensaio quando os bancos tiverem dados de produção (o teste atual valida o caminho, não volume).
