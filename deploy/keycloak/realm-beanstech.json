@@ -1,0 +1,268 @@
+{
+  "realm": "beanstech",
+  "displayName": "BeansTech",
+  "displayNameHtml": "<b>BeansTech</b> — acesso único",
+  "enabled": true,
+  "sslRequired": "external",
+  "defaultLocale": "pt-BR",
+  "internationalizationEnabled": true,
+  "supportedLocales": [
+    "pt-BR",
+    "en"
+  ],
+  "loginTheme": "keycloak.v2",
+  "accountTheme": "keycloak.v3",
+  "registrationAllowed": false,
+  "registrationEmailAsUsername": true,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "rememberMe": true,
+  "verifyEmail": false,
+  "bruteForceProtected": true,
+  "permanentLockout": false,
+  "failureFactor": 8,
+  "waitIncrementSeconds": 60,
+  "maxFailureWaitSeconds": 900,
+  "maxDeltaTimeSeconds": 43200,
+  "quickLoginCheckMilliSeconds": 1000,
+  "minimumQuickLoginWaitSeconds": 60,
+  "passwordPolicy": "length(12) and notUsername and notEmail and passwordHistory(5) and hashAlgorithm(argon2) and hashIterations(3)",
+  "otpPolicyType": "totp",
+  "otpPolicyAlgorithm": "HmacSHA256",
+  "otpPolicyDigits": 6,
+  "otpPolicyPeriod": 30,
+  "otpPolicyLookAheadWindow": 1,
+  "otpPolicyCodeReusable": false,
+  "webAuthnPolicyRpEntityName": "BeansTech",
+  "webAuthnPolicyRpId": "beanstech.com.br",
+  "webAuthnPolicyPasswordlessRpEntityName": "BeansTech",
+  "webAuthnPolicyPasswordlessRpId": "beanstech.com.br",
+  "webAuthnPolicyPasswordlessRequireResidentKey": "Yes",
+  "webAuthnPolicyPasswordlessUserVerificationRequirement": "required",
+  "webAuthnPolicyPasswordlessCreateTimeout": 120,
+  "ssoSessionIdleTimeout": 3600,
+  "ssoSessionMaxLifespan": 43200,
+  "accessTokenLifespan": 300,
+  "accessTokenLifespanForImplicitFlow": 900,
+  "offlineSessionIdleTimeout": 2592000,
+  "revokeRefreshToken": true,
+  "refreshTokenMaxReuse": 0,
+  "eventsEnabled": true,
+  "eventsExpiration": 15552000,
+  "eventsListeners": [
+    "jboss-logging"
+  ],
+  "enabledEventTypes": [
+    "LOGIN",
+    "LOGIN_ERROR",
+    "LOGOUT",
+    "UPDATE_PASSWORD",
+    "RESET_PASSWORD",
+    "SEND_RESET_PASSWORD",
+    "UPDATE_TOTP",
+    "REMOVE_TOTP",
+    "VERIFY_EMAIL",
+    "CLIENT_LOGIN",
+    "CLIENT_LOGIN_ERROR",
+    "IMPERSONATE",
+    "UPDATE_CREDENTIAL",
+    "REMOVE_CREDENTIAL"
+  ],
+  "adminEventsEnabled": true,
+  "adminEventsDetailsEnabled": true,
+  "smtpServer": {
+    "host": "${KC_SMTP_HOST}",
+    "port": "${KC_SMTP_PORT}",
+    "ssl": "true",
+    "starttls": "false",
+    "auth": "true",
+    "user": "${KC_SMTP_USER}",
+    "password": "${KC_SMTP_PASSWORD}",
+    "from": "${KC_SMTP_USER}",
+    "fromDisplayName": "BeansTech",
+    "replyTo": "contato@feijaojustech.com.br"
+  },
+  "roles": {
+    "realm": [
+      {
+        "name": "professional",
+        "description": "Profissional habilitado (médico, dentista, advogado…) — MFA obrigatório"
+      },
+      {
+        "name": "patient",
+        "description": "Paciente / cidadão"
+      },
+      {
+        "name": "partner-api",
+        "description": "IA parceira / integração via client credentials"
+      },
+      {
+        "name": "vertical-admin",
+        "description": "Administra usuários da própria vertical"
+      }
+    ]
+  },
+  "groups": [
+    {
+      "name": "healthtech",
+      "attributes": {
+        "vertical": [
+          "healthtech"
+        ]
+      }
+    },
+    {
+      "name": "legaltech",
+      "attributes": {
+        "vertical": [
+          "legaltech"
+        ]
+      }
+    },
+    {
+      "name": "fintech",
+      "attributes": {
+        "vertical": [
+          "fintech"
+        ]
+      }
+    },
+    {
+      "name": "proptech",
+      "attributes": {
+        "vertical": [
+          "proptech"
+        ]
+      }
+    }
+  ],
+  "defaultRole": {
+    "name": "default-roles-beanstech",
+    "composite": true,
+    "composites": {
+      "realm": [
+        "offline_access",
+        "uma_authorization"
+      ]
+    }
+  },
+  "requiredActions": [
+    {
+      "alias": "CONFIGURE_TOTP",
+      "name": "Configure OTP",
+      "providerId": "CONFIGURE_TOTP",
+      "enabled": true,
+      "defaultAction": true,
+      "priority": 10
+    },
+    {
+      "alias": "webauthn-register-passwordless",
+      "name": "Webauthn Register Passwordless",
+      "providerId": "webauthn-register-passwordless",
+      "enabled": true,
+      "defaultAction": false,
+      "priority": 20
+    },
+    {
+      "alias": "VERIFY_EMAIL",
+      "name": "Verify Email",
+      "providerId": "VERIFY_EMAIL",
+      "enabled": true,
+      "defaultAction": false,
+      "priority": 30
+    },
+    {
+      "alias": "UPDATE_PASSWORD",
+      "name": "Update Password",
+      "providerId": "UPDATE_PASSWORD",
+      "enabled": true,
+      "defaultAction": false,
+      "priority": 40
+    },
+    {
+      "alias": "TERMS_AND_CONDITIONS",
+      "name": "Terms and Conditions",
+      "providerId": "TERMS_AND_CONDITIONS",
+      "enabled": true,
+      "defaultAction": true,
+      "priority": 50
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "dodr",
+      "name": "DoDr — Medicina com evidência",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "${KC_CLIENT_SECRET_DODR}",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "rootUrl": "https://dodr.ai",
+      "baseUrl": "https://dodr.ai",
+      "redirectUris": [
+        "https://dodr.ai/api/auth/callback/keycloak",
+        "https://www.dodr.ai/api/auth/callback/keycloak",
+        "https://app.dodr.ai/api/auth/callback/keycloak"
+      ],
+      "webOrigins": [
+        "https://dodr.ai",
+        "https://www.dodr.ai",
+        "https://app.dodr.ai"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "https://dodr.ai##https://dodr.ai/*",
+        "backchannel.logout.session.required": "true"
+      }
+    },
+    {
+      "clientId": "ragmed-api",
+      "name": "API de evidências (IAs parceiras) — client credentials",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "${KC_CLIENT_SECRET_RAGMED_API}",
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "attributes": {
+        "access.token.lifespan": "900"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "beanstech-admin",
+      "email": "beanstechbrasil@gmail.com",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "BeansTech",
+      "lastName": "Admin",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${KC_REALM_ADMIN_PASSWORD}",
+          "temporary": true
+        }
+      ],
+      "realmRoles": [
+        "vertical-admin",
+        "professional"
+      ],
+      "clientRoles": {
+        "realm-management": [
+          "realm-admin"
+        ]
+      },
+      "requiredActions": [
+        "CONFIGURE_TOTP",
+        "UPDATE_PASSWORD"
+      ]
+    }
+  ]
+}

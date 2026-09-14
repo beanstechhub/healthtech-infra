@@ -9,3 +9,5 @@ prontuario-web	beanshealth/prontuario.tech/web	Dockerfile	-	8080	4120	prontuario
 petiq-web	beanshealth/petiq.tech	Dockerfile	-	3000	4170	petiq.tech,www.petiq.tech
 dodr-site	beanshealth/dodr.ai/web	Dockerfile	BUILD_TARGET=site,NEXT_PUBLIC_APP_URL=https://dodr.ai	3001	4100	dodr.ai,www.dodr.ai
 dentista-web	beanshealth/portaldodentista/web	Dockerfile	NEXT_PUBLIC_APP_URL=https://portaldodentista.ai	3000	4150	portaldodentista.ai,www.portaldodentista.ai
+keycloak	deploy/keycloak	Dockerfile	-	8080	4090	id.beanstech.com.br
+dodr-app	beanshealth/dodr.ai/web	Dockerfile	BUILD_TARGET=app,NEXT_PUBLIC_APP_URL=https://app.dodr.ai	3001	4101	app.dodr.ai

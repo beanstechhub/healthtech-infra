@@ -122,7 +122,7 @@ Taxas derivadas de `QueryInstanceBill` 2026-09 (horas acumuladas ÷ valor): GPU 
 | **`elite-health-2`** GPU 2×L20 (nova) | SG | **4.297** | PAYG | réplica: HA + 2× capacidade; **desligar fora do horário = −65%** (`StopInstance` com `StoppedMode=StopCharging` não cobra compute) |
 | `br-es` r9i.4xlarge (Elastic RagJur/RagMed) | SP | 759 | SP universal (quando contratado) | compartilhado com legaltech |
 | `br-db` r9i.2xlarge (Postgres 17) | SP | 391 | idem | compartilhado (alirealty + 8 DBs healthtech) |
-| `br-apps` g9i.2xlarge (Caddy/Docker) | SP | 303 | idem | compartilhado (alirealty, useco2, 8 sites healthtech) |
+| `br-apps` g9i.2xlarge (Caddy/Docker) | SP | 303 | idem | compartilhado (alirealty, useco2, 9 sites healthtech + Keycloak) |
 | `medpubr` r9i.2xlarge (modelos CPU) | SP | 404 | idem | 100% healthtech |
 | ESSD 4×100 GB (SP) + 2×200 GB (SG) | — | ~165 | SP universal cobre Cloud Disk | |
 | Snapshot da imagem `elite-health-medical` 200 GB | SG | ~6 | — | manter para rebuild |
@@ -194,3 +194,28 @@ ossutil64 cp oss://beanstech-backup-br/postgres/<data>/ht_dodr.dump /tmp/ && sud
 - **PITR (pgBackRest):** linha `antes` gravada → alvo T anotado → linha `depois` gravada → restore `--type=time --target=T` em cluster temporário na porta 5433 → contém **só `antes`** (`recovery stopping before commit of transaction 3592`) → cluster e diretório apagados, tabela de prova removida da produção. Script: `deploy/instance/pgbackrest-pitr-test.sh` (reexecutável).
 
 Perda máxima de dados no `br-db` caiu de 24 h para ≈ 5 min (`archive_timeout=300`). Ainda é um nó só: réplica de streaming continua recomendada antes de carga clínica.
+
+---
+
+## 9. Identidade única — BeansTech ID (Keycloak) · configurado 2026-09-14
+
+**Decisão:** login de todas as verticais num único IdP open-source, **Keycloak 26.4.7**, rodando no `br-apps` com o **PolarDB MySQL** como banco (database `keycloak`, conta própria). Sem Google, sem AWS, sem IDaaS (Alibaba não tem em SP). Os portais falam **OpenID Connect** com ele e nunca veem senha.
+
+| Item | Valor |
+|---|---|
+| Endereço | `https://id.beanstech.com.br` (DNS only → Caddy → container `ht-keycloak` 127.0.0.1:4090) |
+| Realm | `beanstech` — pt-BR, Argon2, senha ≥ 12, histórico 5, brute-force (8 falhas → espera crescente até 15 min), TOTP como ação padrão, passkeys (WebAuthn passwordless, rpId `beanstech.com.br`), termos de uso obrigatórios, eventos e admin-events auditados por 180 dias |
+| Claims próprias (scope `beanstech`) | `vertical` (multi), `tenant`, `professional_registry` (CRM/CRO/OAB), `roles` |
+| Papéis | `professional` · `patient` · `partner-api` · `vertical-admin`; grupos `healthtech/legaltech/fintech/proptech` |
+| Clients | `dodr` (auth code + PKCE S256; callbacks `app.dodr.ai`, `dodr.ai`) · `ragmed-api` (client credentials para IAs parceiras, token 15 min) |
+| Console admin | `/admin/*` só da VPC e do IP do dev (Caddy devolve 403 ao resto — testado de Singapura) |
+| E-mail | Direct Mail `no-reply@ativo.tech` (SMTP 465) — **pendente a senha SMTP** (`DIRECTMAIL_SMTP_PASSWORD` no KMS está como placeholder; gerar no console) — até lá, sem e-mail de verificação/recuperação |
+| Segredos (KMS) | `KEYCLOAK_DB_PASSWORD` · `KEYCLOAK_ADMIN_PASSWORD` (bootstrap `admin`, master realm) · `KEYCLOAK_REALM_ADMIN_PASSWORD` (`beanstech-admin`, temporária, exige troca + TOTP) · `KEYCLOAK_CLIENT_SECRET_DODR` · `KEYCLOAK_CLIENT_SECRET_RAGMED_API` |
+| Backup | `backup-keycloak` 03:50 BRT → `oss://beanstech-backup-br/keycloak/<data>/` (export do realm com usuários) + PolarDB tem PITR gerenciado |
+| Deploy | `deploy/keycloak/deploy.sh` (renderiza o realm com segredos do KMS → `--import-realm` só cria se não existir → `configure.sh` garante o scope `beanstech` de forma idempotente) |
+
+**dodr.ai integrado:** `app.dodr.ai` (build `BUILD_TARGET=app`, porta 4101) usa Auth.js com provider `keycloak` (PKCE) no lugar do Google; schema Prisma aplicado em `ht_dodr`. Testado: `POST /api/auth/signin/keycloak` → `id.beanstech.com.br/.../auth?client_id=dodr&code_challenge_method=S256` → formulário "Entrar em BeansTech" (200). Login com usuário real depende só de criar o usuário (console admin ou API).
+
+**Próximos portais:** criar um client por portal no realm (5 linhas no JSON ou no console), adicionar `AUTH_KEYCLOAK_*` ao manifesto e trocar o provider. Camada de identidade passa a ser uma só; as tabelas `users/sessions/api_keys` do `ht_auth` (§1) ficam substituídas pelo Keycloak — manter só `auth_audit` estendida e cotas.
+
+**Métodos de entrada sem big tech:** e-mail+senha+TOTP · passkeys · código por e-mail (Direct Mail) · WhatsApp/SMS (CAMS, a ligar) · gov.br (broker OIDC, quando houver convênio) · certificado ICP-Brasil (X.509) · SSO do hospital (SAML/OIDC).

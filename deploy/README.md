@@ -64,3 +64,7 @@ for d in dodr.ai exame.tech prontuario.tech petiq.tech drhealth.tech beanshealth
 ## Backup (§8 do plano)
 
 `./instance/install-backup.sh` (via `ecs_run`) instala `ossutil64` (RAM role) + cron: `backup-config` 03:10 BRT em todos os hosts, `backup-postgres` 03:30 BRT no `br-db`. Destino `oss://beanstech-backup-br` (versionado, sem delete pela role). Logs em `/var/log/backup-*.log`.
+
+## BeansTech ID (Keycloak) — §9 do plano
+
+`./keycloak/deploy.sh` sobe/atualiza o IdP em `id.beanstech.com.br` (realm `beanstech` importado só na primeira vez; `configure.sh` idempotente). Novo portal: adicionar client no `keycloak/realm-beanstech.json` **e** no console (o import não altera realm existente), `AUTH_KEYCLOAK_ISSUER/ID/SECRET` no manifesto, provider `keycloak` no Auth.js. Console admin: `https://id.beanstech.com.br/admin/` (só VPC/IP do dev); usuário `admin` (master) com senha em `KEYCLOAK_ADMIN_PASSWORD`.
