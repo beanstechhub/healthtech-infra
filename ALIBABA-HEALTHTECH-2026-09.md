@@ -170,7 +170,8 @@ Com a cadeia acima, uma resposta "supported" típica (1 pergunta → 20 trechos 
 | Discos das 4 ECS BR (sistema + dados, exceto o disco de 4 TB do Elastic) | política `sp-0jx3olklszfj65sbs6rk` | snapshots ECS (sa-east-1) | diária 03:00 BRT · 14 dias |
 | Discos das 2 GPUs SG | política `sp-t4n6nq8skyjj05d22mpj` | snapshots ECS (ap-southeast-1) | semanal dom · 28 dias |
 | `br-apps` ponto de restauração da borda | snapshot manual `s-0jxgltk4xaqm806hpcco` + imagem `elite-health-medical` p/ GPU | — | 30 dias |
-| **PostgreSQL** (12 bancos + roles) | `backup-postgres` no `br-db`: `pg_dump -Fc` por banco + `pg_dumpall --globals-only` + SHA256SUMS | `oss://beanstech-backup-br/postgres/<data>/` | diária 03:30 BRT · 60 dias |
+| **PostgreSQL — contínuo (PITR)** | **pgBackRest 2.59**: `archive_mode=on`, WAL enviado ao OSS a cada segmento (≤ 5 min), full domingo + incremental diário, repo **cifrado AES-256 no cliente** (chave `PGBACKREST_REPO_CIPHER` no KMS), chave S3 do usuário RAM `pgbackrest-brdb` restrita ao prefixo | `oss://beanstech-backup-br/pgbackrest/` | contínuo · 4 fulls (≈ 4 semanas) |
+| **PostgreSQL — dump lógico** (12 bancos + roles) | `backup-postgres`: `pg_dump -Fc` por banco + `pg_dumpall --globals-only` + SHA256SUMS (camada independente, restauração seletiva simples) | `oss://beanstech-backup-br/postgres/<data>/` | diária 03:30 BRT · 60 dias |
 | Configuração dos 4 hosts (Caddy, manifestos `.secrets`, CA, units systemd, medpubr, compose do ES, postgresql.conf/pg_hba, crontab, inventário docker) | `backup-config` | `oss://beanstech-backup-br/config/<host>/` | diária 03:10 BRT · 90 dias |
 | Elasticsearch (RagJur/RagMed) | snapshot nativo já existente | `oss://beanstech-es-backup/es-snapshots/` | (configurado antes desta sessão) |
 | Ferramental de infra + docs | git | `github.com/beanstechhub/healthtech-infra` (privado) | a cada mudança |
@@ -188,4 +189,8 @@ ossutil64 cp oss://beanstech-backup-br/postgres/<data>/ht_dodr.dump /tmp/ && sud
 # 5) apps: git clone healthtech-infra && ./acr-build.sh <app> && ./ecs-deploy.sh <app>   (imagens ficam no ACR)
 ```
 
-**Ensaio de restauração executado em 2026-09-14:** dump `ht_dodr` baixado do OSS → checksum SHA-256 OK → `pg_restore` em `ht_dodr_restore_test` → extensões e estrutura idênticas ao original → banco de teste removido. `globals.sql.gz` contém os 8 roles `ht_*`. Repetir o ensaio quando os bancos tiverem dados de produção (o teste atual valida o caminho, não volume).
+**Ensaios de restauração executados em 2026-09-14:**
+- Dump lógico: `ht_dodr` baixado do OSS → SHA-256 OK → `pg_restore` em banco temporário → estrutura idêntica → removido.
+- **PITR (pgBackRest):** linha `antes` gravada → alvo T anotado → linha `depois` gravada → restore `--type=time --target=T` em cluster temporário na porta 5433 → contém **só `antes`** (`recovery stopping before commit of transaction 3592`) → cluster e diretório apagados, tabela de prova removida da produção. Script: `deploy/instance/pgbackrest-pitr-test.sh` (reexecutável).
+
+Perda máxima de dados no `br-db` caiu de 24 h para ≈ 5 min (`archive_timeout=300`). Ainda é um nó só: réplica de streaming continua recomendada antes de carga clínica.
