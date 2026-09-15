@@ -23,3 +23,11 @@
 **/*.p12
 **/node_modules/
 deploy/.last-builds.tsv
+!apresentacoes/
+!apresentacoes/build-deck.js
+!apresentacoes/package.json
+!DoDr_BeansTech_Instituicoes_2026-09.pptx
+!DoDr_BeansTech_Instituicoes_2026-09.pdf
+apresentacoes/render/
+apresentacoes/node_modules/
+apresentacoes/*.pptx
