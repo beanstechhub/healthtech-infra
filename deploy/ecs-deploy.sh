@@ -35,6 +35,7 @@ docker run -d --name ht-$app --restart unless-stopped \\
 cat > /etc/caddy/sites/$app.caddy <<'__C__'
 $caddy_domains {
     encode zstd gzip
+$( [ "$app" = healthdash ] && printf '    basicauth {\n        beans __HTPASS__\n    }\n' )
     request_body {
         max_size 25MB
     }
@@ -49,6 +50,7 @@ $caddy_domains {
     reverse_proxy 127.0.0.1:$hport
 }
 __C__
+[ "$app" = healthdash ] && sed -i "s|__HTPASS__|\$(cat /etc/healthtech/healthdash.htpass.b64)|" /etc/caddy/sites/$app.caddy
 grep -q '^import /etc/caddy/sites/\*.caddy' /etc/caddy/Caddyfile || sed -i '1i import /etc/caddy/sites/*.caddy' /etc/caddy/Caddyfile
 caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null && systemctl reload caddy
 for i in \$(seq 1 30); do

@@ -12,3 +12,4 @@ dentista-web	beanshealth/portaldodentista/web	Dockerfile	NEXT_PUBLIC_APP_URL=htt
 keycloak	deploy/keycloak	Dockerfile	-	8080	4090	id.beanstech.com.br
 dodr-app	beanshealth/dodr.ai/web	Dockerfile	BUILD_TARGET=app,NEXT_PUBLIC_APP_URL=https://app.dodr.ai	3001	4101	app.dodr.ai
 directus	deploy/directus	Dockerfile	-	8055	4080	cms.beanstech.com.br
+healthdash	deploy/healthdash	Dockerfile	-	8080	4060	health.beanstech.com.br
