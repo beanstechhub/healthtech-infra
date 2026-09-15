@@ -54,7 +54,7 @@ async def refresh():
             except Exception as ex: return {"name": "Elasticsearch br-es", "group": "Brasil", "ok": False, "code": 0, "ms": 0, "detail": type(ex).__name__}
         tasks.append(es())
         tasks.append(probe(c, "BeansTech ID (OIDC discovery)", "Brasil", "https://id.beanstech.com.br/realms/beanstech/.well-known/openid-configuration", extract=lambda r: r.json()["issuer"]))
-        tasks.append(probe(c, "Directus CMS", "Brasil", "https://cms.beanstech.com.br/server/health", ok=(200, 204), extract=lambda r: r.json().get("status", "")))
+        tasks.append(probe(c, "Directus CMS", "Brasil", "https://cms.beanstech.com.br/server/ping", ok=(200,), extract=lambda r: "pong · e-mail SMTP pendente (senha Direct Mail)"))
         res = await asyncio.gather(*tasks)
     # Postgres / PolarDB via TCP
     async def tcp(name, host, port):
