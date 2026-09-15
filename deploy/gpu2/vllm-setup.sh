@@ -39,9 +39,9 @@ ExecStop=/usr/bin/docker stop vllm-$1
 WantedBy=multi-user.target
 U
 }
-unit lingshu-32b 8001 0 Lingshu-32B "--quantization bitsandbytes --load-format bitsandbytes --max-model-len 16384 --gpu-memory-utilization 0.90 --limit-mm-per-prompt image=4"
-unit baichuan-m2 8002 1 Baichuan-M2-32B-GPTQ-Int4 "--max-model-len 16384 --gpu-memory-utilization 0.50"
-unit lingshu-i-8b 8003 1 Lingshu-I-8B "--max-model-len 8192 --gpu-memory-utilization 0.42 --limit-mm-per-prompt image=4 --trust-remote-code"
+unit lingshu-32b 8001 0 Lingshu-32B "--quantization fp8 --max-model-len 12288 --gpu-memory-utilization 0.92 --limit-mm-per-prompt '{\"image\":4}'"
+unit baichuan-m2 8002 1 Baichuan-M2-32B-GPTQ-Int4 "--max-model-len 12288 --gpu-memory-utilization 0.18"
+unit lingshu-i-8b 8003 1 Lingshu-I-8B "--max-model-len 8192 --gpu-memory-utilization 0.45 --limit-mm-per-prompt '{\"image\":4}' --trust-remote-code"
 systemctl daemon-reload
 
 cat > /usr/local/bin/gpu2-fetch.sh <<'X'
