@@ -8,6 +8,9 @@
  *   4. KMS 3.0        — todo segredo vem do env renderizado pelo kms-env (RAM role); esta lib nunca lê chave de arquivo.
  *   5. Ferramenta robusta — medpubr (CPU BR: rerank + verificação de suporte + PII) e, para casos difíceis,
  *      o especialista GPU em Singapura (medgemma:27b / granite-guardian) via gateway com token.
+ *   6. Excelência — Baichuan-M3-235B (Qwen3-MoE, vLLM 4×L20 em Virgínia, OpenAI-compatible com token): re-síntese
+ *      quando a camada 2 devolve "partial"/inválido ou a pergunta é marcada complexa. Mesmo contrato, mesma regra:
+ *      só sobre os trechos recuperados. Configurado por EXCELLENCE_BASE_URL/API_KEY/MODEL; ausente = camada desligada.
  *
  * Contrato de saída = §9 do RAGMED-PORTAIS-DATASETS-FLUXOS.md (claims com evidência, status supported|partial|insufficient).
  * Uso: server-side apenas (Next route handlers / Hono / FastAPI via HTTP). Sem dependências além de fetch.
@@ -48,6 +51,7 @@ export type ChainConfig = {
   qwenBaseUrl: string; qwenApiKey: string; qwenModel: string;
   medpubrUrl: string;
   gpuUrl?: string; gpuToken?: string; gpuModel?: string;
+  excellenceBaseUrl?: string; excellenceApiKey?: string; excellenceModel?: string;
   corpusRelease?: string;
   minHits?: number;          // abaixo disso → "insufficient", sem chamar LLM
   minSupport?: number;       // claim abaixo → unsupported → escalonar/abster
@@ -61,6 +65,7 @@ export function configFromEnv(env: NodeJS.ProcessEnv = process.env): ChainConfig
     qwenBaseUrl: need("QWEN_BASE_URL"), qwenApiKey: need("QWEN_API_KEY"), qwenModel: env.QWEN_MODEL ?? "qwen-plus",
     medpubrUrl: need("MEDPUBR_URL"),
     gpuUrl: env.OLLAMA_BASE_URL, gpuToken: env.OLLAMA_API_KEY, gpuModel: env.OLLAMA_CHAT_MODEL ?? "medgemma:27b",
+    excellenceBaseUrl: env.EXCELLENCE_BASE_URL, excellenceApiKey: env.EXCELLENCE_API_KEY, excellenceModel: env.EXCELLENCE_MODEL ?? "baichuan-m3",
     corpusRelease: env.RAGMED_CORPUS_RELEASE ?? "dev",
     minHits: Number(env.RAGMED_MIN_HITS ?? 2), minSupport: Number(env.RAGMED_MIN_SUPPORT ?? 0.45),
   };
@@ -115,9 +120,9 @@ Cada afirmação deve citar [n] o(s) trecho(s) que a sustentam. Se os trechos n�
 Nunca invente doses, nomes comerciais, datas ou referências. Não dê diagnóstico individual; descreva o que a evidência diz e para qual população.
 Formato: JSON {"claims":[{"text":"...","cites":[1,2]}],"missing_information":["..."]}`;
 
-async function chat(cfg: ChainConfig, messages: { role: string; content: string }[], model = cfg.qwenModel) {
-  const r = await fetch(`${cfg.qwenBaseUrl}/chat/completions`, {
-    method: "POST", headers: { "content-type": "application/json", authorization: `Bearer ${cfg.qwenApiKey}` },
+async function chat(cfg: ChainConfig, messages: { role: string; content: string }[], model = cfg.qwenModel, base = cfg.qwenBaseUrl, key = cfg.qwenApiKey) {
+  const r = await fetch(`${base}/chat/completions`, {
+    method: "POST", headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
     body: JSON.stringify({ model, messages, temperature: 0.1, response_format: { type: "json_object" } }), signal: withTimeout(60_000),
   });
   const res = await json<{ choices: { message: { content: string } }[]; model?: string }>(r);
@@ -136,7 +141,7 @@ async function gpuReview(cfg: ChainConfig, question: string, context: string): P
 }
 
 /* ---------- orquestração ---------- */
-export async function answer(cfg: ChainConfig, question: string, opts: { tenant?: string; language?: "pt-BR" | "en" } = {}): Promise<EvidenceAnswer> {
+export async function answer(cfg: ChainConfig, question: string, opts: { tenant?: string; language?: "pt-BR" | "en"; complex?: boolean } = {}): Promise<EvidenceAnswer> {
   const answer_id = crypto.randomUUID();
   const pii = await redactPII(cfg, question);                      // dados pessoais nunca chegam ao Model Studio/GPU
   const q = pii.redacted;
@@ -151,7 +156,18 @@ export async function answer(cfg: ChainConfig, question: string, opts: { tenant?
   const { content, model } = await chat(cfg, [{ role: "system", content: SYSTEM_PT }, { role: "user", content: `Trechos:\n${context}\n\nPergunta: ${q}` }]);
 
   let parsed: { claims: { text: string; cites: number[] }[]; missing_information?: string[] };
+  let synthesisModel = model;
   try { parsed = JSON.parse(content); } catch { parsed = { claims: [], missing_information: ["Saída do modelo inválida; resposta retida."] }; }
+
+  // camada 6: excelência — re-síntese pelo modelo grande quando a rápida falhou ou o caso foi marcado complexo
+  const needsExcellence = opts.complex || parsed.claims.length === 0;
+  if (needsExcellence && cfg.excellenceBaseUrl && cfg.excellenceApiKey) {
+    try {
+      const ex = await chat(cfg, [{ role: "system", content: SYSTEM_PT }, { role: "user", content: `Trechos:\n${context}\n\nPergunta: ${q}` }], cfg.excellenceModel, cfg.excellenceBaseUrl, cfg.excellenceApiKey);
+      const p2 = JSON.parse(ex.content);
+      if (Array.isArray(p2.claims) && p2.claims.length > 0) { parsed = p2; synthesisModel = `${ex.model} (excellence)`; }
+    } catch { /* excelência indisponível → segue com o resultado da camada 2 */ }
+  }
 
   const claims: Claim[] = [];
   for (const c of parsed.claims ?? []) {
@@ -168,6 +184,6 @@ export async function answer(cfg: ChainConfig, question: string, opts: { tenant?
     if (review) parsed.missing_information = [...(parsed.missing_information ?? []), `Revisão do especialista: ${review.slice(0, 600)}`];
   }
   const status: EvidenceAnswer["status"] = claims.length === 0 ? "insufficient" : unsupported.length === 0 && claims.every(c => c.support === "supported") ? "supported" : "partial";
-  return { ...base, status, claims: claims.filter(c => c.support !== "unsupported"), missing_information: parsed.missing_information ?? [], model_revision: model,
-    layers: { retrieval: cfg.esIndex, synthesis: model, verifier: "medpubr/bge-reranker-v2-m3", escalated_to_gpu: escalated } };
+  return { ...base, status, claims: claims.filter(c => c.support !== "unsupported"), missing_information: parsed.missing_information ?? [], model_revision: synthesisModel,
+    layers: { retrieval: cfg.esIndex, synthesis: synthesisModel, verifier: "medpubr/bge-reranker-v2-m3", escalated_to_gpu: escalated } };
 }
