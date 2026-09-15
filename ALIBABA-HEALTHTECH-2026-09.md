@@ -264,3 +264,25 @@ Mitigações aplicadas: swap 4 GB (`swappiness=10`) · `earlyoom` (mata python/n
 | Disco / RAM | 74/197 GB · 8/247 GB | 63/197 GB · 5/247 GB |
 
 Leitura: as duas máquinas custam **US$ 8.594/mês** para 16 requisições/dia — a carga ainda não existe porque os portais só agora ganharam login e evidence-chain. Recomendação mantida: **parar a elite-health-2 com `StopCharging`** até haver tráfego medido (a imagem `elite-health-medical` recria em 10 min; só volta a cobrar quando ligar), e agendar janela para `apt upgrade` + reboot da elite-health. Bootstrap do `pull-models.sh` deve fixar o digest/tag Q8 explícito para não repetir o problema do Q4.
+
+---
+
+## 13. Camada de excelência e novo time de modelos · 2026-09-15
+
+**Decisão (usuário):** Baichuan-M3-235B é a camada de excelência; medgemma fica só na `elite-health`; a `elite-health-2` passa a servir Lingshu + Baichuan-M2 em vLLM. Tudo OpenAI-compatible com token, mesmo contrato do Model Studio.
+
+| Máquina | GPU | Modelo (licença) | Formato / VRAM | Porta | Estado |
+|---|---|---|---|---|---|
+| **`beanstech-m3-va`** `i-0xib5gcfcvbmr24i24wr` · `gn8is-4x.16xlarge` 4× L20 · **Virgínia** · 47.85.201.160 | 0–3 (TP=4) | **Baichuan-M3-235B** (Qwen3-MoE 235B/A22B, Apache-2.0) | GPTQ-INT4 oficial 124,5 GB, ctx 32k | 8000 `baichuan-m3` | download em curso (~3 h a 100 Mbps); serviço `vllm-m3` sobe sozinho ao fim |
+| `elite-health-2` `i-t4n2xmqbiwu59fpl2omj` · SG | 0 | **Lingshu-32B** (Qwen2.5-VL, MIT) | bf16 67 GB → bitsandbytes 4 bits (~20 GB), ctx 16k, imagens | 8001 `lingshu-32b` | download |
+| idem | 1 | **Baichuan-M2-32B** (Apache-2.0) | GPTQ-Int4 oficial 19 GB | 8002 `baichuan-m2` | download |
+| idem | 1 | **Lingshu-I-8B** (InternVL, MIT) | bf16 16 GB, imagens | 8003 `lingshu-i-8b` | download |
+| `elite-health` `i-t4n52…` · SG | 0/1 | medgemma:27b Q8 + 1.5-4b · granite4.1 + guardian + qwen3-vl | Ollama (inalterado) | 8080 (router) | produção; reboot pendente |
+
+Detalhes operacionais: Ollama desativado na `elite-health-2` (medgemma removido de lá); disco de dados 500 GB ESSD (`d-t4n2xmqbiwu604lmq3w2`) montado em `/data` para pesos; downloads por `aria2c` (16 conexões/arquivo — HF e ModelScope entregam ~2 MB/s por conexão e a EIP por tráfego limita a entrada a **100 Mbps**, não alterável por API); vLLM `:latest` no bring-up → **fixar digest** após validar. Tokens: `M3_API_TOKEN` (VA), `GPU2_GATEWAY_TOKEN` (SG, reaproveitado); SGs liberam só `br-apps` + IP do dev.
+
+**evidence-chain — camada 6 "excelência":** `EXCELLENCE_BASE_URL/API_KEY/MODEL` (já nos manifestos dos 8 portais). Aciona quando a síntese rápida devolve vazio/inválido ou `opts.complex=true`; re-sintetiza **só sobre os trechos recuperados**; se indisponível, segue com a camada 2. `model_revision` registra `baichuan-m3 (excellence)` quando usado.
+
+**Custo novo:** M3 ≈ US$ 9,9/h sob demanda (≈ 7.250/mês) · spot na mesma máquina US$ 1,98/h (script aceita `spot`). Total GPU do grupo com as 3 máquinas ligadas ≈ **US$ 15.800/mês** — a decisão de manter as três 24×7 deve vir do benchmark cego PT-BR (RAGMED §11), não antes.
+
+Lingshu-7B e Meditron3 (8B/70B/Phi4-14B), Gemma-3-27B-MeditronFO, Apertus-8B-MeditronFO: ficam como candidatos de rodada (subir sob demanda no lugar de um dos serviços acima). Embeddings (MedCPT, Qwen3-Embedding-Medical-0.6B, embeddinggemma-medical) → benchmark de recall no `medpubr` contra BGE-M3; troca implica reindexar.
