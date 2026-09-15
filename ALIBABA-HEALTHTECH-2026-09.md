@@ -219,3 +219,48 @@ Perda máxima de dados no `br-db` caiu de 24 h para ≈ 5 min (`archive_timeout=
 **Próximos portais:** criar um client por portal no realm (5 linhas no JSON ou no console), adicionar `AUTH_KEYCLOAK_*` ao manifesto e trocar o provider. Camada de identidade passa a ser uma só; as tabelas `users/sessions/api_keys` do `ht_auth` (§1) ficam substituídas pelo Keycloak — manter só `auth_audit` estendida e cotas.
 
 **Métodos de entrada sem big tech:** e-mail+senha+TOTP · passkeys · código por e-mail (Direct Mail) · WhatsApp/SMS (CAMS, a ligar) · gov.br (broker OIDC, quando houver convênio) · certificado ICP-Brasil (X.509) · SSO do hospital (SAML/OIDC).
+
+---
+
+## 10. CMS — Directus 11.17.4 (`cms.beanstech.com.br`) · 2026-09-15
+
+Decisão: **Directus** (Payload descartado por histórico; Strapi perde no SSO pago; SaaS descartados por custo/residência; WordPress descartado por superfície de ataque — o SEO vem do Next.js dos portais, não do CMS). Um CMS para todas as verticais: coleções com campo `site`, permissões por papel.
+
+| Item | Valor |
+|---|---|
+| Runtime | container `ht-directus` (imagem espelhada no ACR, versão fixada) · `br-apps` 127.0.0.1:4080 · Caddy |
+| Banco | Postgres `ht_cms` no `br-db` (PITR) |
+| Mídia | `oss://beanstech-cms-media/media/` (SP, privado) via driver S3 pelo endpoint interno; usuário RAM `directus-cms` restrito ao bucket; **testado**: upload → objeto no OSS → download pelo Directus |
+| Login | **só BeansTech ID** (client `directus`, OIDC, `AUTH_KEYCLOAK_ALLOW_PUBLIC_REGISTRATION=false` — o usuário precisa existir no Directus com o mesmo e-mail) + admin local `beanstechbrasil@gmail.com` (senha `DIRECTUS_ADMIN_PASSWORD` no KMS) |
+| Segredos (KMS) | `DIRECTUS_KEY/SECRET/ADMIN_PASSWORD` · `DIRECTUS_OSS_AK/SK` · `HT_CMS_DB_PASSWORD` · `KEYCLOAK_CLIENT_SECRET_DIRECTUS` |
+| CORS | os 9 domínios healthtech (ajustar ao adicionar verticais) |
+| E-mail | Direct Mail — pendente senha SMTP (mesma pendência do Keycloak) |
+| Regra de produto | artigo editorial é conteúdo, **não evidência**; o RagMed continua lendo só o acervo autorizado no Elastic. Um artigo pode referenciar `document_id`s do acervo |
+
+Próximo passo editorial: modelar as coleções (`articles`, `authors`, `categories`, `sites`) e ligar o primeiro portal (dodr.ai `/blog`) via REST `GET /items/articles?filter[site][_eq]=dodr`.
+
+---
+
+## 11. Incidente 2026-09-15 · `br-apps` travado (~03:00–03:20 UTC)
+
+Sintoma: TCP aceito pelo kernel, nada em user-space respondia (Caddy, Cloud Assistant). Sem OOM no journal. Estado do host: **sem swap**, 31 GB RAM, e além dos 10 containers healthtech + Keycloak, rodam ali advogandoai, minutatech, 3 containers e-arbitragem e **85 processos `coletor-*` (scrapers jurídicos)** — cenário clássico de livelock de memória. Recuperado com `RebootInstance --ForceStop` (tudo voltou em 20 s; Keycloak leva ~40 s a mais).
+
+Mitigações aplicadas: swap 4 GB (`swappiness=10`) · `earlyoom` (mata python/node/next-server quando RAM < 5%, nunca caddy/docker/java/sshd) · **alarmes CloudMonitor** (memória > 90 %, CPU > 95 %, load5 > 16, 3 períodos) nos 4 hosts BR + **monitor HTTP** de `drogaria.tech`, `id.beanstech.com.br`, `app.dodr.ai` → `Default Contact Group` (beanstechbrasil@gmail.com).
+
+**Recomendação estrutural:** tirar os coletores jurídicos do `br-apps` (uma ECS própria de legaltech ou o `br-es`, que tem 123 GB de RAM e 16 vCPU ociosos) — a borda dos 9 portais de saúde e do login do grupo não pode disputar memória com 85 scrapers.
+
+---
+
+## 12. Revisão das GPUs em Singapura · 2026-09-15
+
+| | elite-health (`i-t4n52…`) | elite-health-2 (`i-t4n2xm…`) |
+|---|---|---|
+| Driver / Ollama | 595.84 / 0.33.3 | idem |
+| Residentes | GPU0: medgemma:27b **Q8** (31,4 GB) + medgemma-1.5-4b · GPU1: granite4.1:30b-q4 + granite3-guardian:8b + qwen3-vl:8b — 42,5 + 38,1 GB | **estava errado**: o pull do 1º boot trouxe `medgemma:27b` **Q4** (17 GB) e a GPU1 vazia (`warm-models.sh` com aspa a mais → status 2). **Corrigido**: script reescrito; pull do Q8 (`unsloth/MedGemma-27B-it-GGUF:Q8_0`, ~30 GB) e warm-up rodando em background |
+| Serviços | ollama×2, router (401 sem token ✅), whisper 200, nginx, chexagent (só arquivo) | idem + chexagent em execução |
+| Uso real (24 h) | **16 requisições** ao router | **0** |
+| Segurança | SG compartilhado OK: 22 só do IP do dev, 8080 só do `br-apps`, sem 3389; 80/443 abertos com nginx vazio (fechar ou usar) | idem |
+| Manutenção | 9 updates pendentes, **reboot-required** | 11 updates |
+| Disco / RAM | 74/197 GB · 8/247 GB | 63/197 GB · 5/247 GB |
+
+Leitura: as duas máquinas custam **US$ 8.594/mês** para 16 requisições/dia — a carga ainda não existe porque os portais só agora ganharam login e evidence-chain. Recomendação mantida: **parar a elite-health-2 com `StopCharging`** até haver tráfego medido (a imagem `elite-health-medical` recria em 10 min; só volta a cobrar quando ligar), e agendar janela para `apt upgrade` + reboot da elite-health. Bootstrap do `pull-models.sh` deve fixar o digest/tag Q8 explícito para não repetir o problema do Q4.

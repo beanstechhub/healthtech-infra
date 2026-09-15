@@ -68,3 +68,7 @@ for d in dodr.ai exame.tech prontuario.tech petiq.tech drhealth.tech beanshealth
 ## BeansTech ID (Keycloak) — §9 do plano
 
 `./keycloak/deploy.sh` sobe/atualiza o IdP em `id.beanstech.com.br` (realm `beanstech` importado só na primeira vez; `configure.sh` idempotente). Novo portal: adicionar client no `keycloak/realm-beanstech.json` **e** no console (o import não altera realm existente), `AUTH_KEYCLOAK_ISSUER/ID/SECRET` no manifesto, provider `keycloak` no Auth.js. Console admin: `https://id.beanstech.com.br/admin/` (só VPC/IP do dev); usuário `admin` (master) com senha em `KEYCLOAK_ADMIN_PASSWORD`.
+
+## CMS (Directus) — §10 do plano
+
+`./ecs-deploy.sh directus` (imagem em `directus/Dockerfile`, manifesto `apps/directus.secrets`). Admin: `https://cms.beanstech.com.br/admin` — botão "BeansTech ID" (usuário precisa existir no Directus com o mesmo e-mail) ou admin local (`DIRECTUS_ADMIN_PASSWORD` no KMS). Mídia vai para `oss://beanstech-cms-media`.

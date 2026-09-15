@@ -233,6 +233,26 @@
       "attributes": {
         "access.token.lifespan": "900"
       }
+    },
+    {
+      "clientId": "directus",
+      "name": "Directus CMS",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "${KC_CLIENT_SECRET_DIRECTUS}",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "rootUrl": "https://cms.beanstech.com.br",
+      "redirectUris": [
+        "https://cms.beanstech.com.br/auth/login/keycloak/callback"
+      ],
+      "webOrigins": [
+        "https://cms.beanstech.com.br"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      }
     }
   ],
   "users": [
