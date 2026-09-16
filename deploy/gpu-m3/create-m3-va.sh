@@ -62,7 +62,7 @@ ExecStart=/usr/bin/docker run --name vllm-m3 --gpus all --ipc=host --shm-size 32
   -v /data/hf:/root/.cache/huggingface -e HF_HUB_ENABLE_HF_TRANSFER=1 -e VLLM_API_KEY=${VLLM_API_KEY} \
   __VLLM_IMAGE__ --model __MODEL__ --served-model-name baichuan-m3 \
   --tensor-parallel-size 4 --max-model-len 32768 --gpu-memory-utilization 0.92 \
-  --enable-prefix-caching --max-num-seqs 32 --reasoning-parser qwen3 --host 0.0.0.0 --port 8000
+  --enable-prefix-caching --max-num-seqs 32 --trust-remote-code --reasoning-parser qwen3 --host 0.0.0.0 --port 8000
 ExecStop=/usr/bin/docker stop vllm-m3
 [Install]
 WantedBy=multi-user.target
