@@ -30,4 +30,5 @@ deploy/.last-builds.tsv
 !DoDr_BeansTech_Instituicoes_2026-09.pdf
 apresentacoes/render/
 apresentacoes/node_modules/
-apresentacoes/*.pptx
+# apresentacoes/*.pptx
+!apresentacoes/*.html

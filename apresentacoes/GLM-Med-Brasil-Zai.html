@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeansTech × Z.ai — GLM-Med Brasil · Proposta de Parceria Estratégica</title>
+<style>
+:root{--bg:#0a0f0e;--card:#111a18;--primary:#00b894;--primary-dim:#00a882;--accent:#fdcb6e;--text:#e8f0ee;--muted:#8fa7a2;--border:#1f2f2b;--blue:#74b9ff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font:16px/1.7 -apple-system,'Segoe UI',Inter,Arial,sans-serif;background:var(--bg);color:var(--text);max-width:1200px;margin:0 auto;padding:40px 24px}
+h1{font-size:2.6em;font-weight:800;margin-bottom:8px;color:var(--primary);letter-spacing:-.02em}
+h2{font-size:1.8em;font-weight:700;color:var(--text);margin:48px 0 20px;padding-bottom:12px;border-bottom:1px solid var(--border);letter-spacing:-.01em}
+h3{font-size:1.25em;font-weight:600;color:var(--primary);margin:28px 0 12px}
+p{margin-bottom:16px;color:var(--text);line-height:1.75}
+.muted{color:var(--muted)}
+.hero{text-align:center;padding:60px 0 40px;border-bottom:1px solid var(--border)}
+.hero .tag{font-size:.9em;text-transform:uppercase;letter-spacing:.2em;color:var(--accent);margin-bottom:16px}
+.hero .sub{font-size:1.2em;color:var(--muted);margin:20px auto 0;max-width:800px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin:32px 0}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center}
+.stat .num{font-size:2.4em;font-weight:800;color:var(--accent)}
+.stat .label{font-size:.85em;color:var(--muted);margin-top:4px}
+table{width:100%;border-collapse:collapse;margin:24px 0;font-size:.95em}
+th{background:var(--card);padding:12px 16px;text-align:left;color:var(--primary);font-weight:600;border-bottom:2px solid var(--primary);font-size:.85em;text-transform:uppercase;letter-spacing:.05em}
+td{padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text)}
+tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+tr:hover td{background:rgba(0,184,148,.05)}
+.good{color:var(--primary);font-weight:600}
+.bad{color:#e17055;font-weight:600}
+.best{color:var(--accent);font-weight:700}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:24px 0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin:24px 0}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px}
+.card h4{color:var(--primary);font-size:1.1em;margin-bottom:12px}
+.card p{font-size:.95em;color:var(--muted);line-height:1.6}
+.card .big{font-size:2em;font-weight:800;color:var(--accent);margin:12px 0}
+.bar{height:8px;border-radius:4px;background:var(--border);position:relative;margin:8px 0 16px}
+.bar-fill{height:100%;border-radius:4px;position:absolute;top:0;left:0}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.tag{background:rgba(0,184,148,.12);border:1px solid rgba(0,184,148,.3);color:var(--primary);padding:4px 12px;border-radius:20px;font-size:.8em}
+.section{margin:48px 0}
+.callout{background:rgba(253,203,110,.08);border:1px solid rgba(253,203,110,.2);border-radius:12px;padding:24px;margin:24px 0}
+.callout .title{color:var(--accent);font-weight:700;margin-bottom:12px;font-size:1.1em}
+pre{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;overflow-x:auto;font-size:.85em;line-height:1.6;margin:16px 0;font-family:'SF Mono',Consolas,monospace;color:var(--muted)}
+code{background:rgba(0,184,148,.1);padding:2px 6px;border-radius:4px;font-size:.9em;color:var(--primary);font-family:monospace}
+.footer{border-top:1px solid var(--border);margin-top:60px;padding-top:24px;text-align:center;color:var(--muted);font-size:.85em}
+.timeline{position:relative;padding-left:32px;border-left:2px solid var(--primary);margin:24px 0}
+.timeline-item{position:relative;margin-bottom:28px}
+.timeline-item::before{content:'';position:absolute;left:-38px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--primary);border:3px solid var(--bg)}
+.timeline-item .date{color:var(--accent);font-size:.8em;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.timeline-item h4{color:var(--text);margin-bottom:8px}
+.timeline-item p{color:var(--muted);font-size:.95em}
+@media(max-width:768px){.grid2,.grid3{grid-template-columns:1fr}h1{font-size:1.8em}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+<div class="tag">Proposta Confidencial de Parceria · Setembro 2026</div>
+<h1>GLM-Med Brasil</h1>
+<p class="sub"><strong>BeansTech Health × Z.ai</strong> — Fine-tuning do GLM-5.3 para medicina brasileira, hospedado em data centers brasileiros com energia solar, conectividade via satélite e API em território nacional. A primeira LLM médica bilíngue PT/EN treinada em diretrizes brasileiras (PCDT/Anvisa/SciELO), auditável e em conformidade com a LGPD.</p>
+</div>
+
+<div class="stats">
+<div class="stat"><div class="num">US$ 300M</div><div class="label">Investimento proposto</div></div>
+<div class="stat"><div class="num">US$ 1,2B+</div><div class="label">Retorno estimado (5 anos)</div></div>
+<div class="stat"><div class="num">2</div><div class="label">Data centers (PB + CE)</div></div>
+<div class="stat"><div class="num">100%</div><div class="label">Dados em território nacional</div></div>
+<div class="stat"><div class="num">26</div><div class="label">Casos benchmark validados</div></div>
+</div>
+
+<h2>1 · Por que o GLM-5.3 é a base certa</h2>
+
+<p>Testamos 6 modelos lado a lado, com 26 casos clínicos brasileiros (português, PCDT, Anvisa, protocolos da SBP), medindo <strong>claim coverage</strong> (fração de afirmações críticas corretas), formato, velocidade e segurança. O GLM-5.3 <strong>venceu ou empatou em primeiro</strong>.</p>
+
+<table>
+<tr><th>Modelo</th><th>Coverage</th><th>Formato</th><th>tok/s</th><th>Arquitetura</th><th>Força</th><th>Limitação</th></tr>
+<tr><td><strong>GLM-5.3</strong></td><td class="best">0,45</td><td>25/26</td><td>93</td><td>MoE (Z.ai)</td><td>Cirurgia 0,88 · Conduta 0,67 · Imagem 0,62</td><td>Pediatria 0,28 · Raciocina em EN</td></tr>
+<tr><td>Baichuan-M2-32B</td><td class="best">0,45</td><td class="good">26/26</td><td>41</td><td>Denso 32B (Qwen2)</td><td>Medicamento 0,57 · Veterinária 0,62</td><td>Imagem 0,25</td></tr>
+<tr><td>Qwen-plus (API)</td><td>0,44</td><td class="good">26/26</td><td>51</td><td>API (Alibaba)</td><td>Cirurgia 0,75 · Emergência 0,53</td><td>Pediatria 0,36</td></tr>
+<tr><td>AntAngelMed-100B</td><td>0,41</td><td>24/26</td><td class="good">149</td><td>MoE 256/8 (Ling/Ant)</td><td>Mais rápido · Raciocina em PT</td><td>Emergência 0,58</td></tr>
+<tr><td>Baichuan-M3-235B</td><td>0,39</td><td>24/26</td><td>71</td><td>MoE 235B/22B (Qwen3)</td><td>Emergência 0,63 · Profundidade</td><td>Conduta 0,33 · Raciocina em EN</td></tr>
+<tr><td>MedGemma-27B</td><td>0,39</td><td>17/26</td><td>25</td><td>Denso 27B (Google)</td><td>Emergência 0,63 · Melhor abstenção</td><td>Formato inconsistente</td></tr>
+</table>
+
+<p class="muted">Benchmark executado em 16/09/2026 a partir do Brasil, com a mesma pergunta enviada aos 6 modelos simultaneamente, system prompt idêntico. Métrica: fração de <em>critical_claims</em> do gabarito presentes na resposta. Dados brutos disponíveis para auditoria.</p>
+
+<div class="callout">
+<div class="title">O que o benchmark revela</div>
+<p>O GLM-5.3 ganha em <strong>4 de 8 domínios clínicos</strong> (cirurgia, conduta, imagem, medicamento), tem a <strong>menor taxa de alucinação</strong> entre os 6 (1 forbidden hit vs. 2–3 dos outros), e responde a <strong>93 tokens/s via API</strong> — mais rápido que qualquer modelo auto-hospedado exceto o AntAngelMed. Seu ponto fraco (pediatria 0,28) é <strong>exatamente o que fine-tuning com dataset brasileiro resolve</strong>.</p>
+</div>
+
+<h2>2 · A proposta: GLM-Med</h2>
+
+<p>Fine-tuning do GLM-5.3 com dataset médico brasileiro bilíngue (PT-BR + EN), mantendo a arquitetura MoE e o raciocínio profundo, mas calibrado para:</p>
+
+<div class="grid3">
+<div class="card">
+<h4>Clínica brasileira</h4>
+<p>PCDT (Conitec), bulas Anvisa, protocolos SBP/SBC/SBD, artigos SciELO, guideline adaptations for SUS vs. supplementary care.</p>
+</div>
+<div class="card">
+<h4>Bilíngue verdadeiro</h4>
+<p>Raciocínio e resposta em PT-BR e EN nativamente. Responde no idioma da pergunta. Não traduz — pensa em português.</p>
+</div>
+<div class="card">
+<h4>Regulatório embutido</h4>
+<p>LGPD, CFM 2.454/2026, ANS, CEP/CONEP. Guardrail nativo para abstenção, dose-limiar, PII e sigilo profissional.</p>
+</div>
+</div>
+
+<h3>2.1 Dataset de treinamento</h3>
+
+<table>
+<tr><th>Fonte</th><th>Volume estimado</th><th>Formato</th><th>Licença</th></tr>
+<tr><td>PCDT (Conitec)</td><td>~200 protocolos</td><td>Structured (JSON)</td><td>Domínio público</td></tr>
+<tr><td>Bulas Anvisa</td><td>~25.000 bulas</td><td>Extração estruturada</td><td>Domínio público</td></tr>
+<tr><td>SciELO Brasil (saúde)</td><td>~50.000 artigos</td><td>Text + abstract</td><td>CC-BY (maioria)</td></tr>
+<tr><td>Dados Abertos SUS</td><td>Indicadores + vigilância</td><td>Tabelas/API</td><td>Domínio público</td></tr>
+<tr><td>DrBodeBench (benchmark)</td><td>Questões médicas BR</td><td>Q&A</td><td>Verificar termos</td></tr>
+<tr><td><strong>BeansTech clinical cases</strong></td><td>10.000 casos (projetado)</td><td>SFT + RLHF</td><td>Próprio (BeansTech)</td></tr>
+</table>
+
+<h3>2.2 Método de fine-tuning</h3>
+
+<pre>
+FASE 1 — Supervised Fine-Tuning (SFT)
+  Base: GLM-5.3 (MoE, pesos fornecidos pela Z.ai sob licença de treinamento)
+  Dados: 10.000 casos clínicos bilíngues (PT-BR/EN) com:
+    - pergunta real de plantão
+    - evidência original (bula/protocolo/artigo)
+    - resposta de referência com citações
+    - critérios de correção
+  Infra: 8× H100 (PAI-EAS ou cluster dedicado) · 2–4 semanas
+
+FASE 2 — Alignment (DPO/RLHF)
+  Preferências: médicos brasileiros ranqueiam respostas
+  Objetivo: abstenção correta > resposta arrojada
+    - quando não sabe, dizer "não posso afirmar"
+    - nunca inventar dose sem confirmar bula
+    - sempre citar fonte vigente
+  Infra: idem · 2 semanas
+
+FASE 3 — Validação clínica
+  200 casos cegos, 2 médicos revisores independentes
+  Critério: erro clínico grave = 0
+  Benchmarks: DrBodeBench + suite própria BeansTech
+  Infra: equipe clínica parceira (Einstein/São Luiz/Notre Dame)
+</pre>
+
+<h2>3 · Infraestrutura brasileira — os dois data centers</h2>
+
+<div class="grid2">
+<div class="card">
+<h4>Santa Terezinha / PB</h4>
+<div class="big">Terreno próprio</div>
+<p><strong>Usina fotovoltaica dedicada</strong> + <strong>conectividade via satélite</strong> (sem ligação com rede elétrica pública). Autossuficiente em energia e conectividade. Nordeste brasileiro: latência mínima para Europa e leste dos EUA.</p>
+<div class="tag-row">
+<span class="tag">Solar</span><span class="tag">Satélite</span><span class="tag">Off-grid</span><span class="tag">Terreno próprio</span>
+</div>
+</div>
+<div class="card">
+<h4>ZPE de Caucaia / CE</h4>
+<div class="big">Zona de Processamento</div>
+<p><strong>Mesma ZPE do TikTok</strong> — incentivos fiscais, infraestrutura de rede internacional, regime aduaneiro especial. Projetos de JP e Fortaleza já prontos. Acesso direto a cabos submarinos (latência <15ms para EUA).</p>
+<div class="tag-row">
+<span class="tag">ZPE</span><span class="tag">Cabos submarinos</span><span class="tag">Incentivos fiscais</span><span class="tag">Projeto pronto</span>
+</div>
+</div>
+</div>
+
+<h3>3.1 Vantagem de latência</h3>
+
+<table>
+<tr><th>Origem</th><th>Alibaba Cloud SG (atual)</th><th>Data center PB/CE (proposto)</th><th>Ganho</th></tr>
+<tr><td>Brasil (São Paulo)</td><td>~180 ms</td><td><strong>&lt;20 ms</strong></td><td class="good">9× melhor</td></tr>
+<tr><td>Europa</td><td>~250 ms</td><td><strong>~120 ms</strong></td><td class="good">2× melhor</td></tr>
+<tr><td>Leste EUA</td><td>~200 ms</td><td><strong>~100 ms</strong></td><td class="good">2× melhor</td></tr>
+<tr><td>América Latina</td><td>~300 ms</td><td><strong>&lt;80 ms</strong></td><td class="good">4× melhor</td></tr>
+</table>
+
+<p>O Nordeste brasileiro está <strong>mais perto da Europa e da costa leste dos EUA</strong> do que Singapura. Um data center em PB/CE serve o Brasil, a América Latina, a Europa e o leste dos EUA com latência competitiva — algo que Singapura não consegue.</p>
+
+<h3>3.2 Modelo de energia</h3>
+
+<p>A usina fotovoltaica dedicada elimina a dependência da rede elétrica pública. Isso significa:</p>
+<ul style="color:var(--muted);margin:16px 0;padding-left:24px">
+<li>Custo energético previsível e baixo (solar no Nordeste tem irradiação ~5,5 kWh/m²/dia)</li>
+<li>Zero emissão de carbono no processamento (ESG auditável)</li>
+<li>Independência de apagões ou racionamento</li>
+<li>Conectividade via satélite elimina dependência de fibra terrestre</li>
+</ul>
+
+<h2>4 · O ecossistema BeansTech</h2>
+
+<div class="grid3">
+<div class="card">
+<h4>Fundador</h4>
+<p>Matheus Ximenes — advogado corporativo, 12 anos em Tribunal (7 como assessor de Ministro). Pós-graduação em Cloud Computing e Proteção de Dados. Especialista em IA para setores regulados.</p>
+</div>
+<div class="card">
+<h4>Produtos em produção</h4>
+<p><strong>ragjur.ai</strong> — RAG jurídico sobre 67M de julgados (produção)<br><strong>ragmed.ai</strong> — RAG médico sobre PCDT/Anvisa/SciELO (em ingestão)<br><strong>dodr.ai</strong> — portal médico com ferramenta de apoio à decisão (8 domínios no ar)</p>
+</div>
+<div class="card">
+<h4>Domínios próprios</h4>
+<p><strong>z.cloud</strong> — cloud brasileira (ativa, redirecionamento implementado)<br><strong>glm.cloud</strong> — marca reservada para a parceria<br><strong>beanstech.com.br</strong> — plataforma corporativa</p>
+</div>
+</div>
+
+<h3>4.1 Stack já validada em produção</h3>
+
+<table>
+<tr><th>Camada</th><th>Tecnologia</th><th>Estado</th></tr>
+<tr><td>Modelos (6)</td><td>GLM-5.3 · Baichuan-M3-235B · AntAngelMed-100B · Baichuan-M2-32B · MedGemma-27B · Lingshu-32B</td><td class="good">6 rodando agora</td></tr>
+<tr><td>Infra</td><td>4× gn8is-4x (16× L20) + ECS SP/SG + PolarDB + KMS + OSS</td><td class="good">Produção</td></tr>
+<tr><td>Identidade</td><td>Keycloak (OIDC, passkeys, TOTP)</td><td class="good">id.beanstech.com.br</td></tr>
+<tr><td>Cadeia anti-alucinação</td><td>6 camadas: RAG → síntese → PolarDB → KMS → verificação → excelência</td><td class="good">Código pronto</td></tr>
+<tr><td>CMS</td><td>Directus 11 (cms.beanstech.com.br)</td><td class="good">Produção</td></tr>
+<tr><td>Portais</td><td>8 sites + /decisao (apoyo à decisão clínica)</td><td class="good">No ar</td></tr>
+<tr><td>Monitoramento</td><td>health.beanstech.com.br (31 sondas)</td><td class="good">Ativo</td></tr>
+</table>
+
+<h3>4.2 Segurança e compliance já implementados</h3>
+
+<ul style="color:var(--muted);margin:16px 0;padding-left:24px">
+<li>LGPD: PII removida antes do modelo (medpubr, SP), trilha de auditoria em OSS, RIPD em preparação</li>
+<li>KMS 3.0: ~45 segredos, nenhum em código, rotação via RAM role</li>
+<li>PostgreSQL com PITR (~5 min de perda máxima), ensaio de restauração executado</li>
+<li>Anti-DDoS Basic, security groups, Caddy com HSTS, earlyoom</li>
+<li>Backups diários versionados em OSS, sem permissão de delete</li>
+<li>Alarmes CloudMonitor 24×7 (CPU/RAM/HTTP/latência)</li>
+</ul>
+
+<h2>5 · Mercado endereçável — por que o retorno é maior que US$ 300M</h2>
+
+<h3>5.1 Tamanho do mercado</h3>
+
+<table>
+<tr><th>Segmento</th><th>Médicos / profissionais</th><th>Estimativa SaaS/mês</th><th>Mercado anual</th></tr>
+<tr><td>Médicos (CFM)</td><td>~550.000</td><td>R$ 149</td><td>R$ 983M</td></tr>
+<tr><td>Farmacêuticos</td><td>~350.000</td><td>R$ 99</td><td>R$ 416M</td></tr>
+<tr><td>Enfermeiros</td><td>~2.300.000</td><td>R$ 49</td><td>R$ 1.352M</td></tr>
+<tr><td>Hospitais</td><td>~6.800 (67% privados)</td><td>R$ 10.000</td><td>R$ 816M</td></tr>
+<tr><td>Planos de saúde (ANS)</td><td>~740 operadoras</td><td>R$ 100.000</td><td>R$ 888M</td></tr>
+<tr><td>API para IAs parceiras</td><td>Global</td><td>US$ 0,50/resposta</td><td>Escalável</td></tr>
+<tr><td colspan="3"><strong>TAM Brasil (saúde)</strong></td><td class="best">~R$ 4,4 bi/ano</td></tr>
+</table>
+
+<p class="muted">Fontes: CFM Conselho Federal de Medicamento (registro ativo 2026), ANS, CFF. Estimativa de pricing baseada no custo real de infraestrutura BeansTech (ver §6).</p>
+
+<h3>5.2 Cenário de retorno (5 anos, US$ 300M investimento)</h3>
+
+<table>
+<tr><th>Ano</th><th>Instituições</th><th>Profissionais</th><th>API tokens</th><th>Receita (US$)</th><th>Observação</th></tr>
+<tr><td>1</td><td>5</td><td>5.000</td><td>—</td><td>15M</td><td>Pilotos Einstein/Rede D'Or/Notre Dame/SulAmérica/CRM-SP</td></tr>
+<tr><td>2</td><td>20</td><td>50.000</td><td>1M/mês</td><td>85M</td><td>Expansão D'Or + Hapvida + operadoras</td></tr>
+<tr><td>3</td><td>50</td><td>150.000</td><td>10M/mês</td><td>250M</td><td>GLM-Med treinado, licensed para 3º parties</td></tr>
+<tr><td>4</td><td>100</td><td>300.000</td><td>50M/mês</td><td>500M</td><td>Expansão LATAM (espanhol), 2º data center rodando</td></tr>
+<tr><td>5</td><td>200</td><td>500.000</td><td>100M/mês</td><td>800M</td><td>Global: Europa + leste EUA via PB/CE, modelo bilíngue</td></tr>
+<tr><td colspan="5"><strong>Total 5 anos</strong></td><td class="best">US$ 1,65 bi</td></tr>
+</table>
+
+<p class="muted">ROI: US$ 1,65 bi receita vs. US$ 300M investimento = 5,5× em 5 anos. Não inclui valor do ativo (data centers, modelo treinado, acervo de evidências) nem licenciamento do GLM-Med para terceiros.</p>
+
+<div class="callout">
+<div class="title">O que a Z.ai ganha que o dinheiro não compra</div>
+<p>① <strong>Presença soberana no maior mercado de saúde da América Latina</strong> — 220 milhões de brasileiros, SUS universal + sistema suplementar robusto. ② <strong>LGPD como vantagem competitiva</strong> — o único modelo médico com API executada em território nacional, trilha de auditoria LGPD, e conformidade CFM/ANS nativa. ③ <strong>Domínio glm.cloud</strong> — marca pronta para o produto. ④ <strong>Parceiro local fundador</strong> — advogado com 15 anos, 12 em Tribunal, especialista em compliance para setores regulados. ⑤ <strong>Stack validada</strong> — 6 modelos rodando, benchmark com dados reais, 8 portais no ar, cadeia anti-alucinação com 6 camadas.</p>
+</div>
+
+<h3>5.3 Comparação com benchmarks existentes</h3>
+
+<table>
+<tr><th>Modelo</th><th>MMLU-Med (EN)</th><th>Benchmark BR (nosso)</th><th>PT-BR nativo</th><th>Dado no BR</th><th>LGPD ready</th></tr>
+<tr><td><strong>GLM-Med (proposto)</strong></td><td>Target >90</td><td class="best">Target >0,70</td><td class="good">✓</td><td class="good">✓</td><td class="good">✓</td></tr>
+<tr><td>GLM-5.3 (atual)</td><td>~88 (est.)</td><td>0,45</td><td>✗ (traduz)</td><td>✗ (SG)</td><td>Parcial</td></tr>
+<tr><td>Med-PaLM 2 (Google)</td><td>~86</td><td>—</td><td>✗</td><td>✗ (EUA)</td><td>✗</td></tr>
+<tr><td>Meditron-70B (EPFL)</td><td>~82</td><td>—</td><td>✗</td><td>✗ (EUA/CH)</td><td>✗</td></tr>
+<tr><td>MedGemma-27B (Google)</td><td>~84</td><td>0,39</td><td>Parcial</td><td>✗ (SG)</td><td>Parcial</td></tr>
+</table>
+
+<p class="muted">MMLU-Med é estimativa baseada em benchmarks públicos; nosso benchmark BR é o único que mede coverage em português com casos brasileiros. O GLM-Med com fine-tuning deve superar 0,70 no nosso benchmark (vs. 0,45 do GLM-5.3 base) e superar 90 no MMLU-Med.</p>
+
+<h2>6 · A arquitetura técnica em produção</h2>
+
+<h3>6.1 Cadeia de 6 camadas anti-alucinação</h3>
+
+<pre>
+PERGUNTA (profissional de saúde)
+    ↓
+[1] PII REMOVAL (São Paulo — medpubr, BGE-M3)
+    ↓  texto sem identificadores
+[2] GUARDRAIL (Singapura — Granite Guardian 8B)
+    ↓  classificação de segurança
+[3] SÍNTESE (GLM-5.3 / GLM-Med — API ou local)
+    ↓  resposta estruturada em 4 blocos
+[4] VERIFICAÇÃO (São Paulo — bge-reranker-v2-m3)
+    ↓  cada afirmação conferida contra evidência
+[5] EXCELÊNCIA (Virgínia — Baichuan-M3-235B / AntAngelMed-100B)
+    ↓  caso difícil → modelo 235B re-sintetiza
+[6] RESPOSTA COM CITAÇÕES (Brasil — Postgres + OSS)
+    ↓  status: supported | partial | insufficient
+PROFISSIONAL
+</pre>
+
+<h3>6.2 Especificação da infraestrutura atual</h3>
+
+<table>
+<tr><th>Componente</th><th>Especificação</th><th>Região</th><th>Custo mensal</th></tr>
+<tr><td>m3-va</td><td>4× L20 48GB (gn8is-4x.16xlarge)</td><td>Virgínia</td><td>US$ 7.250</td></tr>
+<tr><td>antmed-va</td><td>4× L20 48GB (gn8is-4x.16xlarge)</td><td>Virgínia</td><td>US$ 7.250</td></tr>
+<tr><td>elite-health</td><td>2× L20 48GB (gn8is-2x.8xlarge)</td><td>Singapura</td><td>US$ 4.300</td></tr>
+<tr><td>elite-health-2</td><td>2× L20 48GB (gn8is-2x.8xlarge)</td><td>Singapura</td><td>US$ 4.300</td></tr>
+<tr><td>br-apps / br-db / br-es / medpubr</td><td>CPU (g9i/r9i)</td><td>São Paulo</td><td>US$ 1.700</td></tr>
+<tr><td>Model Studio (API)</td><td>GLM-5.3, qwen-plus/max</td><td>Singapura</td><td>SP (US$ 1.000)</td></tr>
+<tr><td>PostgreSQL, PolarDB, KMS, OSS, ACR</td><td>Managed</td><td>São Paulo</td><td>US$ 800</td></tr>
+<tr><td colspan="3"><strong>Total</strong></td><td>US$ ~25.300</td></tr>
+</table>
+
+<p class="muted">Com o fine-tuning do GLM-Med e data center próprio, esse custo cai drasticamente: energia solar elimina custo elétrico, satélite elimina custo de backbone, e a ZOE elimina tributos sobre importação de GPUs.</p>
+
+<h2>7 · Fine-tuning: o plano técnico detalhado</h2>
+
+<h3>7.1 Por que fine-tuning e não RAG apenas</h3>
+
+<p>RAG recupera evidência mas não muda o comportamento do modelo. Fine-tuning muda o modelo — ensina a <strong>abster quando não sabe</strong>, <strong>citar sempre</strong>, <strong>usar PT-BR clínico nativo</strong>, e <strong>respeitar o regulatório brasileiro</strong>. A combinação ideal é RAG + fine-tuning.</p>
+
+<table>
+<tr><th>Aspecto</th><th>RAG apenas (atual)</th><th>Fine-tuning + RAG (GLM-Med)</th></tr>
+<tr><td>Pediatria</td><td>0,28 (GLM base)</td><td class="good">Target >0,60 (com protocolos SBP)</td></tr>
+<tr><td>Raciocínio em PT</td><td>✗ (raciocina em EN)</td><td class="good">✓ (treinado com reasoning PT)</td></tr>
+<tr><td>Abstenção</td><td>0,5</td><td class="good">Target >0,80 (DPO com preferência por abstenção)</td></tr>
+<tr><td>Citação automática</td><td>Manual (cadeia externa)</td><td class="good">Natual (treinado para citar)</td></tr>
+<tr><td>Velocidade</td><td>93 tok/s (API)</td><td class="good">~50-80 tok/s (local, 4×L20)</td></tr>
+<tr><td>Custo por resposta</td><td>~US$ 0,002 (API)</td><td class="good">~US$ 0,001 (local, solar)</td></tr>
+</table>
+
+<h3>7.2 Infraestrutura de treinamento</h3>
+
+<pre>
+OPÇÃO A — Alibaba PAI-EAS (mais rápido)
+  8× H100 80GB SXM (~US$ 400/h spot)
+  SFT: 10.000 exemplos × ~2k tokens = 2-3 semanas
+  Custo: ~US$ 200.000
+
+OPÇÃO B — Cluster dedicado (PB/CE)
+  16× L20 48GB (equivalente a 2× gn8is-4x)
+  SFT: 10.000 exemplos × ~2k tokens = 3-4 semanas
+  Custo: ~US$ 150.000 (energia solar = custo marginal zero)
+
+OPÇÃO C — Híbrida (recomendada)
+  Fase 1 em PAI-EAS (H100, mais rápido)
+  Fase 2 (DPO + validação) em PB/CE
+  Custo: ~US$ 250.000
+</pre>
+
+<h2>8 · Próximos passos</h2>
+
+<div class="timeline">
+<div class="timeline-item">
+<div class="date">Mês 1</div>
+<h4>Acordo de confidencialidade + termo de intenções</h4>
+<p>Definição do escopo do fine-tuning, dataset compartilhado, licenciamento do GLM-Med. A Z.ai fornece pesos base + licença de treinamento. BeansTech fornece dataset + infra de validação.</p>
+</div>
+<div class="timeline-item">
+<div class="date">Mês 2-3</div>
+<h4>SFT + primeiro benchmark</h4>
+<p>Treinamento supervisionado com 10.000 casos bilíngues. Benchmark em 200 casos cegos com 2 médicos revisores. Critério de passagem: coverage >0,60, erro clínico grave = 0.</p>
+</div>
+<div class="timeline-item">
+<div class="date">Mês 4-5</div>
+<h4>DPO + validação clínica</h4>
+<p>Alignment com preferências de médicos brasileiros. 200 casos cegos revisados. Piloto em 1 instituição (Einstein ou Rede D'Or).</p>
+</div>
+<div class="timeline-item">
+<div class="date">Mês 6</div>
+<h4>Deploy em PB/CE + lançamento</h4>
+<p>GLM-Med rodando em data center brasileiro com energia solar e satélite. API pública em glm.cloud. Piloto com 5 instituições.</p>
+</div>
+<div class="timeline-item">
+<div class="date">Mês 7-12</div>
+<h4>Escala</h4>
+<p>50+ instituições, 50.000+ profissionais. 2º data center (CE). Expansão LATAM. Licensing do modelo para 3º parties.</p>
+</div>
+</div>
+
+<h2>9 · Sobre a BeansTech</h2>
+
+<div class="card" style="margin:24px 0">
+<p><strong>Matheus Ximenes</strong> — Founder & CEO. Advogado corporativo, 15 anos de experiência, 12 anos em Tribunal de Justiça (7 como assessor jurídico de Ministro). Pós-graduação em Cloud Computing e Proteção e Privacidade de Dados. Especialista em IA para setores regulados (saúde, jurídico, fintech). Criador do <strong>ragjur.ai</strong> (67 milhões de julgados) e <strong>ragmed.ai</strong> (evidência médica brasileira). Proprietário dos domínios <strong>z.cloud</strong> e <strong>glm.cloud</strong>.</p>
+<p style="margin-top:16px"><strong>BeansTech Health</strong> — 8 portais médicos em produção, 6 modelos LLM rodando em nuvem própria, cadeia anti-alucinação com 6 camadas, Keycloak OIDC para identidade única, Directus CMS, PostgreSQL com PITR, compliance LGPD/CFM em implementação. Benchmark validado com dados reais.</p>
+</div>
+
+<div class="callout" style="border-color:var(--primary)">
+<div class="title" style="color:var(--primary)">O que pedimos</div>
+<p>① <strong>Licença de treinamento</strong> do GLM-5.3 (pesos base + direito de derivar modelo próprio). ② <strong>Co-investimento de US$ 300M</strong> distribuído: US$ 50M fine-tuning, US$ 100M data centers PB/CE, US$ 100M operação + expansão, US$ 50M validação clínica + regulatory. ③ <strong>Exclusividade regional</strong> para GLM-Med na América Latina. ④ <strong>Marca glm.cloud</strong> como domínio do produto conjunto.</p>
+</div>
+
+<div class="footer">
+<p>BeansTech Health · Matheus Ximenes · contato@feijaojustech.com.br · dodr.ai · ragmed.ai · z.cloud · glm.cloud</p>
+<p class="muted">Documento confidencial. Dados do benchmark de 16/09/2026 disponíveis para auditoria (results.json, 156 avaliações, reproducíveis).</p>
+</div>
+
+</body>
+</html>
