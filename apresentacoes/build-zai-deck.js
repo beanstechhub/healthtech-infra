@@ -53,7 +53,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
 {
   const s = p.addSlide(); s.background = { color: WHITE };
   title(s, "Executive Summary", "The foundation already exists — the partnership scales it globally");
-  const stats = [["US$ 300M","Partnership Value"],["US$ 8.2B","Market (BR Regulated)"],["4","Regulated Verticals"],["16","GPUs in Production"],["1.75M+","Professionals (BR)"]];
+  const stats = [["US$ 300M","Partnership Value"],["US$ 8.2B","Market (BR Regulated)"],["4","Regulated Verticals"],["2","Data Centers (1 Carbon-Free)"],["1.75M+","Professionals (BR)"]];
   stats.forEach(([v,l],i) => {
     const x = M + i * 2.42;
     s.addShape(p.shapes.RECTANGLE, { x, y: 1.7, w: 2.2, h: 1.3, fill: { color: LIGHT }, line: { color: BORDER, width: 1 } });
@@ -63,7 +63,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
   s.addShape(p.shapes.RECTANGLE, { x: M, y: 3.3, w: W-2*M, h: 1.5, fill: { color: NAVY }, line: { color: NAVY } });
   s.addText([
     { text: "The hardest part — the model — already exists.", options: { bold: true, color: GOLDLT, fontSize: 15, breakLine: true } },
-    { text: "What typically takes years to build (infrastructure, regulatory expertise, distribution, domains) is already operational. BeansTech runs 16 GPUs, 6 frontier models, 8 medical portals, a complete compliance stack — and a clinical benchmark that validated GLM-5.3 as the top performer.", options: { color: "B0C4D4", fontSize: 11.5 } }
+    { text: "What typically takes years to build (infrastructure, regulatory expertise, distribution, domains) is already operational. BeansTech runs 6 frontier models, 8 medical portals, a complete compliance stack, and has secured land for two sovereign data centers — and a clinical benchmark that validated GLM-5.3 as the top performer.", options: { color: "B0C4D4", fontSize: 11.5 } }
   ], { x: M+0.3, y: 3.5, w: W-2*M-0.6, h: 1.1, margin: 0, lineSpacing: 16 });
   // two columns: what Z.ai gains / what BeansTech brings
   s.addText("What Z.ai Gains", { x: M, y: 5.0, w: 5.8, h: 0.4, fontSize: 14, fontFace: SANS, bold: true, color: BLUE, margin: 0 });
@@ -75,7 +75,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
   ], { x: M, y: 5.4, w: 5.8, h: 1.6, fontSize: 10.5, fontFace: SANS, color: TEXT, margin: 0, paraSpaceAfter: 6 });
   s.addText("What BeansTech Brings", { x: 7.0, y: 5.0, w: 5.8, h: 0.4, fontSize: 14, fontFace: SANS, bold: true, color: BLUE, margin: 0 });
   s.addText([
-    { text: "Production infrastructure — 16 GPUs, 6 models, 31 live health probes", options: { bullet: buG(), breakLine: true } },
+    { text: "Production infrastructure — 6 models, 31 live health probes, 2 data center sites secured", options: { bullet: buG(), breakLine: true } },
     { text: "Clinical benchmark — 156 evaluations, zero errors, GLM-5.3 validated", options: { bullet: buG(), breakLine: true } },
     { text: "75 production domains across 6 regulated verticals", options: { bullet: buG(), breakLine: true } },
     { text: "Regulatory expertise — founder attorney, 12 years Judiciary", options: { bullet: buG() } }
@@ -431,7 +431,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
 // ════════════════════════════════════════════════════
 {
   const s = p.addSlide(); s.background = { color: WHITE };
-  title(s, "What We Ask — What We Give", "A partnership of equals, each bringing what the other cannot build alone");
+  title(s, "What We Ask — What We Give", "A balanced partnership of equals — each side contributing what the other cannot build alone");
   // left: Z.ai
   s.addShape(p.shapes.RECTANGLE, { x: M, y: 1.7, w: 5.8, h: 4.2, fill: { color: NAVY }, line: { color: GOLD, width: 1.5 } });
   s.addText("Z.AI CONTRIBUTES", { x: M+0.3, y: 1.9, w: 5.2, h: 0.4, fontSize: 14, fontFace: SANS, bold: true, color: GOLDLT, charSpacing: 2, margin: 0 });
@@ -452,7 +452,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
   s.addText("BEANSTECH CONTRIBUTES", { x: 7.3, y: 1.9, w: 5.2, h: 0.4, fontSize: 14, fontFace: SANS, bold: true, color: NAVY, charSpacing: 2, margin: 0 });
   s.addText([
     { text: "Complete production infrastructure", options: { bullet: bu(), bold: true, color: NAVY, breakLine: true } },
-    { text: "16 GPUs, 6 models, 31 health probes, 8 portals — all live and auditable", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
+    { text: "6 models, 31 health probes, 8 portals live, 2 data center sites secured (PB solar + CE ZPE)", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
     { text: " ", options: { fontSize: 4, breakLine: true } },
     { text: "Distribution across 6 regulated verticals", options: { bullet: bu(), bold: true, color: NAVY, breakLine: true } },
     { text: "75 domains, 1.75M professionals, existing sales relationships", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
@@ -466,6 +466,12 @@ const buG = () => ({ code: "25B8", indent: 10 });
     { text: "Regulatory expertise", options: { bullet: bu(), bold: true, color: NAVY, breakLine: true } },
     { text: "Founder attorney, 12 years Judiciary, postgraduate in Data Protection", options: { bullet: false, fontSize: 9, color: MUTED } }
   ], { x: 7.3, y: 2.3, w: 5.2, h: 3.4, margin: 0, paraSpaceAfter: 2, lineSpacing: 13 });
+  // balance note
+  s.addShape(p.shapes.RECTANGLE, { x: M, y: 6.0, w: W-2*M, h: 0.8, fill: { color: LIGHT }, line: { color: GOLD, width: 1 } });
+  s.addText([
+    { text: "On Balance: ", options: { bold: true, color: NAVY, fontSize: 10 } },
+    { text: "We recognize that another company could invest more capital. What cannot be replicated at any price: regulatory expertise, production infrastructure, sovereign land, premium domains, and a clinical benchmark that independently validated GLM. The partnership is balanced because each side contributes what money alone cannot buy.", options: { color: MUTED, fontSize: 9.5 } }
+  ], { x: M+0.2, y: 6.1, w: W-2*M-0.4, h: 0.6, margin: 0, lineSpacing: 12 });
   footer(s);
 }
 
