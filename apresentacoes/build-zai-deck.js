@@ -75,7 +75,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
   ], { x: M, y: 5.4, w: 5.8, h: 1.6, fontSize: 10.5, fontFace: SANS, color: TEXT, margin: 0, paraSpaceAfter: 6 });
   s.addText("What BeansTech Brings", { x: 7.0, y: 5.0, w: 5.8, h: 0.4, fontSize: 14, fontFace: SANS, bold: true, color: BLUE, margin: 0 });
   s.addText([
-    { text: "Full-stack platform — 75 production domains, 6 frontier models, 67M+ indexed court decisions, identity + compliance infrastructure, 2 data center sites secured", options: { bullet: buG(), breakLine: true } },
+    { text: "Full-stack platform — 75 production domains (including z.cloud: 1-letter premium, live; glm.cloud: owned via Alibaba DNS) · 6 frontier models · 67M+ indexed court decisions · identity + compliance infrastructure · 2 data center sites secured", options: { bullet: buG(), breakLine: true } },
     { text: "Clinical benchmark — 156 evaluations, zero errors, GLM-5.3 validated", options: { bullet: buG(), breakLine: true } },
     { text: "75 production domains across 6 regulated verticals", options: { bullet: buG(), breakLine: true } },
     { text: "Regulatory expertise — founder attorney, 12 years Judiciary", options: { bullet: buG() } }
@@ -461,7 +461,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
     { text: "10,000+ clinical cases with verified answers and citation grounding", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
     { text: " ", options: { fontSize: 4, breakLine: true } },
     { text: "Sovereign infrastructure + premium domains", options: { bullet: bu(), bold: true, color: NAVY, breakLine: true } },
-    { text: "Land in PB (solar+satellite) and CE (ZPE) · z.cloud, glm.cloud, ativo.tech, ragjur.ai, ragmed.ai, dodr.ai", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
+    { text: "Land in PB (solar+satellite) and CE (ZPE) · z.cloud (1-letter premium, est. US$ 250k–1M) · glm.cloud (3-letter, perfect for GLM-branded product) · ativo.tech · ragjur.ai · ragmed.ai · dodr.ai", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
     { text: " ", options: { fontSize: 4, breakLine: true } },
     { text: "Regulatory expertise", options: { bullet: bu(), bold: true, color: NAVY, breakLine: true } },
     { text: "Founder attorney, 12 years Judiciary, postgraduate in Data Protection", options: { bullet: false, fontSize: 9, color: MUTED } }
