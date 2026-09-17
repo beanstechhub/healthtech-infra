@@ -53,7 +53,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
 {
   const s = p.addSlide(); s.background = { color: WHITE };
   title(s, "Executive Summary", "The foundation already exists — the partnership scales it globally");
-  const stats = [["US$ 300M","Partnership Value"],["US$ 8.2B","Market (BR Regulated)"],["6","Regulated Verticals"],["16","GPUs in Production"],["1.75M","Professionals (BR)"]];
+  const stats = [["US$ 300M","Partnership Value"],["US$ 8.2B","Market (BR Regulated)"],["4","Regulated Verticals"],["16","GPUs in Production"],["1.75M+","Professionals (BR)"]];
   stats.forEach(([v,l],i) => {
     const x = M + i * 2.42;
     s.addShape(p.shapes.RECTANGLE, { x, y: 1.7, w: 2.2, h: 1.3, fill: { color: LIGHT }, line: { color: BORDER, width: 1 } });
@@ -245,10 +245,10 @@ const buG = () => ({ code: "25B8", indent: 10 });
   const s = p.addSlide(); s.background = { color: WHITE };
   title(s, "The BeansTech Ecosystem", "75 production domains · 6 regulated verticals · shared infrastructure");
   const verts = [
-    ["LegalTech", "ragjur.ai", "67M+ court decisions indexed · 55 sources · GLM-5.3 integration mapped", "1.2M attorneys · R$ 80B/yr"],
     ["HealthTech", "dodr.ai · ragmed.ai", "8 portals live · 6 frontier models · anti-hallucination chain · clinical decision support", "550k physicians · R$ 4.4B/yr"],
-    ["FinTech / RegTech", "beansbank · pldbr", "AML compliance, SAR narrative, KYC · GLM-5.3 for analysis, Flash for volume", "740 institutions · R$ 12B/yr"],
-    ["Marketplace", "ativo.tech · z.cloud", "Cloud & AI marketplace in production · z.cloud pilot as sovereign token cloud", "Global · US$ 11.9M/yr projected"],
+    ["LegalTech", "ragjur.ai", "67M+ court decisions indexed · 55 sources · GLM-5.3 for analysis, Flash for volume search", "1.2M attorneys · R$ 80B/yr"],
+    ["FinTech / RegTech", "beansbank · pldbr", "AML compliance, SAR narrative, KYC · GLM-5.3 for deep analysis, Flash for triage", "740 institutions · R$ 12B/yr"],
+    ["PropTech ★ GLM Flash", "alirealty.com.br · cyrela.ai", "Document analysis, credit triage, due diligence · GLM-5.3 Flash processes in seconds what takes hours", "R$ 15B/yr (real estate tech)"],
   ];
   verts.forEach(([v, dom, desc, mkt], i) => {
     const x = M + (i % 2) * 6.15, y = 1.7 + Math.floor(i / 2) * 2.6;
