@@ -469,8 +469,8 @@ const buG = () => ({ code: "25B8", indent: 10 });
   // balance note
   s.addShape(p.shapes.RECTANGLE, { x: M, y: 6.0, w: W-2*M, h: 0.8, fill: { color: LIGHT }, line: { color: GOLD, width: 1 } });
   s.addText([
-    { text: "On Balance: ", options: { bold: true, color: NAVY, fontSize: 10 } },
-    { text: "We recognize that another company could invest more capital. What cannot be replicated at any price: regulatory expertise, production infrastructure, sovereign land, premium domains, and a clinical benchmark that independently validated GLM. The partnership is balanced because each side contributes what money alone cannot buy.", options: { color: MUTED, fontSize: 9.5 } }
+    { text: "On the US$ 300M: ", options: { bold: true, color: GOLD, fontSize: 10 } },
+    { text: "This is the value we place on this partnership — and on building it together with Z.ai specifically. It is not an amount we would accept from just any investor, regardless of size. The US$ 300M reflects what the combination of our sovereign infrastructure, regulatory expertise, and GLM\u2019s quality is worth when built together — by partners who share the same principles. We are choosing Z.ai as much as Z.ai would be choosing us.", options: { color: MUTED, fontSize: 9.5 } }
   ], { x: M+0.2, y: 6.1, w: W-2*M-0.4, h: 0.6, margin: 0, lineSpacing: 12 });
   footer(s);
 }
