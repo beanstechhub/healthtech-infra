@@ -34,3 +34,4 @@ apresentacoes/node_modules/
 !apresentacoes/*.html
 !apresentacoes/ZCloud-Zai-Parceria-EN.pptx
 !apresentacoes/build-zai-deck.js
+!apresentacoes/*.md
