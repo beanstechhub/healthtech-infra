@@ -53,7 +53,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
 {
   const s = p.addSlide(); s.background = { color: WHITE };
   title(s, "Executive Summary", "The foundation already exists — the partnership scales it globally");
-  const stats = [["US$ 300M","Partnership Value"],["US$ 8.2B","Market (BR Regulated)"],["75","Production Domains"],["2","Data Centers (1 Carbon-Free)"],["1.75M+","Professionals (BR)"]];
+  const stats = [["US$ 300M","Partnership Value"],["US$ 8.2B","Market (BR Regulated)"],["75+","Production Domains"],["2","Data Centers (1 Carbon-Free)"],["1.75M+","Professionals (BR)"]];
   stats.forEach(([v,l],i) => {
     const x = M + i * 2.42;
     s.addShape(p.shapes.RECTANGLE, { x, y: 1.7, w: 2.2, h: 1.3, fill: { color: LIGHT }, line: { color: BORDER, width: 1 } });
@@ -63,7 +63,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
   s.addShape(p.shapes.RECTANGLE, { x: M, y: 3.3, w: W-2*M, h: 1.5, fill: { color: NAVY }, line: { color: NAVY } });
   s.addText([
     { text: "The hardest part — the model — already exists.", options: { bold: true, color: GOLDLT, fontSize: 15, breakLine: true } },
-    { text: "What typically takes years to build is already operational: a multi-vertical platform spanning healthcare, legal, financial, real estate and AI infrastructure — 75 production domains, 6 frontier models in production, 77M+ court decisions indexed, sovereign identity and compliance infrastructure, and secured land for two data centers (one carbon-free). A clinical benchmark independently validated GLM-5.3 as the top performer.", options: { color: "B0C4D4", fontSize: 11.5 } }
+    { text: "What typically takes years to build is already operational: a multi-vertical platform spanning healthcare, legal, financial, real estate, compliance and AI infrastructure — 75 production domains, 6 frontier models in production, 77M+ court decisions indexed, sovereign identity and compliance infrastructure, and secured land for two data centers (one carbon-free). A clinical benchmark independently validated GLM-5.3 as the top performer.", options: { color: "B0C4D4", fontSize: 11.5 } }
   ], { x: M+0.3, y: 3.5, w: W-2*M-0.6, h: 1.1, margin: 0, lineSpacing: 16 });
   // two columns: what Z.ai gains / what BeansTech brings
   s.addText("What Z.ai Gains", { x: M, y: 5.0, w: 5.8, h: 0.4, fontSize: 14, fontFace: SANS, bold: true, color: BLUE, margin: 0 });
@@ -132,7 +132,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
     { text: " ", options: { fontSize: 6, breakLine: true } },
     { text: "When a regulated institution asks \"where is my data processed?\" — the current answer is \"outside Brazil\" or \"we don't know.\"", options: { fontSize: 11, color: "B0C4D4", breakLine: true } },
     { text: " ", options: { fontSize: 6, breakLine: true } },
-    { text: "With GLM on z.cloud, the answer is: \"In Brazilian territory, with complete audit trail, transparent abstention, and a frontier-quality model.\"", options: { fontSize: 11.5, color: GOLDLT, bold: true } }
+    { text: "With GLM on z.cloud — a domain we own, a platform we built, a promise we are ready to fulfill — the answer is: \"In Brazilian territory, with complete audit trail, transparent abstention, and a frontier-quality model.\"", options: { fontSize: 11.5, color: GOLDLT, bold: true } }
   ], { x: 3.5, y: 1.7, w: 8.5, h: 2.4, margin: 0, lineSpacing: 16 });
   // regulated landscape table
   s.addText("Brazil's Regulated Landscape", { x: M, y: 4.2, w: 6, h: 0.4, fontSize: 14, fontFace: SANS, bold: true, color: GOLDLT, margin: 0 });
@@ -248,7 +248,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
     ["HealthTech", "dodr.ai · ragmed.ai (+8 portals)", "Clinical decision support · anti-hallucination chain · 6 frontier models · benchmark-validated", "550k physicians · R$ 4.4B/yr"],
     ["LegalTech", "ragjur.ai", "77M+ court decisions indexed · 55 sources · GLM-5.3 for analysis, Flash for volume search", "1.2M attorneys · R$ 80B/yr"],
     ["FinTech / RegTech", "beansbank · beans.credit", "AML compliance, SAR narrative, KYC · GLM-5.3 for deep analysis, Flash for triage", "740 institutions · R$ 12B/yr"],
-    ["PropTech ★ GLM Flash", "alirealty.com.br · cyrela.ai", "Document analysis, credit triage, due diligence · GLM-5.3 Flash processes in seconds what takes hours", "R$ 15B/yr (real estate tech)"],
+    ["PropTech ★ GLM Flash", "proptechbr.ai · alirealty.com.br · cyrela.ai", "Document analysis, credit triage, due diligence · proptechbr.ai as the vertical\u2019s entry point and flagship AI portal", "R$ 15B/yr (real estate tech)"],
   ];
   verts.forEach(([v, dom, desc, mkt], i) => {
     const x = M + (i % 2) * 6.15, y = 1.7 + Math.floor(i / 2) * 2.6;
@@ -501,7 +501,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
     { text: "10,000+ clinical cases with verified answers and citation grounding", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
     { text: " ", options: { fontSize: 4, breakLine: true } },
     { text: "Sovereign infrastructure + premium domains", options: { bullet: bu(), bold: true, color: NAVY, breakLine: true } },
-    { text: "Land in PB (solar+satellite) and CE (ZPE) · z.cloud (1-letter premium, live, irreplaceable) · glm.cloud (GLM-branded product domain, owned and ready) · ativo.tech · ragjur.ai · ragmed.ai · dodr.ai", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
+    { text: "Land in PB (solar+satellite) and CE (ZPE) · z.cloud (1-letter premium, live, irreplaceable) · glm.cloud (GLM-branded product domain, owned and ready) · ativo.tech · ragjur.ai · ragmed.ai · dodr.ai · proptechbr.ai · pldbr.tech", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
     { text: " ", options: { fontSize: 4, breakLine: true } },
     { text: "Regulatory expertise", options: { bullet: bu(), bold: true, color: NAVY, breakLine: true } },
     { text: "Founder attorney, 12 years Judiciary, postgraduate in Data Protection", options: { bullet: false, fontSize: 9, color: MUTED } }
