@@ -263,7 +263,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
       { text: mkt, options: { fontSize: 10, bold: true, color: dark ? GOLDLT : RED } }
     ], { x: x+0.25, y: y+0.15, w: 5.4, h: 2.0, margin: 0, lineSpacing: 13, paraSpaceAfter: 3 });
   });
-  s.addText("ativo.tech — the commercial engine: marketplace for cloud, AI, and token sales across all verticals · z.cloud as sovereign token infrastructure · one model engine (GLM) upgrades everything simultaneously", { x: M, y: 6.78, w: W-2*M, h: 0.42, fontSize: 9.5, fontFace: SANS, color: NAVY, bold: true, align: "center", margin: 0 });
+  s.addText("ativo.tech — the commercial engine: marketplace for cloud, AI, and token sales across all verticals · z.cloud as sovereign token infrastructure · one model engine (GLM) upgrades everything simultaneously", { x: M, y: 6.68, w: W-2*M, h: 0.38, fontSize: 9, fontFace: SANS, color: NAVY, bold: true, align: "center", margin: 0 });
   footer(s);
 }
 
