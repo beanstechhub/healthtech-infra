@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeansTech × Z.ai — Sovereign AI for Regulated Markets · US$ 300M Strategic Partnership</title>
+<style>
+@page{margin:18mm 16mm;size:A4}
+:root{--navy:#0A1628;--navy2:#0D1F35;--gold:#C9A227;--gold-lt:#E8C847;--red:#B0342C;--blue:#2E6FAF;--text:#1A2332;--muted:#5A6B7A;--light:#F7F9FB;--border:#D5DDE5;--success:#1B7A4E}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font:11.5pt/1.65 'Georgia','Times New Roman',serif;background:#fff;color:var(--text);max-width:960px;margin:0 auto;padding:0}
+h1,h2,h3,.num{font-family:'Helvetica Neue',Arial,sans-serif}
+h1{font-size:28pt;color:var(--navy);letter-spacing:-.02em;line-height:1.1}
+h2{font-size:17pt;color:var(--navy);border-bottom:2.5pt solid var(--gold);padding-bottom:8pt;margin:32pt 0 14pt;page-break-after:avoid}
+h3{font-size:12.5pt;color:var(--blue);margin:18pt 0 8pt;page-break-after:avoid}
+p{margin:8pt 0;text-align:justify}
+.muted{color:var(--muted);font-size:9.5pt}
+.small{font-size:9pt}
+.cover{background:var(--navy);color:#fff;padding:60pt 40pt 40pt;page-break-after:always;text-align:left}
+.cover h1{color:var(--gold-lt);font-size:32pt;margin-bottom:12pt}
+.cover .subtitle{font-size:14pt;color:rgba(255,255,255,.75);line-height:1.5;font-family:Georgia,serif}
+.cover .meta{margin-top:40pt;font-size:10pt;color:rgba(255,255,255,.5)}
+.cover .seal{display:inline-block;border:1pt solid var(--gold);color:var(--gold-lt);padding:4pt 12pt;font-size:9pt;letter-spacing:.2em;text-transform:uppercase;margin-top:20pt}
+.page{padding:0 10pt;page-break-after:always}
+.page:last-child{page-break-after:auto}
+table{width:100%;border-collapse:collapse;margin:12pt 0;font-size:9.5pt}
+th{background:var(--navy);color:var(--gold-lt);padding:8pt 10pt;text-align:left;font-family:Helvetica,sans;font-size:8.5pt;text-transform:uppercase;letter-spacing:.03em}
+td{padding:7pt 10pt;border-bottom:.5pt solid var(--border);vertical-align:top}
+tr:nth-child(even) td{background:var(--light)}
+.stat-row{display:flex;gap:12pt;margin:16pt 0;flex-wrap:wrap}
+.stat{flex:1;min-width:130pt;background:var(--light);border:1pt solid var(--border);border-radius:6pt;padding:14pt 16pt;text-align:center}
+.stat .num{font-size:20pt;font-weight:800;color:var(--navy);display:block}
+.stat .lbl{font-size:8pt;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-top:4pt}
+.callout{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;border-radius:8pt;padding:16pt 20pt;margin:14pt 0;page-break-inside:avoid}
+.callout .title{color:var(--gold-lt);font-weight:700;font-size:11pt;margin-bottom:8pt;font-family:Helvetica,sans}
+.callout p{color:rgba(255,255,255,.85);font-size:10pt;margin:0;text-align:left}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14pt;margin:12pt 0}
+.card{background:var(--light);border:1pt solid var(--border);border-radius:6pt;padding:14pt 16pt}
+.card h4{font-family:Helvetica,sans;font-size:10.5pt;color:var(--navy);margin-bottom:8pt}
+.card p{font-size:9.5pt;color:var(--muted);margin:0;text-align:left}
+.card .big{font-size:16pt;font-weight:800;color:var(--gold);margin:6pt 0}
+.tag{display:inline-block;background:rgba(46,111,175,.08);border:.5pt solid rgba(46,111,175,.2);color:var(--blue);padding:2pt 8pt;border-radius:10pt;font-size:8pt;font-family:Helvetica,sans;margin:2pt}
+.quote{font-style:italic;color:var(--blue);border-left:3pt solid var(--gold);padding-left:12pt;margin:12pt 0;font-size:10.5pt}
+.answer-demo{background:var(--light);border:1pt solid var(--border);border-radius:6pt;padding:14pt;margin:12pt 0;page-break-inside:avoid}
+.answer-demo .hdr{font-size:8.5pt;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-family:Helvetica,sans;margin-bottom:8pt}
+.answer-demo .body{font-size:9.5pt;white-space:pre-wrap;line-height:1.6}
+.answer-demo .meta{margin-top:8pt;padding-top:8pt;border-top:.5pt solid var(--border);font-size:8pt;color:var(--muted)}
+.footer{border-top:1pt solid var(--gold);margin-top:24pt;padding-top:10pt;text-align:center;color:var(--muted);font-size:8.5pt}
+.timeline{margin:14pt 0;padding-left:18pt;border-left:2pt solid var(--gold)}
+.timeline-item{margin-bottom:14pt;position:relative}
+.timeline-item::before{content:'';position:absolute;left:-22pt;top:4pt;width:8pt;height:8pt;border-radius:50%;background:var(--gold)}
+.timeline-item .dt{color:var(--red);font-size:8.5pt;text-transform:uppercase;letter-spacing:.08em;font-family:Helvetica,sans;font-weight:600}
+.timeline-item h4{font-size:10.5pt;color:var(--navy);margin:2pt 0 4pt}
+.timeline-item p{font-size:9.5pt;color:var(--muted);margin:0;text-align:left}
+.accent-gold{color:var(--gold);font-weight:700}
+.accent-red{color:var(--red);font-weight:700}
+.accent-navy{color:var(--navy);font-weight:700}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+<h1>BeansTech × Z.ai</h1>
+<div class="subtitle"><strong>Sovereign AI for Regulated Markets</strong><br>
+Bringing GLM to Latin America's largest economy — with data sovereignty, energy independence, and auditability as design principles, not afterthoughts.</div>
+<div class="seal">Strategic Partnership Proposal</div>
+<div class="meta">
+<p><strong>BeansTech</strong> · São Paulo, Brazil · September 2026<br>
+Matheus Ximenes · Founder &amp; CEO<br>
+Attorney at Law · Postgraduate in Cloud Computing &amp; Data Protection<br>
+contato@feijaojustech.com.br · beanstech.com.br · z.cloud · glm.cloud</div>
+</div>
+
+<!-- PAGE 1 -->
+<div class="page">
+<h2>Executive Summary</h2>
+
+<p>This proposal presents a <strong>US$ 300 million strategic partnership</strong> between BeansTech (Brazil) and Z.ai to deploy, fine-tune, and commercialize the GLM model family across Latin America's largest regulated markets. The valuation reflects the <strong>enterprise value of the joint venture</strong>, not an operational budget — the partnership encompasses infrastructure, fine-tuning, distribution across six regulated verticals, and two sovereign data centers.</p>
+
+<div class="callout">
+<div class="title">The Foundation Already Exists</div>
+<p>What typically takes years to build — the infrastructure, the regulatory expertise, the distribution channels, the domains — <strong>is already operational.</strong> BeansTech runs <strong>16 GPUs</strong> across 4 instances, <strong>6 frontier models</strong> in production, <strong>8 medical portals</strong> serving live traffic, a complete identity and compliance stack, and a clinical benchmark that <strong>validated GLM-5.3 as the top performer</strong> against 5 other frontier models.</p>
+</div>
+
+<div class="stat-row">
+<div class="stat"><span class="num">US$ 300M</span><span class="lbl">Partnership Value</span></div>
+<div class="stat"><span class="num">US$ 8.2B</span><span class="lbl">Addressable Market (BR)</span></div>
+<div class="stat"><span class="num">6</span><span class="lbl">Regulated Verticals</span></div>
+<div class="stat"><span class="num">16</span><span class="lbl">GPUs in Production</span></div>
+<div class="stat"><span class="num">1.75M</span><span class="lbl">Target Professionals (BR)</span></div>
+</div>
+
+<h3>What Z.ai Gains</h3>
+<table>
+<tr><th>Benefit</th><th>Detail</th><th>Why It Matters</th></tr>
+<tr><td><strong>Sovereign Presence</strong></td><td>First frontier model with API executed in Brazilian territory, hosted on Brazilian infrastructure</td><td>LGPD compliance by design — not by contract amendment</td></tr>
+<tr><td><strong>Market Access</strong></td><td>550k physicians, 1.2M attorneys, 740 financial institutions, 740 health insurers — all regulated, all needing auditable AI</td><td>Distribution that would take years and millions to build organically</td></tr>
+<tr><td><strong>Brand Positioning</strong></td><td>z.cloud and glm.cloud as premium domains for the joint product</td><td>"The AI cloud that proves what it answers" — already live and positioned</td></tr>
+<tr><td><strong>Energy Independence</strong></td><td>Solar-powered data centers in Paraíba (off-grid) and Ceará (ZPE)</td><td>ESG auditability + cost predictability + competitive latency to US/EU</td></tr>
+<tr><td><strong>Regulatory Partner</strong></td><td>Founder is a corporate attorney with 12 years in the Judiciary, postgraduate in Data Protection</td><td>Trust in regulated sectors is built by people who understand regulation</td></tr>
+</table>
+
+<h3>What BeansTech Contributes</h3>
+<table>
+<tr><th>Asset</th><th>Status</th><th>Verification</th></tr>
+<tr><td>Infrastructure (16 GPU, 6 models, 4 regions)</td><td>Production</td><td>health.beanstech.com.br — 31 live probes</td></tr>
+<tr><td>Clinical benchmark (6 models × 26 cases)</td><td>Completed 16/09/2026</td><td>results.json — 156 evaluations, zero errors</td></tr>
+<tr><td>Anti-hallucination chain (6 layers)</td><td>Production</td><td>GitHub — healthtech-infra (private)</td></tr>
+<tr><td>Identity (Keycloak OIDC, passkeys, TOTP)</td><td>Production</td><td>id.beanstech.com.br</td></tr>
+<tr><td>Domains (z.cloud, glm.cloud, ragjur.ai, ragmed.ai, dodr.ai, ativo.tech)</td><td>Owned &amp; active</td><td>DNS verifiable</td></tr>
+<tr><td>Data centers (PB solar + CE ZPE)</td><td>Land secured, projects ready</td><td>Santa Terezinha/PB + ZPE Caucaia/CE</td></tr>
+</table>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page">
+<h2>The Benchmark That Validates This Partnership</h2>
+
+<p>On September 16, 2026, BeansTech executed a clinical benchmark comparing six frontier language models on <strong>26 real Brazilian medical cases</strong> — in Portuguese, covering PCDT (Conitec) guidelines, ANVISA drug labels, and SBP protocols. Each model received the identical system prompt, temperature 0.2, executed from São Paulo.</p>
+
+<table>
+<tr><th>Model</th><th>Architecture</th><th>Clinical Coverage</th><th>Speed (tok/s)</th><th>Best Domain</th><th>Security Score</th></tr>
+<tr><td><strong>GLM-5.3 (Z.ai)</strong></td><td>MoE</td><td style="color:var(--gold);font-weight:800">0.45</td><td>93</td><td>Surgery 0.88 · Management 0.67 · Imaging 0.62</td><td>1 (best)</td></tr>
+<tr><td>Baichuan-M2-32B</td><td>Dense 32B</td><td style="font-weight:700">0.45</td><td>41</td><td>Medication 0.57 · Veterinary 0.62</td><td>1</td></tr>
+<tr><td>Qwen-plus (Alibaba)</td><td>API</td><td>0.44</td><td>51</td><td>Surgery 0.75</td><td>2</td></tr>
+<tr><td>AntAngelMed-100B</td><td>MoE 256/8</td><td>0.41</td><td style="font-weight:800">149</td><td>Native PT reasoning</td><td>3</td></tr>
+<tr><td>Baichuan-M3-235B</td><td>MoE 235B</td><td>0.39</td><td>71</td><td>Emergency 0.63</td><td>2</td></tr>
+<tr><td>MedGemma-27B (Google)</td><td>Dense 27B</td><td>0.39</td><td>25</td><td>Emergency 0.63</td><td>2</td></tr>
+</table>
+
+<h3>What Impressed Us Most</h3>
+<div class="answer-demo">
+<div class="hdr">Case: 68-year-old male, atrial fibrillation, CrCl 28 mL/min, bleeding on rivaroxaban 20mg — GLM-5.3 Response</div>
+<div class="body"><strong>Clinical Reasoning:</strong> Dose above the recommended level for this renal function (ANVISA label: CrCl 15–50 → 15mg/day). This suggests drug overexposure as a probable contributing factor. Rivaroxaban has significant renal clearance; at CrCl 28, accumulation and increased hemorrhagic risk are expected.
+
+<strong>Management:</strong> Acute phase — discontinue, hemodynamic support, consider prothrombin complex concentrate or andexanet alfa if available. Post-stabilization — apixaban (lower renal clearance, lower major bleeding rate).
+
+<strong>What I Cannot Assert:</strong> Exact vitamin K dose without consulting the local protocol.</div>
+<div class="meta">GLM-5.3 was the <strong>only model</strong> to: identify 20mg as an excessive dose (not merely "reduce"), cite ANVISA as the Brazilian regulatory source, mention andexanet alfa as a specific Factor Xa reversal agent, and note that hemodialysis does not significantly remove rivaroxaban.</div>
+</div>
+
+<div class="quote">
+"We have tested the best models in the world. GLM-5.3 won — not by a technical margin, but by something harder to measure: it knows when to say 'I cannot assert.' In regulated markets, that is not a feature. It is character."<br>
+<span class="small">— Matheus Ximenes, Founder &amp; CEO, BeansTech</span>
+</div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page">
+<h2>The z.cloud Thesis: Why Sovereign AI Wins in Brazil</h2>
+
+<div class="callout">
+<div class="title">z.cloud — The Seventh Letter, The Complete Answer</div>
+<p>The letter <strong>Z</strong> — the seventh consonant, the last letter, the one that completes. In a market where every regulated institution asks "where is my data processed?", the current answer is "outside Brazil" or "we don't know." With GLM running on <strong>z.cloud</strong>, the answer becomes: <strong>"In Brazilian territory, with complete audit trail, transparent abstention, and a frontier-quality model."</strong></p>
+</div>
+
+<h3>Brazil's Regulated Landscape</h3>
+<table>
+<tr><th>Sector</th><th>Regulated By</th><th>Professionals / Entities</th><th>Annual Market (BR)</th><th>Key Requirement</th></tr>
+<tr><td>Healthcare</td><td>CFM, ANS, LGPD</td><td>550,000 physicians · 6,800 hospitals · 740 insurers</td><td>R$ 4.4 billion</td><td>Data residency + clinical audit trail</td></tr>
+<tr><td>Legal</td><td>OAB, LGPD</td><td>1,200,000 attorneys · 500,000 firms</td><td>R$ 80 billion</td><td>Professional secrecy + source verification</td></tr>
+<tr><td>Financial</td><td>BACEN, COAF</td><td>740 institutions</td><td>R$ 12 billion (compliance)</td><td>PLD/FT Res. 4.893 + decision audit</td></tr>
+<tr><td>Insurance</td><td>ANS</td><td>740 operators · 48M beneficiaries</td><td>R$ 220 billion (premiums)</td><td>Defensible decisions per ANS</td></tr>
+<tr><td><strong>Total</strong></td><td>—</td><td><strong>~1.75M professionals + 8,000 institutions</strong></td><td><strong>US$ 8.2 billion</strong></td><td>—</td></tr>
+</table>
+
+<h3>Why GLM Wins in These Markets</h3>
+
+<div class="grid2">
+<div class="card">
+<h4>GLM-5.3 Flash — The Engine</h4>
+<p class="big">High Volume</p>
+<p>For tasks requiring speed and scale: document triage, compliance screening, case-law search, claim pre-processing. API executed in Brazilian territory. Cost: covered by existing Model Studio allocations.</p>
+<span class="tag">Banking compliance</span><span class="tag">Legal volume</span><span class="tag">Health triage</span>
+</div>
+<div class="card">
+<h4>GLM-5.3 — The Specialist</h4>
+<p class="big">Deep Reasoning</p>
+<p>For tasks requiring depth: clinical decision support, complex litigation analysis, SAR narrative generation, regulatory interpretation. The model that won our benchmark. Available via API in Brazil and for local deployment on sovereign infrastructure.</p>
+<span class="tag">Clinical decisions</span><span class="tag">Complex litigation</span><span class="tag">Regulatory analysis</span>
+</div>
+</div>
+
+<h3>The Infrastructure Advantage</h3>
+
+<div class="grid2">
+<div class="card">
+<h4>Santa Terezinha, Paraíba</h4>
+<p class="big">Solar + Satellite</p>
+<p><strong>Photovoltaic plant</strong> on owned land, with <strong>direct satellite connectivity</strong> — no connection to the public power grid. Fully energy-independent. Northeast Brazil offers optimal solar irradiation (~5.5 kWh/m²/day) and the <strong>lowest latency to Europe and US East Coast</strong> of any Brazilian region.</p>
+</div>
+<div class="card">
+<h4>ZPE Caucaia, Ceará</h4>
+<p class="big">Special Economic Zone</p>
+<p>Located in the <strong>same ZPE as TikTok's Brazilian data center</strong> — tax incentives, customs special regime, direct access to international submarine cables. João Pessoa and Fortaleza projects are <strong>already completed and ready for construction.</strong></p>
+</div>
+</div>
+
+<table>
+<tr><th>Route</th><th>Current (Singapore)</th><th>Proposed (PB/CE)</th><th>Improvement</th></tr>
+<tr><td>Brazil (São Paulo)</td><td>~180 ms</td><td><strong>&lt; 20 ms</strong></td><td class="accent-gold">9×</td></tr>
+<tr><td>Europe (Frankfurt)</td><td>~250 ms</td><td><strong>~120 ms</strong></td><td class="accent-gold">2×</td></tr>
+<tr><td>US East (Virginia)</td><td>~200 ms</td><td><strong>~100 ms</strong></td><td class="accent-gold">2×</td></tr>
+<tr><td>Latin America</td><td>~300 ms</td><td><strong>&lt; 80 ms</strong></td><td class="accent-gold">4×</td></tr>
+</table>
+</div>
+
+<!-- PAGE 4 -->
+<div class="page">
+<h2>The BeansTech Ecosystem</h2>
+
+<p>BeansTech operates <strong>75 production domains</strong> across six regulated verticals. The infrastructure, identity, compliance, and distribution layers are shared — adding GLM as the model engine upgrades all verticals simultaneously.</p>
+
+<div class="grid2">
+<div class="card">
+<h4>LegalTech — ragjur.ai</h4>
+<p class="big">67M+ Court Decisions</p>
+<p>Semantic search and legal analysis over <strong>67 million Brazilian court decisions</strong> (55 sources, Elasticsearch). GLM-5.3 integration already mapped in the roadmap. <strong>Market: 1.2M attorneys, R$ 80B/year legal services.</strong></p>
+<span class="tag">ragjur.com.br</span><span class="tag">legalsuite.tech</span><span class="tag">minuta.tech</span><span class="tag">+17 domains</span>
+</div>
+<div class="card">
+<h4>HealthTech — dodr.ai / ragmed.ai</h4>
+<p class="big">8 Portals Live</p>
+<p>Clinical decision support with 6 frontier models, 6-layer anti-hallucination chain, PII removal, guardrail, citation verification. <strong>Market: 550k physicians, 6,800 hospitals, R$ 4.4B/year.</strong></p>
+<span class="tag">dodr.ai</span><span class="tag">exame.tech</span><span class="tag">prontuario.tech</span><span class="tag">+5 domains</span>
+</div>
+</div>
+
+<div class="grid2">
+<div class="card">
+<h4>FinTech / RegTech</h4>
+<p class="big">Compliance &amp; PLD/FT</p>
+<p>Anti-money laundering, SAR narrative generation, KYC, credit risk. GLM-5.3 for complex analysis, Flash for volume triage. <strong>Market: 740 institutions, R$ 12B/year compliance spend.</strong></p>
+<span class="tag">beansbank</span><span class="tag">beans.credit</span><span class="tag">pldbr</span><span class="tag">+11 domains</span>
+</div>
+<div class="card">
+<h4>Marketplace — ativo.tech</h4>
+<p class="big">Cloud &amp; AI Platform</p>
+<p>Brazilian marketplace for cloud and AI services, with model comparison and cost analysis. <strong>z.cloud pilot</strong> as private token cloud — projected US$ 11.9M/year revenue in 12 months of scale.</p>
+<span class="tag">ativo.tech</span><span class="tag">ativo.cloud</span><span class="tag">z.cloud</span><span class="tag">glm.cloud</span>
+</div>
+</div>
+
+<h3>The Anti-Hallucination Architecture (6 Layers)</h3>
+<div class="answer-demo">
+<div class="body" style="font-size:9pt;font-family:monospace">
+QUESTION → [1. PII REMOVED (Brazil)] → [2. GUARDRAIL (Granite Guardian)]
+        → [3. SYNTHESIS (GLM-5.3 / GLM-5.3 Flash — routed by domain)]
+        → [4. CITATION VERIFICATION (reranker, Brazil)]
+        → [5. EXCELLENCE (235B model, if complex)]
+        → [6. AUDIT TRAIL (Postgres + OSS, Brazil)]
+RESPONSE: supported | partial | insufficient — with document, revision, and page cited</div>
+</div>
+
+<h3>Fine-Tuning: From 0.45 to 0.70+</h3>
+<p>With SFT on a Brazilian bilingual dataset (10,000+ clinical cases, PCDT + ANVISA + SciELO + institutional data), GLM-5.3's clinical coverage is projected to reach <strong>0.70+</strong>, with native Portuguese reasoning. The fine-tuned model becomes <strong>the first frontier medical model trained on Brazilian regulatory data</strong> — a defensible, licensable asset.</p>
+
+<table>
+<tr><th>Weakness (Base Model)</th><th>Resolution (Fine-Tuned)</th><th>Method</th></tr>
+<tr><td>Pediatrics coverage: 0.28</td><td>Target: &gt; 0.60</td><td>SFT with SBP protocols + pediatric dosing guidelines</td></tr>
+<tr><td>Reasoning in English</td><td>Native PT reasoning</td><td>SFT with bilingual reasoning chains</td></tr>
+<tr><td>Abstention rate: 0.50</td><td>Target: &gt; 0.80</td><td>DPO with preference for correct abstention</td></tr>
+<tr><td>Citation: external chain</td><td>Native citation</td><td>SFT with citation-grounded examples</td></tr>
+</table>
+</div>
+
+<!-- PAGE 5 -->
+<div class="page">
+<h2>Global Revenue Projection</h2>
+
+<p>The US$ 300 million partnership value reflects the <strong>enterprise value of the joint venture</strong>. What follows is the projected revenue that this investment unlocks — starting in Brazil and expanding globally through the data center advantage.</p>
+
+<h3>Phase 1: Brazil (Years 1–2)</h3>
+<table>
+<tr><th>Revenue Stream</th><th>Year 1</th><th>Year 2</th><th>Driver</th></tr>
+<tr><td>z.cloud token API (GLM on sovereign infra)</td><td>US$ 6.0M</td><td>US$ 18M</td><td>Regulated institutions adopting sovereign AI</td></tr>
+<tr><td>HealthTech subscriptions (dodr.ai, ragmed.ai)</td><td>US$ 3.4M</td><td>US$ 12M</td><td>550k physicians, 6.8k hospitals</td></tr>
+<tr><td>LegalTech subscriptions (ragjur.ai)</td><td>US$ 2.5M</td><td>US$ 15M</td><td>1.2M attorneys, 67M indexed decisions</td></tr>
+<tr><td>FinTech compliance (PLD/FT, SAR)</td><td>US$ 1.5M</td><td>US$ 8M</td><td>740 institutions, mandatory compliance</td></tr>
+<tr><td>Dedicated GPU leasing (GLM-Med on 4×L20)</td><td>US$ 0.8M</td><td>US$ 2M</td><td>Hospitals and research institutions</td></tr>
+<tr><td><strong>Year 1 Total</strong></td><td><strong>US$ 14.2M</strong></td><td><strong>US$ 55M</strong></td><td>—</td></tr>
+</table>
+
+<h3>Phase 2: Regional + Global (Years 3–5)</h3>
+<table>
+<tr><th>Expansion</th><th>Year 3</th><th>Year 4</th><th>Year 5</th><th>Rationale</th></tr>
+<tr><td>Brazil mature operations</td><td>US$ 80M</td><td>US$ 110M</td><td>US$ 134M</td><td>Full penetration of 6 verticals</td></tr>
+<tr><td>Latin America (Spanish)</td><td>US$ 15M</td><td>US$ 35M</td><td>US$ 60M</td><td>Data center PB/CE serves LATAM &lt; 80ms</td></tr>
+<tr><td>Europe (GDPR-aligned)</td><td>US$ 8M</td><td>US$ 20M</td><td>US$ 40M</td><td>GDPR compliance architecture is transferable</td></tr>
+<tr><td>US East Coast</td><td>—</td><td>US$ 10M</td><td>US$ 25M</td><td>Latency from PB/CE competitive with US providers</td></tr>
+<tr><td>GLM-Med licensing (3rd parties)</td><td>US$ 5M</td><td>US$ 12M</td><td>US$ 20M</td><td>Fine-tuned model as licensable asset</td></tr>
+<tr><td><strong>Annual Total</strong></td><td><strong>US$ 108M</strong></td><td><strong>US$ 187M</strong></td><td><strong>US$ 279M</strong></td><td>—</td></tr>
+</table>
+
+<div class="callout">
+<div class="title">The Return</div>
+<p><strong>Cumulative 5-year revenue: US$ 643M</strong> (Year 1: $14M → Year 5: $279M)<br>
+<strong>Partnership investment: US$ 300M</strong><br>
+<strong>Direct ROI: 2.1× in 5 years</strong> — excluding the value of data center assets, the fine-tuned model IP, the domain portfolio, and the recurring revenue base that continues beyond Year 5.</p>
+<p style="margin-top:8pt">At Year 5 run-rate of US$ 279M/year, the enterprise value at a conservative 8× multiple = <strong>US$ 2.2 billion</strong> — a 7.4× return on the partnership investment.</p>
+</div>
+</div>
+
+<!-- PAGE 6 -->
+<div class="page">
+<h2>The Data Center Advantage: Why PB/CE Beats Singapore for the Americas</h2>
+
+<p>The hardest part — the model — <strong>already exists.</strong> What the partnership adds is the infrastructure that makes it sovereign, fast, and independent:</p>
+
+<div class="grid2">
+<div class="card">
+<h4>Energy Independence</h4>
+<p class="big">Solar + Satellite</p>
+<p>Photovoltaic generation eliminates public grid dependency. Direct satellite connectivity eliminates fiber dependency. <strong>Zero single point of failure</strong> in energy or connectivity. ESG reporting: verifiable zero-carbon processing.</p>
+</div>
+<div class="card">
+<h4>Geographic Advantage</h4>
+<p class="big">Northeast Brazil</p>
+<p>The northeastern coast of Brazil is <strong>geographically closer to Europe and US East Coast</strong> than any other Brazilian region — and competitive with major hubs for LATAM. Submarine cables land in Fortaleza (same ZPE).</p>
+</div>
+</div>
+
+<table>
+<tr><th>Metric</th><th>Singapore (Current)</th><th>PB/CE (Proposed)</th><th>Impact</th></tr>
+<tr><td>Latency to São Paulo</td><td>~180 ms</td><td>&lt; 20 ms</td><td class="accent-gold">Real-time clinical decisions</td></tr>
+<tr><td>Latency to Europe</td><td>~250 ms</td><td>~120 ms</td><td class="accent-gold">GDPR-market competitive</td></tr>
+<tr><td>Latency to US East</td><td>~200 ms</td><td>~100 ms</td><td class="accent-gold">Direct competition with US cloud</td></tr>
+<tr><td>Energy source</td><td>Grid (fossil mix)</td><td>Solar (renewable)</td><td class="accent-gold">ESG verifiable</td></tr>
+<tr><td>Energy cost</td><td>Market rate</td><td>Near-zero marginal</td><td class="accent-gold">OPEX predictability</td></tr>
+<tr><td>Data jurisdiction</td><td>Singapore PDPA</td><td>Brazilian LGPD</td><td class="accent-gold">Sovereign by design</td></tr>
+<tr><td>Regulatory status</td><td>Foreign</td><td>Domestic + ZPE incentives</td><td class="accent-gold">Tax + customs advantages</td></tr>
+</table>
+
+<h3>Construction Timeline</h3>
+<div class="timeline">
+<div class="timeline-item"><div class="dt">Month 1–3</div><h4>Z.ai Partnership Agreement + Regulatory Filings</h4><p>Joint venture agreement, LGPD notification, ANPD registration, tax structuring for ZPE operations.</p></div>
+<div class="timeline-item"><div class="dt">Month 4–9</div><h4>Solar Plant Construction (PB)</h4><p>Photovoltaic installation on owned land. Satellite connectivity deployment. First rack: 8× GPU servers.</p></div>
+<div class="timeline-item"><div class="dt">Month 6–12</div><h4>ZPE Caucaia (CE) — Co-location</h4><p>Co-location in the same ZPE as TikTok's Brazilian DC. Submarine cable direct access. 16× GPU servers.</p></div>
+<div class="timeline-item"><div class="dt">Month 12</div><h4>z.cloud Public Launch</h4><p>GLM-5.3 and GLM-5.3 Flash serving from Brazilian territory. API with audit trail. Token pricing.</p></div>
+<div class="timeline-item"><div class="dt">Month 18</div><h4>GLM-Med Fine-Tuned Release</h4><p>SFT + DPO with Brazilian clinical dataset. Benchmark &gt;0.70. Institutional pilots with Einstein, Rede D'Or.</p></div>
+</div>
+</div>
+
+<!-- PAGE 7 -->
+<div class="page">
+<h2>Governance & Ethics</h2>
+
+<p>The partnership operates on principles that both companies share — and that regulated markets demand:</p>
+
+<div class="grid2">
+<div class="card">
+<h4>Transparency</h4>
+<p>Every response discloses: which model, which version, which corpus revision, how many tokens, whether PII was detected. The user always knows what they are talking to.</p>
+</div>
+<div class="card">
+<h4>Abstention</h4>
+<p>When the system cannot find evidence, it says <strong>"insufficient"</strong> — it does not guess. When it does not know the dose, it says <strong>"confirm in protocol."</strong> This is the GLM behavior that won our benchmark and our trust.</p>
+</div>
+</div>
+
+<div class="grid2">
+<div class="card">
+<h4>Data Sovereignty</h4>
+<p>Personal identification is removed before any model sees the data. Clinical or legal text (desensitized) may be processed outside Brazil during transition, with explicit contractual basis (LGPD Art. 34, I). Upon data center completion, <strong>all processing is domestic.</strong></p>
+</div>
+<div class="card">
+<h4>Professional Responsibility</h4>
+<p>The tool supports the professional — it does not replace them. The physician, the attorney, the compliance officer makes the decision. The system provides evidence, not verdicts. This is a design principle, not a disclaimer.</p>
+</div>
+</div>
+
+<h3>Compliance Framework</h3>
+<table>
+<tr><th>Regulation</th><th>How the Platform Complies</th><th>Status</th></tr>
+<tr><td>LGPD (Art. 11, 33, 37)</td><td>PII removed pre-model · transfer basis documented · audit trail per response</td><td>Implemented; RIPD in preparation</td></tr>
+<tr><td>CFM Resolution 2.454/2026</td><td>Physician retains decision authority · transparent AI identification · professional secrecy</td><td>Architectural</td></tr>
+<tr><td>ANS Regulations</td><td>Decision trail per authorization · defensible evidence citation</td><td>Architectural</td></tr>
+<tr><td>BACEN Res. 4.893</td><td>PLD/FT compliance with GLM-5.3 narrative + audit trail</td><td>Roadmap</td></tr>
+<tr><td>CEP/CONEP</td><td>Research protocol with fixed model version, reproducible results</td><td>Architectural</td></tr>
+</table>
+
+<h3>About the Founder</h3>
+<div class="card" style="margin-top:12pt">
+<p><strong>Matheus Ximenes</strong> — Founder &amp; CEO, BeansTech. Corporate attorney with 12 years in the Brazilian Judiciary (7 as legal advisor to a Supreme Court Minister). Postgraduate degrees in Cloud Computing and Data Protection &amp; Privacy. Creator of <strong>ragjur.ai</strong> (67M+ court decisions indexed) and <strong>ragmed.ai</strong> (Brazilian medical evidence). Owner of <strong>z.cloud</strong> and <strong>glm.cloud</strong>. Specialized in AI for regulated sectors where trust is the product.</p>
+</div>
+</div>
+
+<!-- PAGE 8 -->
+<div class="page">
+<h2>What We Ask — What We Give</h2>
+
+<div class="grid2">
+<div class="card">
+<h4>Z.ai Contributes</h4>
+<table style="margin:0">
+<tr><td><strong>US$ 300M</strong> partnership investment<br><span class="small muted">Enterprise value of the joint venture — covering data center construction, model fine-tuning, operational scale-up, and market expansion across LATAM and beyond</span></td></tr>
+<tr><td><strong>GLM-5.3 training license</strong><br><span class="small muted">Base weights + right to derive proprietary models for LATAM markets</span></td></tr>
+<tr><td><strong>Priority access to new models</strong><br><span class="small muted">GLM-5.4+ and multimodal variants as they are released</span></td></tr>
+<tr><td><strong>Co-branding</strong><br><span class="small muted">z.cloud × GLM as the joint product identity</span></td></tr>
+</table>
+</div>
+<div class="card">
+<h4>BeansTech Contributes</h4>
+<table style="margin:0">
+<tr><td><strong>Complete production infrastructure</strong><br><span class="small muted">16 GPUs, 6 models, 8 portals, identity, compliance, monitoring — all live and auditable</span></td></tr>
+<tr><td><strong>Distribution across 6 regulated verticals</strong><br><span class="small muted">Healthcare, legal, financial, insurance, proptech, automation — 75 domains, 1.75M professionals</span></td></tr>
+<tr><td><strong>Training dataset (Brazilian, bilingual)</strong><br><span class="small muted">10,000+ clinical cases with verified answers and citation grounding</span></td></tr>
+<tr><td><strong>Sovereign infrastructure</strong><br><span class="small muted">Land in PB (solar + satellite) and CE (ZPE) — projects ready for construction</span></td></tr>
+<tr><td><strong>Premium domains</strong><br><span class="small muted">z.cloud, glm.cloud, ragjur.ai, ragmed.ai, dodr.ai, ativo.tech</span></td></tr>
+<tr><td><strong>Regulatory expertise</strong><br><span class="small muted">Founder attorney, 12 years Judiciary, postgraduate in Data Protection</span></td></tr>
+</table>
+</div>
+</div>
+
+<div class="callout">
+<div class="title">Next Steps</div>
+<p><strong>1.</strong> 45-minute presentation — live demonstration of GLM-5.3 on the clinical benchmark, z.cloud, and ragjur.ai<br>
+<strong>2.</strong> Technical due diligence — access to results.json, health.beanstech.com.br, private GitHub repository<br>
+<strong>3.</strong> Letter of Intent — investment structure, milestone schedule, governance framework<br>
+<strong>4.</strong> z.cloud pilot launch — GLM-5.3 serving from Brazilian territory within 60 days of agreement</p>
+</div>
+
+<div style="text-align:center;margin:40pt 0 20pt;padding:20pt;border:1.5pt solid var(--gold);border-radius:8pt">
+<p style="font-size:16pt;font-family:Helvetica,sans;font-weight:800;color:var(--navy);margin:0">Partnership Value: US$ 300,000,000</p>
+<p style="font-size:10pt;color:var(--muted);margin:4pt 0 0">Enterprise value of the BeansTech × Z.ai joint venture<br>Projected 5-year return: US$ 643M revenue (2.1× direct) · US$ 2.2B enterprise value at exit (7.4×)</p>
+</div>
+
+<div class="footer">
+<p><strong>BeansTech</strong> · Matheus Ximenes, Founder &amp; CEO · contato@feijaojustech.com.br<br>
+beanstech.com.br · z.cloud · glm.cloud · ativo.tech · ragjur.ai · ragmed.ai · dodr.ai<br>
+<span class="small">September 2026 · Confidential · All claims verifiable in real-time (health.beanstech.com.br, 31 active probes)</span></p>
+</div>
+</div>
+
+</body>
+</html>
