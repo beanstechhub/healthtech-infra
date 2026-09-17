@@ -53,7 +53,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
 {
   const s = p.addSlide(); s.background = { color: WHITE };
   title(s, "Executive Summary", "The foundation already exists — the partnership scales it globally");
-  const stats = [["US$ 300M","Partnership Value"],["US$ 8.2B","Market (BR Regulated)"],["4","Regulated Verticals"],["2","Data Centers (1 Carbon-Free)"],["1.75M+","Professionals (BR)"]];
+  const stats = [["US$ 300M","Partnership Value"],["US$ 8.2B","Market (BR Regulated)"],["75","Production Domains"],["2","Data Centers (1 Carbon-Free)"],["1.75M+","Professionals (BR)"]];
   stats.forEach(([v,l],i) => {
     const x = M + i * 2.42;
     s.addShape(p.shapes.RECTANGLE, { x, y: 1.7, w: 2.2, h: 1.3, fill: { color: LIGHT }, line: { color: BORDER, width: 1 } });
@@ -63,7 +63,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
   s.addShape(p.shapes.RECTANGLE, { x: M, y: 3.3, w: W-2*M, h: 1.5, fill: { color: NAVY }, line: { color: NAVY } });
   s.addText([
     { text: "The hardest part — the model — already exists.", options: { bold: true, color: GOLDLT, fontSize: 15, breakLine: true } },
-    { text: "What typically takes years to build (infrastructure, regulatory expertise, distribution, domains) is already operational. BeansTech runs 6 frontier models, 8 medical portals, a complete compliance stack, and has secured land for two sovereign data centers — and a clinical benchmark that validated GLM-5.3 as the top performer.", options: { color: "B0C4D4", fontSize: 11.5 } }
+    { text: "What typically takes years to build is already operational: a multi-vertical platform spanning healthcare, legal, financial, real estate and AI infrastructure — 75 production domains, 6 frontier models in production, 67M+ court decisions indexed, sovereign identity and compliance infrastructure, and secured land for two data centers (one carbon-free). A clinical benchmark independently validated GLM-5.3 as the top performer.", options: { color: "B0C4D4", fontSize: 11.5 } }
   ], { x: M+0.3, y: 3.5, w: W-2*M-0.6, h: 1.1, margin: 0, lineSpacing: 16 });
   // two columns: what Z.ai gains / what BeansTech brings
   s.addText("What Z.ai Gains", { x: M, y: 5.0, w: 5.8, h: 0.4, fontSize: 14, fontFace: SANS, bold: true, color: BLUE, margin: 0 });
@@ -75,7 +75,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
   ], { x: M, y: 5.4, w: 5.8, h: 1.6, fontSize: 10.5, fontFace: SANS, color: TEXT, margin: 0, paraSpaceAfter: 6 });
   s.addText("What BeansTech Brings", { x: 7.0, y: 5.0, w: 5.8, h: 0.4, fontSize: 14, fontFace: SANS, bold: true, color: BLUE, margin: 0 });
   s.addText([
-    { text: "Production infrastructure — 6 models, 31 live health probes, 2 data center sites secured", options: { bullet: buG(), breakLine: true } },
+    { text: "Full-stack platform — 75 production domains, 6 frontier models, 67M+ indexed court decisions, identity + compliance infrastructure, 2 data center sites secured", options: { bullet: buG(), breakLine: true } },
     { text: "Clinical benchmark — 156 evaluations, zero errors, GLM-5.3 validated", options: { bullet: buG(), breakLine: true } },
     { text: "75 production domains across 6 regulated verticals", options: { bullet: buG(), breakLine: true } },
     { text: "Regulatory expertise — founder attorney, 12 years Judiciary", options: { bullet: buG() } }
@@ -245,7 +245,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
   const s = p.addSlide(); s.background = { color: WHITE };
   title(s, "The BeansTech Ecosystem", "75 production domains · 6 regulated verticals · shared infrastructure");
   const verts = [
-    ["HealthTech", "dodr.ai · ragmed.ai", "8 portals live · 6 frontier models · anti-hallucination chain · clinical decision support", "550k physicians · R$ 4.4B/yr"],
+    ["HealthTech", "dodr.ai · ragmed.ai (+8 portals)", "Clinical decision support · anti-hallucination chain · 6 frontier models · benchmark-validated", "550k physicians · R$ 4.4B/yr"],
     ["LegalTech", "ragjur.ai", "67M+ court decisions indexed · 55 sources · GLM-5.3 for analysis, Flash for volume search", "1.2M attorneys · R$ 80B/yr"],
     ["FinTech / RegTech", "beansbank · pldbr", "AML compliance, SAR narrative, KYC · GLM-5.3 for deep analysis, Flash for triage", "740 institutions · R$ 12B/yr"],
     ["PropTech ★ GLM Flash", "alirealty.com.br · cyrela.ai", "Document analysis, credit triage, due diligence · GLM-5.3 Flash processes in seconds what takes hours", "R$ 15B/yr (real estate tech)"],
@@ -452,7 +452,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
   s.addText("BEANSTECH CONTRIBUTES", { x: 7.3, y: 1.9, w: 5.2, h: 0.4, fontSize: 14, fontFace: SANS, bold: true, color: NAVY, charSpacing: 2, margin: 0 });
   s.addText([
     { text: "Complete production infrastructure", options: { bullet: bu(), bold: true, color: NAVY, breakLine: true } },
-    { text: "6 models, 31 health probes, 8 portals live, 2 data center sites secured (PB solar + CE ZPE)", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
+    { text: "75 production domains across 4 verticals · 6 frontier models · 67M+ indexed decisions · identity + compliance stack · 2 data center sites (PB solar + CE ZPE)", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
     { text: " ", options: { fontSize: 4, breakLine: true } },
     { text: "Distribution across 6 regulated verticals", options: { bullet: bu(), bold: true, color: NAVY, breakLine: true } },
     { text: "75 domains, 1.75M professionals, existing sales relationships", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
@@ -483,7 +483,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
   title(s, "Next Steps", "From agreement to launch in 60 days", true);
   const steps = [
     ["Step 1", "45-minute presentation", "Live demonstration of GLM-5.3 on the clinical benchmark, z.cloud, and ragjur.ai"],
-    ["Step 2", "Technical due diligence", "Access to results.json, health.beanstech.com.br (31 live probes), private GitHub repository"],
+    ["Step 2", "Technical due diligence", "Access to benchmark results (156 evaluations), health.beanstech.com.br (31 live probes), private GitHub, ragjur.ai (67M+ decisions), alirealty.com.br (production)"],
     ["Step 3", "Letter of Intent", "Investment structure, milestone schedule, governance framework"],
     ["Step 4", "z.cloud pilot launch", "GLM-5.3 serving from Brazilian territory within 60 days of agreement"],
   ];
