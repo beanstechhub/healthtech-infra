@@ -75,7 +75,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
   ], { x: M, y: 5.4, w: 5.8, h: 1.6, fontSize: 10.5, fontFace: SANS, color: TEXT, margin: 0, paraSpaceAfter: 6 });
   s.addText("What BeansTech Brings", { x: 7.0, y: 5.0, w: 5.8, h: 0.4, fontSize: 14, fontFace: SANS, bold: true, color: BLUE, margin: 0 });
   s.addText([
-    { text: "Full-stack platform — 75 production domains (including z.cloud: 1-letter premium, live; glm.cloud: owned via Alibaba DNS) · 6 frontier models · 67M+ indexed court decisions · identity + compliance infrastructure · 2 data center sites secured", options: { bullet: buG(), breakLine: true } },
+    { text: "Full-stack platform — 75 production domains (z.cloud and glm.cloud: irreplaceable brand assets, live and owned) · 6 frontier models · 67M+ indexed court decisions · identity + compliance infrastructure · 2 data center sites secured", options: { bullet: buG(), breakLine: true } },
     { text: "Clinical benchmark — 156 evaluations, zero errors, GLM-5.3 validated", options: { bullet: buG(), breakLine: true } },
     { text: "75 production domains across 6 regulated verticals", options: { bullet: buG(), breakLine: true } },
     { text: "Regulatory expertise — founder attorney, 12 years Judiciary", options: { bullet: buG() } }
@@ -358,6 +358,46 @@ const buG = () => ({ code: "25B8", indent: 10 });
 }
 
 // ════════════════════════════════════════════════════
+// S9A · WHY Z.AI NEEDS THIS — THE REVENUE MODEL PROBLEM
+// ════════════════════════════════════════════════════
+{
+  const s = p.addSlide(); s.background = { color: NAVY };
+  title(s, "The Revenue Challenge — And How This Partnership Solves It", "Building a complete, competitive ecosystem where every participant wins", true);
+  // Left: the problem
+  s.addText("The Challenge Every AI Lab Faces", { x: M, y: 1.6, w: 5.8, h: 0.4, fontSize: 13, fontFace: SANS, bold: true, color: GOLDLT, margin: 0 });
+  s.addText([
+    { text: "Monetization gap vs R&D spend", options: { bullet: buG(), bold: true, color: WHITE, breakLine: true } },
+    { text: "Frontier models cost hundreds of millions to train. API revenue alone rarely covers the burn. The industry is searching for sustainable business models.", options: { fontSize: 9.5, color: "B0C4D4", breakLine: true } },
+    { text: " ", options: { fontSize: 4, breakLine: true } },
+    { text: "Commoditization pressure", options: { bullet: buG(), bold: true, color: WHITE, breakLine: true } },
+    { text: "Free and near-free alternatives compress API pricing. Differentiation by quality alone is not enough — you need ecosystem lock-in and switching costs.", options: { fontSize: 9.5, color: "B0C4D4", breakLine: true } },
+    { text: " ", options: { fontSize: 4, breakLine: true } },
+    { text: "Geographic concentration", options: { bullet: buG(), bold: true, color: WHITE, breakLine: true } },
+    { text: "Most AI revenue flows through US and Chinese markets. Latin America — 650M people, US$ 8.2B in regulated sectors — remains underserved by sovereign AI infrastructure.", options: { fontSize: 9.5, color: "B0C4D4", breakLine: true } },
+    { text: " ", options: { fontSize: 4, breakLine: true } },
+    { text: "Compute dependency", options: { bullet: buG(), bold: true, color: WHITE, breakLine: true } },
+    { text: "Running at the mercy of cloud provider GPU allocation creates a growth ceiling — and a cost structure that eats margins.", options: { fontSize: 9.5, color: "B0C4D4" } }
+  ], { x: M, y: 2.0, w: 5.8, h: 4.6, margin: 0, paraSpaceAfter: 3, lineSpacing: 12 });
+
+  // Right: how we solve it
+  s.addText("How This Partnership Answers Each One", { x: 7.0, y: 1.6, w: 5.8, h: 0.4, fontSize: 13, fontFace: SANS, bold: true, color: GOLDLT, margin: 0 });
+  s.addText([
+    { text: "Ecosystem, not just API", options: { bullet: buG(), bold: true, color: GOLDLT, breakLine: true } },
+    { text: "The partnership is not a reseller agreement. It is a joint venture that builds a complete ecosystem: model + infrastructure + identity + compliance + distribution + marketplace. Every layer creates switching costs and recurring revenue.", options: { fontSize: 9.5, color: "B0C4D4", breakLine: true } },
+    { text: " ", options: { fontSize: 4, breakLine: true } },
+    { text: "Sovereign infrastructure = zero compute dependency", options: { bullet: buG(), bold: true, color: GOLDLT, breakLine: true } },
+    { text: "The data centers solve the compute problem that constrains every AI company today. Owning sovereign GPU infrastructure with near-zero marginal energy cost means scaling to demand, not to third-party allocation. Every GPU-hour served becomes revenue, not cost.", options: { fontSize: 9.5, color: "B0C4D4", breakLine: true } },
+    { text: " ", options: { fontSize: 4, breakLine: true } },
+    { text: "Regulated markets = premium pricing", options: { bullet: buG(), bold: true, color: GOLDLT, breakLine: true } },
+    { text: "Healthcare, legal, and financial institutions pay for trust, not tokens. In sectors where a wrong answer has clinical or legal consequences, the premium is on auditability and abstinence — not on speed. GLM-5.3\u2019s ethical behavior becomes a pricing moat.", options: { fontSize: 9.5, color: "B0C4D4", breakLine: true } },
+    { text: " ", options: { fontSize: 4, breakLine: true } },
+    { text: "LATAM = uncontested market", options: { bullet: buG(), bold: true, color: GOLDLT, breakLine: true } },
+    { text: "No other AI provider offers sovereign, regulated-market infrastructure in Latin America. First mover advantage in a 650M-person market with US$ 8.2B in addressable regulated spend.", options: { fontSize: 9.5, color: "B0C4D4" } }
+  ], { x: 7.0, y: 2.0, w: 5.8, h: 4.6, margin: 0, paraSpaceAfter: 3, lineSpacing: 12 });
+  footer(s, true);
+}
+
+// ════════════════════════════════════════════════════
 // S9B · DATA CENTER AS REVENUE MULTIPLIER
 // ════════════════════════════════════════════════════
 {
@@ -461,7 +501,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
     { text: "10,000+ clinical cases with verified answers and citation grounding", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
     { text: " ", options: { fontSize: 4, breakLine: true } },
     { text: "Sovereign infrastructure + premium domains", options: { bullet: bu(), bold: true, color: NAVY, breakLine: true } },
-    { text: "Land in PB (solar+satellite) and CE (ZPE) · z.cloud (1-letter premium, est. US$ 250k–1M) · glm.cloud (3-letter, perfect for GLM-branded product) · ativo.tech · ragjur.ai · ragmed.ai · dodr.ai", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
+    { text: "Land in PB (solar+satellite) and CE (ZPE) · z.cloud (1-letter premium, live, irreplaceable) · glm.cloud (GLM-branded product domain, owned and ready) · ativo.tech · ragjur.ai · ragmed.ai · dodr.ai", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
     { text: " ", options: { fontSize: 4, breakLine: true } },
     { text: "Regulatory expertise", options: { bullet: bu(), bold: true, color: NAVY, breakLine: true } },
     { text: "Founder attorney, 12 years Judiciary, postgraduate in Data Protection", options: { bullet: false, fontSize: 9, color: MUTED } }
