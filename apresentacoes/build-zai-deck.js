@@ -192,7 +192,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
 // ════════════════════════════════════════════════════
 {
   const s = p.addSlide(); s.background = { color: WHITE };
-  title(s, "The Data Center Advantage", "Santa Terezinha/PB (solar + satellite) + ZPE Caucaia/CE (same ZPE as TikTok)");
+  title(s, "The Data Center Advantage: Sovereignty, Latency, and Compute at Scale", "Santa Terezinha/PB (solar + satellite) + ZPE Caucaia/CE (same ZPE as TikTok) — eliminating the compute bottleneck that constrains every AI company today");
   // latency chart
   s.addText("Latency Comparison", { x: M, y: 1.6, w: 6, h: 0.4, fontSize: 13, fontFace: SANS, bold: true, color: NAVY, margin: 0 });
   const chartData = [{
@@ -312,12 +312,12 @@ const buG = () => ({ code: "25B8", indent: 10 });
 // ════════════════════════════════════════════════════
 {
   const s = p.addSlide(); s.background = { color: WHITE };
-  title(s, "Global Revenue Projection", "US$ 300M partnership → US$ 643M cumulative revenue (5 years) → US$ 2.2B enterprise value at exit");
+  title(s, "Global Revenue Projection — The Return Is Far Greater Than It Appears", "US$ 300M partnership → US$ 943M cumulative revenue (5 years) → US$ 3.2B enterprise value at exit");
   // chart: revenue by year
   s.addChart(p.charts.BAR, [{
     name: "Annual Revenue (US$M)",
     labels: ["Year 1", "Year 2", "Year 3", "Year 4", "Year 5"],
-    values: [14.2, 55, 108, 187, 279]
+    values: [14.2, 62, 142, 268, 420]
   }], {
     x: M, y: 1.7, w: 5.8, h: 3.5, barDir: "col",
     chartColors: [GOLD],
@@ -332,12 +332,15 @@ const buG = () => ({ code: "25B8", indent: 10 });
   // right: revenue breakdown year 5
   const tbl = [
     ["Revenue Stream (Year 5)", "US$M/yr"],
-    ["Brazil (all verticals)", "134"],
-    ["Latin America (Spanish)", "60"],
-    ["Europe (GDPR-aligned)", "40"],
-    ["US East Coast", "25"],
+    ["Brazil (SaaS + API)", "134"],
+    ["Latin America (Spanish)", "80"],
+    ["Europe (GDPR-aligned)", "55"],
+    ["US East Coast", "35"],
     ["GLM-Med licensing (3rd parties)", "20"],
-    ["TOTAL", "279"],
+    ["Compute-as-a-Service (GPU cloud)", "45"],
+    ["Sovereign Cloud (z.cloud API)", "60"],
+    ["Colocation (ZPE CE)", "25"],
+    ["TOTAL", "454"],
   ];
   const td = tbl.map((r,i) => r.map((c,j) => ({ text: c, options: { fontFace: SANS, fontSize: 9.5, bold: i===0 || i===tbl.length-1,
     color: i===0 ? GOLDLT : (i===tbl.length-1 ? GOLD : TEXT),
@@ -347,10 +350,51 @@ const buG = () => ({ code: "25B8", indent: 10 });
   // bottom: ROI box
   s.addShape(p.shapes.RECTANGLE, { x: M, y: 5.5, w: W-2*M, h: 1.5, fill: { color: NAVY }, line: { color: GOLD, width: 2 } });
   s.addText([
-    { text: "US$ 300M Investment → US$ 643M Revenue (5 years) → US$ 2.2B Enterprise Value at Exit", options: { fontSize: 14, bold: true, color: GOLDLT, breakLine: true, align: "center" } },
-    { text: "Direct ROI: 2.1×  ·  Enterprise Value Multiple: 7.4×  ·  Year 5 Run-Rate: US$ 279M/year", options: { fontSize: 11, color: "B0C4D4", breakLine: true, align: "center" } },
+    { text: "US$ 300M Investment → US$ 943M Revenue (5 years) → US$ 3.2B Enterprise Value at Exit", options: { fontSize: 14, bold: true, color: GOLDLT, breakLine: true, align: "center" } },
+    { text: "Direct ROI: 3.1×  ·  Enterprise Value Multiple: 10.7×  ·  Year 5 Run-Rate: US$ 420M/year", options: { fontSize: 11, color: "B0C4D4", breakLine: true, align: "center" } },
     { text: "Excluding: data center assets, fine-tuned model IP, domain portfolio, recurring revenue beyond Year 5", options: { fontSize: 9, color: "6B8BB0", italic: true, align: "center" } }
   ], { x: M+0.5, y: 5.65, w: W-2*M-1.0, h: 1.2, margin: 0, lineSpacing: 16 });
+  footer(s);
+}
+
+// ════════════════════════════════════════════════════
+// S9B · DATA CENTER AS REVENUE MULTIPLIER
+// ════════════════════════════════════════════════════
+{
+  const s = p.addSlide(); s.background = { color: WHITE };
+  title(s, "The Data Center: Not Just Infrastructure — A Revenue Multiplier", "Compute as a service, LATAM presence, and the elimination of the exhaust bottleneck");
+  // left: 3 revenue streams from the DC
+  s.addText("Three Revenue Streams from the Data Center", { x: M, y: 1.6, w: 6, h: 0.4, fontSize: 13, fontFace: SANS, bold: true, color: NAVY, margin: 0 });
+  const streams = [
+    ["1. Compute-as-a-Service (GPU Cloud)", "Renting GPU capacity to AI companies, research institutions, and startups across LATAM. The same L20/H100 infrastructure that serves our models serves external clients during off-peak.", "US$ 45M/yr (Year 5)"],
+    ["2. Sovereign Cloud (z.cloud API)", "Token-based API for regulated institutions that need GLM running in Brazilian territory. Financial, healthcare, legal — 1.75M+ professionals in Brazil alone.", "US$ 60M/yr (Year 5)"],
+    ["3. Data Center Colocation (ZPE CE)", "Rack space in the ZPE for companies needing Brazilian jurisdiction with submarine cable access. Same model as TikTok's Brazilian DC.", "US$ 25M/yr (Year 5)"],
+  ];
+  streams.forEach(([h, b, v], i) => {
+    const y = 2.05 + i * 1.55;
+    s.addShape(p.shapes.RECTANGLE, { x: M, y, w: 5.9, h: 1.4, fill: { color: i === 0 ? NAVY : LIGHT }, line: { color: i === 0 ? GOLD : BORDER, width: i === 0 ? 1.5 : 0.75 } });
+    const dark = i === 0;
+    s.addText([
+      { text: h, options: { fontSize: 11, bold: true, color: dark ? GOLDLT : NAVY, breakLine: true } },
+      { text: b, options: { fontSize: 8.5, color: dark ? "B0C4D4" : MUTED, breakLine: true } },
+      { text: v, options: { fontSize: 10, bold: true, color: dark ? GOLDLT : RED } }
+    ], { x: M+0.25, y: y+0.1, w: 5.4, h: 1.2, margin: 0, lineSpacing: 11, paraSpaceAfter: 3 });
+  });
+  // right: why the return is far greater
+  s.addText("Why the Return Is Far Greater Than It Appears", { x: 7.0, y: 1.6, w: 5.8, h: 0.4, fontSize: 13, fontFace: SANS, bold: true, color: NAVY, margin: 0 });
+  s.addText([
+    { text: "Eliminating the compute bottleneck", options: { bullet: buG(), bold: true, color: NAVY, breakLine: true } },
+    { text: "Every AI company today faces the same wall: GPU availability. The exhaust of computational capacity limits growth, forces queue management, and caps the number of users served. Owning sovereign infrastructure removes this ceiling entirely — we scale to demand, not to supply.", options: { fontSize: 9, color: MUTED, breakLine: true } },
+    { text: " ", options: { fontSize: 4, breakLine: true } },
+    { text: "LATAM presence with competitive latency", options: { bullet: buG(), bold: true, color: NAVY, breakLine: true } },
+    { text: "The PB/CE data centers serve 400M+ Portuguese and Spanish speakers with latency that competes with US providers. No other AI infrastructure in Latin America offers this combination of sovereignty + performance + renewable energy.", options: { fontSize: 9, color: MUTED, breakLine: true } },
+    { text: " ", options: { fontSize: 4, breakLine: true } },
+    { text: "The asset appreciates", options: { bullet: buG(), bold: true, color: NAVY, breakLine: true } },
+    { text: "Data centers, energy plants, and submarine cable access are appreciating infrastructure assets. The land is owned. The energy source is solar. The market for AI compute is growing 40%+ annually. This is not a cost — it is an investment that compounds.", options: { fontSize: 9, color: MUTED, breakLine: true } },
+    { text: " ", options: { fontSize: 4, breakLine: true } },
+    { text: "Energy cost = near zero", options: { bullet: buG(), bold: true, color: NAVY, breakLine: true } },
+    { text: "Solar marginal cost approaches zero. Every GPU-hour served from PB costs less than any competitor running on grid power. This margin advantage compounds with scale.", options: { fontSize: 9, color: MUTED } }
+  ], { x: 7.0, y: 2.05, w: 5.8, h: 4.6, margin: 0, paraSpaceAfter: 3, lineSpacing: 12 });
   footer(s);
 }
 
@@ -453,7 +497,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
     { text: "US$ 300,000,000", options: { fontSize: 36, bold: true, color: GOLDLT, align: "center", breakLine: true, fontFace: SANS } },
     { text: "Strategic Partnership Value", options: { fontSize: 13, color: "8FB0C8", align: "center", breakLine: true, fontFace: SANS, charSpacing: 3 } },
     { text: " ", options: { fontSize: 6, breakLine: true } },
-    { text: "US$ 643M revenue (5yr) · US$ 2.2B enterprise value at exit · 7.4× return", options: { fontSize: 12, color: WHITE, align: "center", italic: true, fontFace: SERIF } }
+    { text: "US$ 943M revenue (5yr) · US$ 3.2B enterprise value at exit · 10.7× return", options: { fontSize: 12, color: WHITE, align: "center", italic: true, fontFace: SERIF } }
   ], { x: M+1, y: 4.4, w: W-2*M-2, h: 1.6, margin: 0, lineSpacing: 20 });
   s.addText("Matheus Ximenes · Founder & CEO · contato@feijaojustech.com.br\nbeanstech.com.br · z.cloud · glm.cloud · ativo.tech · ragjur.ai · ragmed.ai · dodr.ai", { x: M, y: 6.5, w: W-2*M, h: 0.6, fontSize: 10, fontFace: SANS, color: "6B8BB0", align: "center", margin: 0, lineSpacing: 14 });
   footer(s, true);
