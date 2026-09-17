@@ -251,6 +251,26 @@ Mitigações aplicadas: swap 4 GB (`swappiness=10`) · `earlyoom` (mata python/n
 
 ---
 
+## 14. elite-health: Ollama → vLLM · 2026-09-17
+
+Migração completa conforme decisão do usuário (GPU 0 = excelência clínica, GPU 1 = compliance/guardrail):
+
+| GPU | Porta | Modelo | Formato | VRAM |
+|---|---|---|---|---|
+| GPU 0 | :8001 | medgemma-27b | FP8 (HF) | 43 GB |
+| GPU 1 | :8002 | granite-4.1-30b | FP8 (HF) | 41 GB (total) |
+| GPU 1 | :8003 | granite-guardian-3.2-3b-a800m | bf16 MoE 800M ativos | junto |
+
+**Resultados medidos (17/09/2026):**
+- medgemma-27b vLLM: 24,7 tok/s (1 fluxo) · **92,5 tok/s (4 simultâneos)** — igual ao Ollama em 4 fluxos, mas com *continuous batching* (5ª requisição entra no batch em vez de esperar) e paged attention
+- granite-4.1: carregado, respondendo clínico em PT
+- granite-guardian-3.2: carregado, classificando (guardrail ativo)
+- Ollama: **parado e desativado** (não volta no boot)
+- qwen3-vl: removido (visão → Lingshu-I-8B na elite-health-2)
+- HF_TOKEN no KMS (para downloads futuros de pesos HuggingFace)
+
+**Pendente:** código do /decisao usa `/api/generate` (formato Ollama) para o guardrail; precisa trocar para `/v1/chat/completions` (formato vLLM) apontando para :8003.
+
 ## 12. Revisão das GPUs em Singapura · 2026-09-15
 
 | | elite-health (`i-t4n52…`) | elite-health-2 (`i-t4n2xm…`) |
