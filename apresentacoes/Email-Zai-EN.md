@@ -32,17 +32,15 @@ The z.cloud — the seventh letter, the one that completes — is already live a
 
 ## The BeansTech Ecosystem
 
-We operate **five regulated verticals** — and GLM upgrades all of them simultaneously:
+We operate **four regulated verticals** — and GLM upgrades all of them simultaneously:
 
 **1. HealthTech** — dodr.ai, ragmed.ai, exame.tech, prontuario.tech (+8 portals). 550,000 physicians, 6,800 hospitals. R$ 4.4B/year. Clinical decision support with 6 frontier models and a 6-layer anti-hallucination chain.
 
 **2. LegalTech** — ragjur.ai (77M+ court decisions indexed across 55 sources), legalsuite.tech, minuta.tech (+17 domains). 1.2 million attorneys. R$ 80B/year. Semantic search and legal analysis with full audit trail.
 
-**3. FinTech / RegTech** — beansbank, beans.credit (+11 domains). 740 financial institutions. Mandatory AML/FT compliance. GLM-5.3 for SAR narratives, Flash for volume triage.
+**3. FinTech / RegTech / Compliance** — pldbr.tech, beansbank, beans.credit (+11 domains). 740 financial institutions under mandatory BACEN supervision. Anti-money laundering (PLD/FT), SAR narrative generation, KYC, regulatory reporting. GLM-5.3 for complex compliance analysis and regulatory narratives, Flash for volume transaction triage.
 
 **4. PropTech** — alirealty.com.br, cyrela.ai, goliving, proptechbr.ai, feijao.tech. Real estate agencies, developers, and property management. **This is where GLM-5.3 Flash truly excels**: document analysis (deeds, liens, restrictions), credit triage for financing, automated due diligence, and buyer-broker support at volume. alirealty.com.br is already in production — CRM, API, and dashboard running on our infrastructure. proptechbr.ai will serve as the vertical's entry point and flagship AI portal. Flash processes in seconds what takes hours of manual review.
-
-**5. RegTech / Compliance** — pldbr.tech, beansbank, beans.credit. Anti-money laundering (PLD/FT), SAR narrative generation, KYC, regulatory reporting. GLM-5.3 for complex compliance analysis, Flash for volume triage. 740 financial institutions under mandatory BACEN supervision.
 
 ## The Sovereign Infrastructure
 

@@ -63,7 +63,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
   s.addShape(p.shapes.RECTANGLE, { x: M, y: 3.3, w: W-2*M, h: 1.5, fill: { color: NAVY }, line: { color: NAVY } });
   s.addText([
     { text: "The hardest part — the model — already exists.", options: { bold: true, color: GOLDLT, fontSize: 15, breakLine: true } },
-    { text: "What typically takes years to build is already operational: a multi-vertical platform spanning healthcare, legal, financial, real estate, compliance and AI infrastructure — 75 production domains, 6 frontier models in production, 77M+ court decisions indexed, sovereign identity and compliance infrastructure, and secured land for two data centers (one carbon-free). A clinical benchmark independently validated GLM-5.3 as the top performer.", options: { color: "B0C4D4", fontSize: 11.5 } }
+    { text: "What typically takes years to build is already operational: a multi-vertical platform spanning healthcare, legal, financial, real estate and AI infrastructure — 75 production domains, 6 frontier models in production, 77M+ court decisions indexed, sovereign identity and compliance infrastructure, and secured land for two data centers (one carbon-free). A clinical benchmark independently validated GLM-5.3 as the top performer.", options: { color: "B0C4D4", fontSize: 11.5 } }
   ], { x: M+0.3, y: 3.5, w: W-2*M-0.6, h: 1.1, margin: 0, lineSpacing: 16 });
   // two columns: what Z.ai gains / what BeansTech brings
   s.addText("What Z.ai Gains", { x: M, y: 5.0, w: 5.8, h: 0.4, fontSize: 14, fontFace: SANS, bold: true, color: BLUE, margin: 0 });
