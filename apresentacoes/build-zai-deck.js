@@ -243,11 +243,11 @@ const buG = () => ({ code: "25B8", indent: 10 });
 // ════════════════════════════════════════════════════
 {
   const s = p.addSlide(); s.background = { color: WHITE };
-  title(s, "The BeansTech Ecosystem", "75 production domains · 6 regulated verticals · shared infrastructure");
+  title(s, "The BeansTech Ecosystem", "75 production domains · 4 verticals + ativo.tech marketplace · shared infrastructure — one model engine upgrades all");
   const verts = [
     ["HealthTech", "dodr.ai · ragmed.ai (+8 portals)", "Clinical decision support · anti-hallucination chain · 6 frontier models · benchmark-validated", "550k physicians · R$ 4.4B/yr"],
     ["LegalTech", "ragjur.ai", "67M+ court decisions indexed · 55 sources · GLM-5.3 for analysis, Flash for volume search", "1.2M attorneys · R$ 80B/yr"],
-    ["FinTech / RegTech", "beansbank · pldbr", "AML compliance, SAR narrative, KYC · GLM-5.3 for deep analysis, Flash for triage", "740 institutions · R$ 12B/yr"],
+    ["FinTech / RegTech", "beansbank · beans.credit", "AML compliance, SAR narrative, KYC · GLM-5.3 for deep analysis, Flash for triage", "740 institutions · R$ 12B/yr"],
     ["PropTech ★ GLM Flash", "alirealty.com.br · cyrela.ai", "Document analysis, credit triage, due diligence · GLM-5.3 Flash processes in seconds what takes hours", "R$ 15B/yr (real estate tech)"],
   ];
   verts.forEach(([v, dom, desc, mkt], i) => {
@@ -263,7 +263,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
       { text: mkt, options: { fontSize: 10, bold: true, color: dark ? GOLDLT : RED } }
     ], { x: x+0.25, y: y+0.15, w: 5.4, h: 2.0, margin: 0, lineSpacing: 13, paraSpaceAfter: 3 });
   });
-  s.addText("All verticals share the same model engine — adding GLM upgrades all simultaneously.", { x: M, y: 6.82, w: W-2*M, h: 0.35, fontSize: 10.5, fontFace: SANS, color: TEXT, bold: true, align: "center", margin: 0 });
+  s.addText("ativo.tech — the commercial engine: marketplace for cloud, AI, and token sales across all verticals · z.cloud as sovereign token infrastructure · one model engine (GLM) upgrades everything simultaneously", { x: M, y: 6.78, w: W-2*M, h: 0.42, fontSize: 9.5, fontFace: SANS, color: NAVY, bold: true, align: "center", margin: 0 });
   footer(s);
 }
 
@@ -461,7 +461,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
     { text: "10,000+ clinical cases with verified answers and citation grounding", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
     { text: " ", options: { fontSize: 4, breakLine: true } },
     { text: "Sovereign infrastructure + premium domains", options: { bullet: bu(), bold: true, color: NAVY, breakLine: true } },
-    { text: "Land in PB (solar+satellite) and CE (ZPE) · z.cloud, glm.cloud, ragjur.ai, ragmed.ai, dodr.ai, ativo.tech", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
+    { text: "Land in PB (solar+satellite) and CE (ZPE) · z.cloud, glm.cloud, ativo.tech, ragjur.ai, ragmed.ai, dodr.ai", options: { bullet: false, fontSize: 9, color: MUTED, breakLine: true } },
     { text: " ", options: { fontSize: 4, breakLine: true } },
     { text: "Regulatory expertise", options: { bullet: bu(), bold: true, color: NAVY, breakLine: true } },
     { text: "Founder attorney, 12 years Judiciary, postgraduate in Data Protection", options: { bullet: false, fontSize: 9, color: MUTED } }
