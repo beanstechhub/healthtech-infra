@@ -43,17 +43,15 @@ const layers=[["Portal do Médico · Pesquisa · Ensino","identidade SSO/MFA · 
 layers.forEach(([h,b,c],i)=>{const y=1.7+i*1.6;s.addShape(pres.shapes.RECTANGLE,{x:M,y,w:W-2*M,h:1.3,fill:{color:c},line:{color:c}});s.addText(h,{x:M+0.3,y:y+0.1,w:10,h:0.5,fontSize:17,fontFace:BF,bold:true,color:"FFFFFF",margin:0});s.addText(b,{x:M+0.3,y:y+0.6,w:10,h:0.5,fontSize:14,fontFace:BF,color:"D0D8E0",margin:0});});
 s.addText("LGPD art. 11: dados sensíveis · art. 37: trilha de operações",{x:M,y:6.6,w:8,h:0.4,fontSize:12,fontFace:BF,color:MUTED,italic:true,margin:0});}
 
-// S5 benchmark (dados)
-{const s=base();title(s,"Fundamento: Benchmark de 200 casos","10 modelos, 23 especialidades, 2.000 avaliações");
-const data=[["Modelo","Coverage","Abstenções","Velocidade"].map(h=>({text:h,options:{bold:true,color:"FFFFFF",fill:{color:DARK},fontFace:BF,fontSize:13}})),
-[["GLM-5.3","0,486","20","23,0s"],["Qwen 3.8-Max","0,437","11","36,4s"],["DeepSeek v4 Pro","0,396","3","37,4s"],["Baichuan-M3 (GPU própria)","0,392","12","33,3s"],["GPT-6 Astra ($50/M)","0,377","15","17,2s"],["Lingshu-32B (imagem)","0,274","18","19,2s"]].map((r,i)=>r.map(c=>({text:c,options:{fontFace:BF,fontSize:13,fill:{color:i%2?"FFFFFF":TINT},valign:"middle"}})))];
-s.addTable(data,{x:M,y:1.5,w:W-2*M,colW:[4.0,2.0,2.0,2.0,1.73],rowH:0.6,border:{type:"solid",pt:0.5,color:"E5E7EB"}});
-s.addShape(pres.shapes.LINE,{x:M,y:5.3,w:W-2*M,h:0,line:{color:"E3ECF5",width:0.75}});
-s.addText([T("Descoberta-chave: ",{bold:true,color:PRIMARY,fontSize:15}),T("cada modelo vence em especialidades diferentes — não existe \'o melhor\'.",{color:TEXT,fontSize:14})],{x:M,y:5.5,w:6,h:0.6,fontFace:BF,margin:0});
-s.addText([T("A arquitetura: ",{bold:true,color:PRIMARY,fontSize:15}),T("roteamento multi-modelo por especialidade.",{color:TEXT,fontSize:14})],{x:M,y:6.1,w:6,h:0.5,fontFace:BF,margin:0});
-s.addText([T("Red-team: ",{bold:true,color:"DC2626",fontSize:14}),T("10/10 modelos falharam. Granite Guardian: 100%.",{color:TEXT,fontSize:13})],{x:7.5,y:5.5,w:5.3,h:0.6,fontFace:BF,margin:0});
-s.addText([T("Cobertura SP: ",{bold:true,color:PRIMARY,fontSize:14}),T("US$ 6.000/mês ativos cobrindo toda a API.",{color:TEXT,fontSize:13})],{x:7.5,y:6.1,w:5.3,h:0.5,fontFace:BF,margin:0});
-s.addText([T("Segurança: ",{bold:true,color:PRIMARY,fontSize:14}),T("PII removida antes de qualquer modelo. Trilha completa LGPD.",{color:TEXT,fontSize:13})],{x:7.5,y:6.6,w:5.3,h:0.4,fontFace:BF,margin:0});}
+// S5 benchmark
+{const s=base();title(s,"Fundamento: Benchmark de 200 casos","10 modelos, 23 especialidades, 2.000 avaliações — o maior teste de LLM para medicina em PT-BR");
+const data=[["Modelo","Coverage","Abst.","Velocidade"].map(h=>({text:h,options:{bold:true,color:"FFFFFF",fill:{color:DARK},fontFace:BF,fontSize:14}})),
+[["GLM-5.3 (Z.ai)","0,486","20","23,0s"],["Qwen 3.8-Max (Alibaba)","0,437","11","36,4s"],["DeepSeek v4 Pro","0,396","3","37,4s"],["Baichuan-M3 (GPU própria)","0,392","12","33,3s"],["GPT-6 Astra (OpenAI)","0,377","15","17,2s"],["Claude Opus 5 (Anthropic)","0,347","6","23,7s"],["Lingshu-32B (DAMO)","0,274","18","19,2s"]].map((r,i)=>r.map(c=>({text:c,options:{fontFace:BF,fontSize:13,fill:{color:i%2?"FFFFFF":TINT},valign:"middle"}})))];
+s.addTable(data,{x:M,y:1.6,w:W-2*M,colW:[4.0,1.8,1.3,1.93],rowH:0.55,border:{type:"solid",pt:0.5,color:"E5E7EB"}});
+s.addShape(pres.shapes.LINE,{x:M,y:5.8,w:W-2*M,h:0,line:{color:"E3ECF5",width:0.75}});
+s.addText([T("Descoberta-chave: ",{bold:true,color:PRIMARY,fontSize:15}),T("cada modelo vence em especialidades diferentes — não existe 'o melhor'. A arquitetura correta é roteamento multi-modelo por especialidade.",{color:TEXT,fontSize:14})],{x:M,y:6.0,w:6.5,h:0.8,fontFace:BF,margin:0});
+s.addText([T("Red-team: ",{bold:true,color:"DC2626",fontSize:14}),T("10/10 falharam. Granite Guardian: 100%.",{color:TEXT,fontSize:13})],{x:7.5,y:6.0,w:5.3,h:0.5,fontFace:BF,margin:0});
+s.addText([T("SPs ativos: ",{bold:true,color:PRIMARY,fontSize:14}),T("US$ 6.000/mês cobrindo API.",{color:TEXT,fontSize:13})],{x:7.5,y:6.5,w:5.3,h:0.4,fontFace:BF,margin:0});}
 
 // S6 red team
 {const s=base();title(s,"Segurança: todos falharam sem guardrail");
@@ -68,15 +66,12 @@ s.addText("O modelo generativo nunca é o guardrail. O guardrail é uma camada s
 {const s=base();title(s,"Conformidade Regulatória Integral");
 const regs=[["LGPD art. 11","Dados sensíveis processados em GPU local; anonimização automática; consentimento específico"],["LGPD art. 37","Trilha: modelo, versão, raciocínio, tokens, guardrail, timestamp"],["CFM 1.821/07","Ferramenta de apoio; nunca diagnóstico autônomo"],["CEP/CONEP","Fine-tuning com dados do Einstein somente mediante protocolo aprovado"]];
 regs.forEach(([h,b],i)=>{const col=i%2,row=Math.floor(i/2);const x=M+col*6.2,y=1.7+row*1.8;s.addShape(pres.shapes.RECTANGLE,{x,y:y+0.06,w:0.14,h:0.14,fill:{color:ACCENT},line:{color:ACCENT}});s.addText(h,{x:x+0.3,y,w:5.5,h:0.35,fontSize:15,fontFace:BF,bold:true,color:PRIMARY,margin:0});s.addText(b,{x:x+0.3,y:y+0.38,w:5.5,h:1.0,fontSize:13,fontFace:BF,color:TEXT,margin:0});});}
-{const s=base();title(s,"Governança: Einstein é protagonista");
-const roles=[["Curador científico","Einstein","Validação clínica, protocolos, acervo"],["Comité de ética","Einstein","Aprovação de fine-tuning, casos de uso"],["Engenharia","BeansTech","Infraestrutura, manutenção, suporte"],["Operação","Einstein","Acesso, dados, SLAs"]];
-const data=[roles.map(r=>r.map((c,j)=>({text:c,options:{fontFace:BF,fontSize:14,bold:j===1,fill:{color:j===1?TINT:"FFFFFF"},color:j===1?PRIMARY:TEXT,valign:"middle"}})))];
-s.addTable(data,{x:M,y:1.5,w:W-2*M,colW:[3.5,3.0,5.43],rowH:0.8,border:{type:"solid",pt:0.5,color:"E5E7EB"}});
-s.addShape(pres.shapes.LINE,{x:M,y:5.0,w:W-2*M,h:0,line:{color:"E3ECF5",width:0.75}});
-s.addText([T("A BeansTech é mera coadjuvante. ",{fontSize:18,fontFace:TF,italic:true,color:ACCENT}),T("O Einstein lidera.",{bold:true,fontSize:18,fontFace:TF,color:PRIMARY})],{x:M,y:5.2,w:W-2*M,h:0.6,margin:0});
-s.addText([T("Decisões que ficam com o Einstein: ",{bold:true,color:PRIMARY,fontSize:14}),T("quais modelos usar, quando atualizar, quais dados usar para fine-tuning, quando suspender.",{color:TEXT,fontSize:14})],{x:M,y:5.8,w:W-2*M,h:0.6,fontFace:BF,margin:0});
-s.addText([T("Decisões que ficam com a BeansTech: ",{bold:true,color:PRIMARY,fontSize:14}),T("infraestrutura, disponibilidade, monitoramento, manutenção.",{color:TEXT,fontSize:14})],{x:M,y:6.0,w:W-2*M,h:0.5,fontFace:BF,margin:0});
-s.addText([T("Ferramenta: ",{bold:true,color:PRIMARY,fontSize:14}),T("o Einstein.Cloud não é um produto da BeansTech — é uma plataforma do Einstein, construída com apoio técnico da BeansTech. A marca, a governança e os dados são do Einstein.",{color:TEXT,fontSize:14})],{x:M,y:6.5,w:W-2*M,h:0.7,fontFace:BF,margin:0});}
+{const s=base();title(s,"Governança: Einstein é protagonista","A BeansTech é coadjuvante na engenharia. O Einstein lidera na ciência, ética e decisão.");
+const data=[["Função","Einstein","BeansTech"].map(h=>({text:h,options:{bold:true,color:"FFFFFF",fill:{color:DARK},fontFace:BF,fontSize:14}})),
+[["Curadoria científica","✓ valida protocolos e acervo","—"],["Comité de ética (CEP)","✓ aprova fine-tuning e casos de uso","—"],["Decisão de modelos","✓ quais usar, quando atualizar","—"],["Suspensão","✓ pode pausar a qualquer momento","—"],["Infraestrutura","—","✓ GPU, rede, manutenção"],["Monitoramento 24×7","—","✓ disponibilidade e suporte"]].map((r,i)=>r.map(c=>({text:c,options:{fontFace:BF,fontSize:13,fill:{color:i%2?"FFFFFF":TINT},valign:"middle"}})))];
+s.addTable(data,{x:M,y:1.6,w:W-2*M,colW:[3.5,4.5,4.53],rowH:0.55,border:{type:"solid",pt:0.5,color:"E5E7EB"}});
+s.addShape(pres.shapes.LINE,{x:M,y:5.5,w:W-2*M,h:0,line:{color:"E3ECF5",width:0.75}});
+s.addText([T("O Einstein.Cloud ",{bold:true,color:PRIMARY,fontSize:16}),T("não é um produto da BeansTech — ",{color:TEXT,fontSize:15}),T("é uma plataforma do Einstein",{bold:true,color:PRIMARY,fontSize:15}),T(", construída com apoio técnico da BeansTech. A marca, a governança e os dados são do Einstein.",{color:TEXT,fontSize:15})],{x:M,y:5.7,w:W-2*M,h:0.8,fontFace:BF,margin:0});}
 
 // S9 roadmap
 {const s=base();title(s,"Roadmap","10 meses da definição à produção");
