@@ -44,11 +44,23 @@ s.addText([T("Por que multi-morbidade é o teste mais difícil: ",{bold:true,col
 
 // S5 pneumologia
 {const s=base();title(s,"Pneumologia: melhor de todos","Coverage 0,75 — 3× melhor que o segundo colocado");
-const bars=[["Qwen 3.8-Max",0.75,PRIMARY],["GLM-5.3",0.25,DARK],["GPT-6 Astra",0.25,DARK],["Claude Opus 5",0.25,DARK]];
-bars.forEach(([name,val,color],i)=>{const y=1.8+i*0.9;s.addShape(pres.shapes.RECTANGLE,{x:M,y,w:val*12,h:0.6,fill:{color},line:{color}});s.addText(name,{x:M,y:y-0.05,w:3,h:0.5,fontSize:14,fontFace:BF,color:TEXT,margin:0});s.addText(String(val).replace(".",","),{x:M+val*12+0.1,y:y-0.05,w:1,h:0.5,fontSize:14,fontFace:BF,bold:true,color,margin:0});});
-s.addText("Caso: DPOC grave, VEF1 28%, exacerbador frequente. O Qwen 3.8-Max foi o único a indicar todas as condutas: terapia tripla (LABA+LAMA+CSI), reabilitação, vacinação, oxigenoterapia e avaliação para transplante.",{x:M,y:4.5,w:W-2*M,h:0.8,fontSize:14,fontFace:BF,color:TEXT,margin:0});
-s.addText([T("Significância clínica: ",{bold:true,color:PRIMARY,fontSize:13}),T("DPOC afeta 6% dos brasileiros acima de 40 anos. O fenótipo exacerbador (2+ crises/ano) exige escalada terapêutica. Perder um passo custa internações e mortalidade.",{color:TEXT,fontSize:13})],{x:M,y:5.4,w:W-2*M,h:0.7,fontFace:BF,margin:0});
-s.addText([T("Onde usamos: ",{bold:true,color:PRIMARY,fontSize:13}),T("todos os portais de saúde com casos respiratórios. O Qwen 3.8-Max é o modelo padrão para pneumologia.",{color:TEXT,fontSize:13})],{x:M,y:6.1,w:W-2*M,h:0.6,fontFace:BF,margin:0});}
+const results=[["Qwen 3.8-Max","0,75",1],["GLM-5.3","0,25",2],["GPT-6 Astra","0,25",3],["Claude Opus 5","0,25",4]];
+results.forEach(([name,cov,rank],i)=>{
+  const col=i%2, row=Math.floor(i/2);
+  const x=M+col*6.2, y=1.6+row*1.2;
+  const isTop=rank===1;
+  s.addShape(pres.shapes.RECTANGLE,{x,y,w:5.8,h:1.0,fill:{color:isTop?"E8F5E9":"FFFFFF"},line:{color:isTop?"2E7D32":"E0E0E0",width:1}});
+  s.addText(name,{x:x+0.2,y:y+0.08,w:3.5,h:0.35,fontSize:14,fontFace:BF,bold:isTop,color:DARK,margin:0});
+  s.addText(`cov ${cov}`,{x:x+0.2,y:y+0.45,w:1.5,h:0.4,fontSize:18,fontFace:TF,bold:true,color:isTop?"2E7D32":MUTED,margin:0});
+  if(isTop){s.addText("★",{x:x+4.5,y:y+0.08,w:1,h:0.5,fontSize:24,color:"FFD700",margin:0});}
+});
+s.addShape(pres.shapes.LINE,{x:M,y:4.2,w:W-2*M,h:0,line:{color:"E0E0E0",width:0.75}});
+s.addText("Caso: DPOC grave, VEF1 28%, exacerbador frequente.",{x:M,y:4.4,w:5.5,h:0.5,fontSize:14,fontFace:BF,bold:true,color:DARK,margin:0});
+s.addText("O Qwen 3.8-Max foi o único a indicar todas as condutas: terapia tripla, reabilitação, vacinação, oxigenoterapia e avaliação para transplante.",{x:M,y:4.9,w:5.5,h:0.8,fontSize:13,fontFace:BF,color:TEXT,margin:0});
+s.addText([T("Significância: ",{bold:true,color:PRIMARY,fontSize:13}),T("DPOC afeta 6% dos brasileiros acima de 40. Perder um passo custa internações e mortalidade.",{color:TEXT,fontSize:13})],{x:6.5,y:4.4,w:6.2,h:0.8,fontFace:BF,margin:0});
+s.addText([T("Onde usamos: ",{bold:true,color:PRIMARY,fontSize:13}),T("todos os portais com casos respiratórios. Modelo padrão para pneumologia.",{color:TEXT,fontSize:13})],{x:6.5,y:5.3,w:6.2,h:0.6,fontFace:BF,margin:0});}
+
+
 // S6 raciocínio
 {const s=base();title(s,"Raciocínio documentado em 100% dos casos");
 s.addText("100%",{x:M,y:1.8,w:3,h:1.5,fontSize:80,fontFace:TF,bold:true,color:PRIMARY,margin:0});
@@ -63,14 +75,28 @@ const costs=[["Qwen 3.8-Max",2.80,PRIMARY],["Claude Opus 5",16.00,DARK],["GPT-6 
 costs.forEach(([name,cost,color],i)=>{const y=1.8+i*1.2;const w=cost/32*10;s.addShape(pres.shapes.RECTANGLE,{x:M,y,w,h:0.8,fill:{color},line:{color}});s.addText(name,{x:M,y:y-0.35,w:4,h:0.3,fontSize:14,fontFace:BF,color:TEXT,margin:0});s.addText(`US$ ${cost.toFixed(2)}`,{x:M+w+0.2,y,w:2,h:0.8,fontSize:18,fontFace:TF,bold:true,color,margin:0,valign:"middle"});});
 s.addText([T("O Qwen 3.8-Max é ",{color:TEXT}),T("11× mais barato",{bold:true,color:PRIMARY}),T(" que o GPT-6 Astra e ",{color:TEXT}),T("6× mais barato",{bold:true,color:PRIMARY}),T(" que o Claude Opus 5 — com qualidade superior.",{color:TEXT})],{x:M,y:5.5,w:W-2*M,h:0.8,fontSize:16,fontFace:BF,margin:0});}
 
-// S8 lingshu
+// S8 lingshu imagem médica
 {const s=base();title(s,"Lingshu-32B (base Qwen2.5-VL): imagem médica","O melhor modelo aberto para VQA médica multimodal");
-const data=[["Benchmark","Lingshu-32B","GPT-4.1","Claude Sonnet 4"].map(h=>({text:h,options:{bold:true,color:"FFFFFF",fill:{color:DARK},fontFace:BF,fontSize:13}})),
-[["Média (7 benchmarks)",66.6,63.4,61.5],["VQA-RAD (radiologia)",76.5,65.0,"—"],["SLAKE (radiologia)",89.2,72.2,"—"],["MIMIC-CXR (laudos)",67.1,57.1,"—"]].map((r,i)=>r.map(c=>({text:String(c).includes(".")?String(c).replace(".",","):String(c),options:{fontFace:BF,fontSize:14,fill:{color:i%2?"FFFFFF":TINT},valign:"middle"}})))];
-s.addTable(data,{x:M,y:1.5,w:W-2*M,colW:[4.0,3.0,3.0,2.03],rowH:0.62,border:{type:"solid",pt:0.5,color:"E5E7EB"}});
-s.addText("12 modalidades suportadas:",{x:M,y:4.5,w:3,h:0.4,fontSize:14,fontFace:BF,color:PRIMARY,bold:true,margin:0});
-s.addText("RX · TC · RM · Ultrassom · Histopatologia · Dermatoscopia · Fundoscopia · OCT · Endoscopia · Microscopia · Fotografia · PET",{x:M,y:4.9,w:W-2*M,h:0.5,fontSize:14,fontFace:BF,color:PRIMARY,margin:0});
-s.addText([T("Vantagem: ",{bold:true,color:PRIMARY,fontSize:14}),T("o Lingshu foi treinado especificamente para medicina. O fine-tuning da DAMO Academy sobre a base Qwen2.5-VL acrescentou 10+ pontos em benchmarks médicos. É o único modelo aberto que ganha do GPT-4.1 em VQA médica.",{color:TEXT,fontSize:14})],{x:M,y:5.6,w:W-2*M,h:1.0,fontFace:BF,margin:0});}
+const benchmarks=[
+  ["VQA-RAD (radiologia)","76,5","GPT-4.1: 65,0"],
+  ["SLAKE (radiologia)","89,2","GPT-4.1: 72,2"],
+  ["Média (7 benchmarks)","66,6","GPT-4.1: 63,4"],
+  ["MIMIC-CXR (laudos)","67,1","GPT-4.1: 57,1"],
+];
+benchmarks.forEach(([bench,score,compare],i)=>{
+  const col=i%2, row=Math.floor(i/2);
+  const x=M+col*6.2, y=1.6+row*1.2;
+  const isBest = parseFloat(score)>65;
+  s.addShape(pres.shapes.RECTANGLE,{x,y,w:5.8,h:1.0,fill:{color:isBest?"E8F5E9":"FFFFFF"},line:{color:isBest?"2E7D32":"E0E0E0",width:1}});
+  s.addText(bench,{x:x+0.2,y:y+0.08,w:3.5,h:0.35,fontSize:13,fontFace:BF,color:DARK,margin:0});
+  s.addText(score,{x:x+0.2,y:y+0.45,w:1.5,h:0.4,fontSize:20,fontFace:TF,bold:true,color:isBest?"2E7D32":MUTED,margin:0});
+  s.addText(compare,{x:x+2.5,y:y+0.5,w:3,h:0.3,fontSize:11,fontFace:BF,color:MUTED,margin:0});
+});
+s.addShape(pres.shapes.LINE,{x:M,y:4.2,w:W-2*M,h:0,line:{color:"E0E0E0",width:0.75}});
+s.addText([T("12 modalidades: ",{bold:true,color:PRIMARY,fontSize:14}),T("RX · TC · RM · Ultrassom · Histopatologia · Dermatoscopia · Fundoscopia · OCT · Endoscopia · Microscopia · PET",{color:TEXT,fontSize:13})],{x:M,y:4.4,w:W-2*M,h:0.6,fontFace:BF,margin:0});
+s.addText([T("Vantagem: ",{bold:true,color:PRIMARY,fontSize:14}),T("fine-tuning médico da DAMO Academy sobre Qwen2.5-VL — +10 pontos em benchmarks. O único modelo aberto que ganha do GPT-4.1 em VQA médica.",{color:TEXT,fontSize:13})],{x:M,y:5.2,w:W-2*M,h:0.8,fontFace:BF,margin:0});
+s.addText([T("Onde usamos: ",{bold:true,color:PRIMARY,fontSize:13}),T("exame.tech (imagem diagnóstica) e dodr.ai (multimodal). GPU própria — 19,2s por análise.",{color:TEXT,fontSize:13})],{x:M,y:6.1,w:W-2*M,h:0.5,fontFace:BF,margin:0});}
+
 
 // S9-11 sugestões
 {const s=base();title(s,"Sugestões para tornar o Qwen o Nº 1","6 ações concretas");
@@ -83,4 +109,23 @@ const phases=[["Fase 1","Fine-tune Qwen PT-BR médico","6 meses","+15-20 pts"],[
 phases.forEach(([f,a,d,r],i)=>{const y=1.6+i*0.8;s.addText(f,{x:M,y,w:1.2,h:0.6,fontSize:14,fontFace:BF,bold:true,color:PRIMARY,margin:0,valign:"middle"});s.addText(a,{x:M+1.3,y,w:4.5,h:0.6,fontSize:14,fontFace:BF,color:TEXT,margin:0,valign:"middle"});s.addText(d,{x:M+6,y,w:1.5,h:0.6,fontSize:14,fontFace:BF,color:MUTED,margin:0,valign:"middle"});s.addText(r,{x:M+7.6,y,w:4.5,h:0.6,fontSize:14,fontFace:BF,bold:true,color:ACCENT,margin:0,valign:"middle"});});
 s.addShape(pres.shapes.LINE,{x:M,y:6.0,w:W-2*M,h:0,line:{color:"E5E7EB",width:0.75}});
 s.addText("Matheus Feijão · WhatsApp +55 11 92507-9058 · matheus@beanstech.com.br",{x:M,y:6.2,w:8,h:0.5,fontSize:14,fontFace:BF,color:DARK,bold:true,margin:0});}
+// GLOSSÁRIO — termos técnicos
+{const s=base();title(s,"Glossário de Termos Técnicos","Para consulta durante e após a apresentação");
+const termos=[
+  ["Coverage","Fração das afirmações críticas do gabarito presente na resposta do modelo. Escala 0 a 1. Quanto maior, mais completa a resposta."],
+  ["Abstenção","Quantas vezes o modelo disse corretamente 'não posso afirmar' quando não tinha evidência suficiente. Mais abstenção = mais segurança."],
+  ["VQA (Visual Question Answering)","Tarefa de responder perguntas sobre imagens. Em medicina: interpretar radiografias, TCs, fotografias clínicas."],
+  ["MoE (Mixture of Experts)","Arquitetura onde apenas um subconjunto de 'especialistas' é ativado por token. Reduz custo computacional mantendo qualidade."],
+  ["Raciocínio documentado","O modelo mostra o passo a passo do seu raciocínio clínico antes da resposta. Essencial para auditoria e conformidade."],
+  ["Red-team","Teste adversarial: tentar deliberadamente fazer o modelo falhar ou produzir conteúdo perigoso. Mede a robustez de segurança."],
+];
+termos.forEach(([termo,def],i)=>{
+  const col=i%2, row=Math.floor(i/2);
+  const x=M+col*6.2, y=1.6+row*1.55;
+  s.addShape(pres.shapes.RECTANGLE,{x,y:y+0.06,w:0.14,h:0.14,fill:{color:ACCENT},line:{color:ACCENT}});
+  s.addText(termo,{x:x+0.3,y,w:5.5,h:0.35,fontSize:15,fontFace:BF,bold:true,color:PRIMARY,margin:0});
+  s.addText(def,{x:x+0.3,y:y+0.38,w:5.5,h:1.0,fontSize:11.5,fontFace:BF,color:TEXT,margin:0});
+});}
+
+
 pres.writeFile({fileName:"Qwen_Medicina_Eric_PT.pptx"}).then(f=>console.log("ok",f));
