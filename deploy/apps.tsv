@@ -15,3 +15,4 @@ directus	deploy/directus	Dockerfile	-	8055	4080	cms.beanstech.com.br
 healthdash	deploy/healthdash	Dockerfile	-	8080	4060	health.beanstech.com.br
 hy-site	deploy/site-hycloud	Dockerfile	-	80	4070	hy.cloud
 granitic-site	deploy/site-graniticcloud	Dockerfile	-	80	4071	granitic.cloud
+ai-playground	deploy/ai-playground	Dockerfile	-	8090	4091	beanstech.ai
