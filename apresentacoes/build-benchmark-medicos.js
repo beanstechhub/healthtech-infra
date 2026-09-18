@@ -99,12 +99,11 @@ s.addText([T("O Einstein recebe: ",{bold:true,color:PRIMARY}),T("co-autoria na m
 {const s=base();title(s,"Como Participar");
 s.addText([T("Plataforma: ",{bold:true,color:PRIMARY,fontSize:18}),T("teste.beanshealth.com.br/teste",{color:ACCENT,bold:true,fontSize:18})],{x:M,y:1.6,w:W-2*M,h:0.5,fontFace:BF,margin:0});
 s.addText([T("Conteúdo: ",{bold:true,color:PRIMARY}),T("200 casos · 9 modelos anônimos · formulário integrado · pausar/continuar",{color:TEXT})],{x:M,y:2.3,w:W-2*M,h:0.5,fontSize:15,fontFace:BF,margin:0});
-s.addText([T("Prazo: ",{bold:true,color:PRIMARY}),T("2 a 4 semanas ({~}6 horas, divisível em sessões de 30-60 min)",{color:TEXT})],{x:M,y:3.0,w:W-2*M,h:0.5,fontSize:15,fontFace:BF,margin:0});
+s.addText([T("Prazo: ",{bold:true,color:PRIMARY}),T("2 a 4 semanas (~6 horas, divisível em sessões de 30-60 min)",{color:TEXT})],{x:M,y:3.0,w:W-2*M,h:0.5,fontSize:15,fontFace:BF,margin:0});
 s.addShape(pres.shapes.LINE,{x:M,y:3.8,w:W-2*M,h:0,line:{color:LINE,width:0.75}});
 s.addText([T("Importante: ",{bold:true,color:"DC2626",fontSize:16}),T("a identidade dos modelos é revelada apenas após a conclusão — para garantir avaliação isenta. Não consulte o gabarito antes de terminar.",{color:TEXT,fontSize:15})],{x:M,y:4.0,w:W-2*M,h:0.8,fontFace:BF,margin:0});
 s.addShape(pres.shapes.LINE,{x:M,y:5.0,w:W-2*M,h:0,line:{color:LINE,width:0.75}});
 s.addText("Matheus Feijão · WhatsApp +55 11 92507-9058 · matheus@beanstech.com.br",{x:M,y:5.3,w:10,h:0.5,fontSize:14,fontFace:BF,bold:true,color:DARK,margin:0});
 s.addText([T("A IA é sempre um meio. ",{fontSize:20,fontFace:TF,color:PRIMARY,italic:true}),T("O médico decide. Sempre.",{fontSize:20,fontFace:TF,color:ACCENT,italic:true,bold:true})],{x:M,y:6.1,w:10,h:0.5,margin:0});}
 
-function "DC2626"{return "DC2626";}
 pres.writeFile({fileName:"Benchmark_Cego_Medicos.pptx"}).then(f=>console.log("ok",f));
