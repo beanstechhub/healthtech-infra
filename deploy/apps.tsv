@@ -2,7 +2,7 @@
 # Colunas (TAB): app  contexto(rel. a healthtech/)  dockerfile  build-args(csv|-)  porta-container  porta-host  domínios(csv)
 # Portas-host 41xx reservadas ao healthtech (alirealty/useco2 usam 30xx). Só 127.0.0.1 — nada exposto sem Caddy.
 drogaria	beanshealth/drogaria.tech	Dockerfile	-	3000	4130	drogaria.tech,www.drogaria.tech
-beanshealth-web	beanshealth/beanshealth-site/web	Dockerfile	-	3000	4140	beanshealth.com.br,www.beanshealth.com.br
+beanshealth-web	beanshealth/beanshealth-site/web	Dockerfile	-	3000	4140	beanshealth.com.br,www.beanshealth.com.br,teste.beanshealth.com.br
 drhealth-web	beanshealth/drhealthtech/web	Dockerfile	-	3000	4160	drhealth.tech,www.drhealth.tech
 exame-web	beanshealth/exame.tech/web	Dockerfile	-	8080	4110	exame.tech,www.exame.tech
 prontuario-web	beanshealth/prontuario.tech/web	Dockerfile	-	8080	4120	prontuario.tech,www.prontuario.tech
