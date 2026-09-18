@@ -86,15 +86,15 @@ Layout: Single-page, scroll-based, com seções âncora
 [Logo: hy em círculo teal, navy background]
 
 Headline (EN):
-  "hy.cloud — The High-Yield Sovereign Cloud"
+  "hy.cloud — Where Hunyuan Meets the Sun"
 
 Sub-headline:
-  "Powered by Tencent Hunyuan. Running on solar.
-   Serving Latin America's regulated sectors."
+  "The sovereign, high-yield cloud for Latin America's regulated sectors.
+   Powered by Tencent Hunyuan. Running on solar. Connected by subsea fiber."
 
 Tagline (PT):
-  "A nuvem soberana de alto rendimento.
-   Movida a Hunyuan. Alimentada pelo sol do Nordeste."
+  "A nuvem soberana onde o Hunyuan encontra o sol.
+   Movida pela Tencent. Alimentada pelo Nordeste."
 ```
 
 #### 2. What "hy" Means
