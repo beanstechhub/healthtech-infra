@@ -461,7 +461,7 @@ const buG = () => ({ code: "25B8", indent: 10 });
   s.addShape(p.shapes.RECTANGLE, { x: M, y: 6.1, w: W-2*M, h: 0.8, fill: { color: NAVY2 }, line: { color: GOLD, width: 1 } });
   s.addText([
     { text: "About the Founder: ", options: { bold: true, color: GOLDLT, fontSize: 10 } },
-    { text: "Matheus Ximenes — Attorney, 12 years in the Brazilian Judiciary (7 as legal advisor to a Supreme Court Minister). Postgraduate in Cloud Computing and Data Protection. Creator of ragjur.ai (77M+ decisions) and ragmed.ai. Owner of z.cloud and glm.cloud.", options: { color: "B0C4D4", fontSize: 9.5 } }
+    { text: "Matheus Ximenes — Attorney, 12 years in the Brazilian Judiciary (7 as legal advisor to a Supreme Court Minister). Postgraduate in Cloud Computing and Data Protection. Creator of ragjur.ai (77M+ decisions) and ragmed.ai. Steward of z.cloud and glm.cloud.", options: { color: "B0C4D4", fontSize: 9.5 } }
   ], { x: M+0.3, y: 6.2, w: W-2*M-0.6, h: 0.6, margin: 0, lineSpacing: 13 });
   footer(s, true);
 }

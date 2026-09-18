@@ -5,7 +5,7 @@ Resultado: JSON + TSV + mapa de competências por domínio."""
 import sys, json, time, os, subprocess, re, collections, concurrent.futures
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else "/tmp/eval-comparativo"
-CASES_FILE = "/tmp/eval/cases-50.json"
+CASES_FILE = "/tmp/eval/cases-200.json"
 os.makedirs(OUT, exist_ok=True)
 cases = json.load(open(CASES_FILE))
 
@@ -17,7 +17,7 @@ def get_env(k): return os.environ.get(k, "")
 MODELS = {
     # OpenRouter (pagos por token)
     "gpt6-astra":    {"base": "https://openrouter.ai/api/v1", "key": get_env("OPENROUTER_API_KEY"), "model": "openai/gpt-6-astra", "source": "openrouter"},
-    "claude-fable":  {"base": "https://openrouter.ai/api/v1", "key": get_env("OPENROUTER_API_KEY"), "model": "anthropic/claude-fable-5", "source": "openrouter"},
+    "claude-opus-5": {"base": "https://openrouter.ai/api/v1", "key": get_env("OPENROUTER_API_KEY"), "model": "anthropic/claude-opus-5", "source": "openrouter"},
     # Model Studio (cobertos pelo SP)
     "qwen38-max":    {"base": get_env("QWEN_BASE_URL"), "key": get_env("QWEN_API_KEY"), "model": "qwen3.8-max", "source": "modelstudio"},
     "kimi-k3":       {"base": get_env("QWEN_BASE_URL"), "key": get_env("QWEN_API_KEY"), "model": "kimi-k3", "source": "modelstudio"},
