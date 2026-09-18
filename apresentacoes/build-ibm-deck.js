@@ -39,8 +39,8 @@ const buB = () => ({ code: "25B8", indent: 10 });
   s.addText([
     { text: "US$ 250,000,000", options: { fontSize: 24, fontFace: SANS, bold: true, color: GOLDLT, breakLine: true } },
     { text: "Strategic Partnership Value", options: { fontSize: 11, fontFace: SANS, color: "8FAFC0" } }
-  ], { x: M, y: 6.2, w: 6, h: 1.0, margin: 0 });
-  s.addText("Matheus Ximenes · Founder & CEO\nAttorney · Postgraduate Cloud Computing & Data Protection\nSeptember 2026 · São Paulo, Brazil", { x: W-M-4.5, y: 6.2, w: 4.5, h: 0.9, fontSize: 9, fontFace: SANS, color: "6B8BB0", align: "right", margin: 0, lineSpacing: 14 });
+  ], { x: M, y: 6.15, w: 6, h: 0.9, margin: 0 });
+  s.addText("Matheus Ximenes · Founder & CEO\nAttorney · Postgraduate Cloud Computing & Data Protection\nSeptember 2026 · São Paulo, Brazil", { x: W-M-4.5, y: 6.18, w: 4.5, h: 0.85, fontSize: 8.5 });
   footer(s, true);
 }
 
@@ -66,14 +66,14 @@ const buB = () => ({ code: "25B8", indent: 10 });
     { text: "Market access — 1.75M regulated professionals in Brazil, 650M in LATAM", options: { bullet: buB(), breakLine: true } },
     { text: "granitic.cloud — premium domain for the joint product", options: { bullet: buB(), breakLine: true } },
     { text: "watsonx integration — sovereign deployment in territory IBM cannot reach alone", options: { bullet: buB() } }
-  ], { x: M, y: 5.5, w: 5.8, h: 1.7, fontSize: 10.5, fontFace: SANS, color: TEXT, margin: 0, paraSpaceAfter: 6 });
+  ], { x: M, y: 5.45, w: 5.8, h: 1.6, fontSize: 10, fontFace: SANS, color: TEXT, margin: 0, paraSpaceAfter: 5 });
   s.addText("What Beans Tech Brings", { x: 7.0, y: 5.1, w: 5.8, h: 0.4, fontSize: 14, fontFace: SANS, bold: true, color: IBM, margin: 0 });
   s.addText([
     { text: "Granite in production — guardrail on every response, compliance in every vertical", options: { bullet: buB(), breakLine: true } },
     { text: "4 regulated verticals live — Legal (77M+ decisions), Compliance, Health, Real Estate", options: { bullet: buB(), breakLine: true } },
     { text: "Sovereign data centers — PB (solar off-grid) + CE (ZPE, subsea)", options: { bullet: buB(), breakLine: true } },
     { text: "Regulatory expertise — founder attorney, 12 years Judiciary", options: { bullet: buB() } }
-  ], { x: 7.0, y: 5.5, w: 5.8, h: 1.7, fontSize: 10.5, fontFace: SANS, color: TEXT, margin: 0, paraSpaceAfter: 6 });
+  ], { x: 7.0, y: 5.45, w: 5.8, h: 1.6, fontSize: 10, fontFace: SANS, color: TEXT, margin: 0, paraSpaceAfter: 5 });
   footer(s);
 }
 
