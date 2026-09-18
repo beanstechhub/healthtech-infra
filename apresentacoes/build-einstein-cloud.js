@@ -48,7 +48,11 @@ s.addText("LGPD art. 11: dados sensíveis · art. 37: trilha de operações",{x:
 const data=[["Modelo","Coverage","Abstenções","Velocidade"].map(h=>({text:h,options:{bold:true,color:"FFFFFF",fill:{color:DARK},fontFace:BF,fontSize:13}})),
 [["GLM-5.3","0,486","20","23,0s"],["Qwen 3.8-Max","0,437","11","36,4s"],["DeepSeek v4 Pro","0,396","3","37,4s"],["Baichuan-M3 (GPU própria)","0,392","12","33,3s"],["GPT-6 Astra ($50/M)","0,377","15","17,2s"],["Lingshu-32B (imagem)","0,274","18","19,2s"]].map((r,i)=>r.map(c=>({text:c,options:{fontFace:BF,fontSize:13,fill:{color:i%2?"FFFFFF":TINT},valign:"middle"}})))];
 s.addTable(data,{x:M,y:1.7,w:9,colW:[3.5,1.8,1.8,1.9],rowH:0.5,border:{type:"solid",pt:0.5,color:"E5E7EB"}});
-s.addText([T("Descoberta-chave: ",{bold:true,color:PRIMARY}),T("cada modelo vence em especialidades diferentes. Não existe 'o melhor' — existe o melhor por domínio. A arquitetura correta é roteamento multi-modelo.",{color:TEXT})],{x:M,y:5.5,w:W-2*M,h:0.9,fontSize:15,fontFace:BF,margin:0});}
+s.addShape(pres.shapes.LINE,{x:M,y:4.9,w:W-2*M,h:0,line:{color:"E3ECF5",width:0.75}});
+s.addText([T("Descoberta-chave: ",{bold:true,color:PRIMARY,fontSize:16}),T("cada modelo vence em especialidades diferentes. Não existe \'o melhor\' — existe o melhor por domínio.",{color:TEXT,fontSize:15})],{x:M,y:5.0,w:6,h:0.7,fontFace:BF,margin:0});
+s.addText([T("A arquitetura correta: ",{bold:true,color:PRIMARY,fontSize:16}),T("roteamento multi-modelo por especialidade — cada pergunta vai ao especialista certo.",{color:TEXT,fontSize:15})],{x:M,y:5.7,w:6,h:0.6,fontFace:BF,margin:0});
+s.addText("Red-team: 10/10 modelos falharam sem guardrail. Granite Guardian: 100% interceptado.",{x:7.5,y:5.0,w:5.3,h:0.7,fontSize:13,fontFace:BF,color:MUTED,margin:0});
+s.addText("AI General-purpose + LLM Inference: US$ 6.000/mês em SPs ativos cobrindo API.",{x:7.5,y:5.7,w:5.3,h:0.6,fontSize:13,fontFace:BF,color:MUTED,margin:0});}
 
 // S6 red team
 {const s=base();title(s,"Segurança: todos falharam sem guardrail");
@@ -67,7 +71,10 @@ regs.forEach(([h,b],i)=>{const col=i%2,row=Math.floor(i/2);const x=M+col*6.2,y=1
 const roles=[["Curador científico","Einstein","Validação clínica, protocolos, acervo"],["Comité de ética","Einstein","Aprovação de fine-tuning, casos de uso"],["Engenharia","BeansTech","Infraestrutura, manutenção, suporte"],["Operação","Einstein","Acesso, dados, SLAs"]];
 const data=[roles.map(r=>r.map((c,j)=>({text:c,options:{fontFace:BF,fontSize:14,bold:j===1,fill:{color:j===1?TINT:"FFFFFF"},color:j===1?PRIMARY:TEXT,valign:"middle"}})))];
 s.addTable(data,{x:M,y:1.8,w:W-2*M,colW:[3.0,2.5,5.43],rowH:0.7,border:{type:"solid",pt:0.5,color:"E5E7EB"}});
-s.addText("A BeansTech é mera coadjuvante. O Einstein lidera.",{x:M,y:5.0,w:W-2*M,h:0.6,fontSize:16,fontFace:TF,italic:true,color:ACCENT,margin:0});}
+s.addShape(pres.shapes.LINE,{x:M,y:4.7,w:W-2*M,h:0,line:{color:"E3ECF5",width:0.75}});
+s.addText([T("A BeansTech é mera coadjuvante. ",{fontSize:18,fontFace:TF,italic:true,color:ACCENT}),T("O Einstein lidera.",{bold:true,fontSize:18,fontFace:TF,color:PRIMARY})],{x:M,y:4.9,w:W-2*M,h:0.6,margin:0});
+s.addText([T("Decisões que ficam com o Einstein: ",{bold:true,color:PRIMARY,fontSize:14}),T("quais modelos usar, quando atualizar, quais dados usar para fine-tuning, quando suspender.",{color:TEXT,fontSize:14})],{x:M,y:5.6,w:W-2*M,h:0.6,fontFace:BF,margin:0});
+s.addText([T("Decisões que ficam com a BeansTech: ",{bold:true,color:PRIMARY,fontSize:14}),T("infraestrutura, disponibilidade, monitoramento, manutenção.",{color:TEXT,fontSize:14})],{x:M,y:6.2,w:W-2*M,h:0.5,fontFace:BF,margin:0});
 
 // S9 roadmap
 {const s=base();title(s,"Roadmap","10 meses da definição à produção");
@@ -104,10 +111,11 @@ s.addText("Matheus Feijão · WhatsApp +55 11 92507-9058 · matheus@beanstech.co
 
 // S13 conclusão
 {const s=base(true);
-s.addText("A inteligência artificial é o meio.",{x:M,y:2.0,w:11,h:0.8,fontSize:28,fontFace:TF,color:"FFFFFF",margin:0});
+s.addText("A inteligência artificial é o meio.",{x:M,y:1.5,w:11,h:0.9,fontSize:32,fontFace:TF,color:"FFFFFF",margin:0});
 s.addText("O médico é o fim.",{x:M,y:3.0,w:11,h:0.8,fontSize:28,fontFace:TF,color:ACCENT,margin:0});
-s.addText("O paciente é o propósito.",{x:M,y:4.0,w:11,h:0.8,fontSize:28,fontFace:TF,color:"FFFFFF",margin:0});
+s.addText("O paciente é o propósito.",{x:M,y:3.7,w:11,h:0.9,fontSize:32,fontFace:TF,color:"FFFFFF",margin:0});
 s.addShape(pres.shapes.LINE,{x:M,y:5.5,w:3.5,h:0,line:{color:ACCENT,width:2}});
-s.addText("github.com/beanstechhub/einstein-benchmark · Matheus Feijão · WhatsApp +55 11 92507-9058",{x:M,y:5.8,w:10,h:0.5,fontSize:14,fontFace:BF,color:"D0DCE8",margin:0});
+s.addText("github.com/beanstechhub/einstein-benchmark · Matheus Feijão · WhatsApp +55 11 92507-9058",{x:M,y:5.1,w:10,h:0.5,fontSize:16,fontFace:BF,color:"D0DCE8",margin:0});
+s.addText("Do Einstein para o Brasil: impacto em milhões de vidas.",{x:M,y:5.5,w:10,h:0.5,fontSize:16,fontFace:BF,color:"D0DCE8",margin:0});
 s.addText("matheus@beanstech.com.br",{x:M,y:6.3,w:9,h:0.4,fontSize:13,fontFace:BF,color:"AAB8CC",margin:0});}
 pres.writeFile({fileName:"Einstein_Cloud_Apresentacao.pptx"}).then(f=>console.log("ok",f));
