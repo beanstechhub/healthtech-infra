@@ -8,7 +8,7 @@ const DARK="1B2A4A",PRIMARY="FF6A00",ACCENT="00A8E8",BG="FFFFFF",TEXT="1B2A4A",M
 const TF="Georgia",BF="Arial"; const T=(s,o={})=>({text:s,options:o});
 let n=0;
 function base(dark=false){const s=pres.addSlide();s.background={color:dark?DARK:BG};n++;s.addText(`BeansTech · Qwen 3.8-Max · Confidencial`,{x:M,y:H-0.45,w:6,h:0.3,fontSize:10,fontFace:BF,color:dark?"8CA0C0":MUTED,margin:0});s.addText(String(n),{x:W-M-0.6,y:H-0.45,w:0.6,h:0.3,fontSize:10,fontFace:BF,color:dark?"8CA0C0":MUTED,align:"right",margin:0});return s;}
-function title(s,t,sub){s.addText(t,{x:M,y:0.4,w:W-2*M,h:0.8,fontSize:30,fontFace:TF,bold:true,color:PRIMARY,margin:0});if(sub)s.addText(sub,{x:M,y:1.2,w:W-2*M,h:0.5,fontSize:15,fontFace:BF,color:MUTED,margin:0});}
+function title(s,t,sub){s.addText(t,{x:M,y:0.4,w:W-2*M,h:0.8,fontSize:30,fontFace:TF,bold:true,color:PRIMARY,margin:0});if(sub)s.addText(sub,{x:M,y:1.2,w:W-2*M,h:0.5,fontSize:15,fontFace:BF,color:"4A5A57",margin:0});}
 
 // S1 capa
 {const s=base(true);s.addText("Qwen 3.8-Max",{x:M,y:1.5,w:8,h:1.2,fontSize:64,fontFace:TF,bold:true,color:"FFFFFF",margin:0});s.addText("in Medicine",{x:M,y:2.7,w:8,h:1.0,fontSize:48,fontFace:TF,color:"FF6A00",margin:0});s.addText("One of the world's best models for clinical decision support",{x:M,y:4.0,w:8,h:0.8,fontSize:20,fontFace:BF,color:"B0C4DE",margin:0});s.addText("Benchmark: 200 casos · 10 modelos · 23 especialidades · 2.000 avaliações",{x:M,y:5.0,w:8,h:0.5,fontSize:14,fontFace:BF,color:"8CA0C0",margin:0});s.addShape(pres.shapes.LINE,{x:M,y:5.8,w:4,h:0,line:{color:PRIMARY,width:2}});s.addText("BeansTech Health → Alibaba Brazil (Eric) · Outubro 2026",{x:M,y:6.0,w:8,h:0.4,fontSize:12,fontFace:BF,color:"8CA0C0",margin:0});}
@@ -16,7 +16,7 @@ function title(s,t,sub){s.addText(t,{x:M,y:0.4,w:W-2*M,h:0.8,fontSize:30,fontFac
 // S2 benchmark
 {const s=base();title(s,"O Benchmark","The largest LLM test para medicina em língua portuguesa já realizado");
 const stats=[["200","real clinical cases"],["10","models tested"],["23","medical specialties"],["2.000","total evaluations"]];
-stats.forEach(([k,v],i)=>{const x=M+i*3.15;s.addText(k,{x,y:1.8,w:2.9,h:1.0,fontSize:52,fontFace:TF,bold:true,color:i===3?PRIMARY:DARK,margin:0});s.addText(v,{x,y:2.8,w:2.9,h:0.5,fontSize:14,fontFace:BF,color:MUTED,margin:0});});
+stats.forEach(([k,v],i)=>{const x=M+i*3.15;s.addText(k,{x,y:1.8,w:2.9,h:1.0,fontSize:52,fontFace:TF,bold:true,color:i===3?PRIMARY:DARK,margin:0});s.addText(v,{x,y:2.8,w:2.9,h:0.5,fontSize:14,fontFace:BF,color:"4A5A57",margin:0});});
 s.addShape(pres.shapes.LINE,{x:M,y:3.6,w:W-2*M,h:0,line:{color:"E5E7EB",width:0.75}});
 s.addText([T("Same standard for all: ",{bold:true,color:DARK}),T("same prompt, same temperature, same context. Evaluation by critical claim coverage.",{color:TEXT})],{x:M,y:3.8,w:W-2*M,h:0.8,fontSize:15,fontFace:BF,margin:0});
 const models=["GPT-6 Astra (OpenAI)","Claude Opus 5 (Anthropic)","GLM-5.3 (Z.ai)","Qwen 3.8-Max (Alibaba)","DeepSeek v4 Pro","Kimi K3 (Moonshot)","Baichuan-M3-235B","AntAngelMed-100B","MedGemma-27B","Lingshu-32B (DAMO)"];
@@ -53,7 +53,7 @@ s.addText("100%",{x:M,y:1.8,w:3,h:1.5,fontSize:80,fontFace:TF,bold:true,color:PR
 s.addText("of cases with explicit clinical reasoning before the answer",{x:M,y:3.3,w:4,h:0.7,fontSize:16,fontFace:BF,color:TEXT,margin:0});
 const comp=[["Qwen 3.8-Max","100%"],["GLM-5.3","100%"],["DeepSeek v4","100%"],["GPT-6 Astra","6%"],["MedGemma-27B","0%"]];
 comp.forEach(([m,v],i)=>{const y=1.8+i*0.8;s.addText(m,{x:6,y,w:3.5,h:0.6,fontSize:15,fontFace:BF,color:TEXT,margin:0,valign:"middle"});const w=parseFloat(v)/100*4;s.addShape(pres.shapes.RECTANGLE,{x:9.5,y,w:Math.max(w,0.1),h:0.5,fill:{color:i<3?PRIMARY:"D1D5DB"},line:{color:i<3?PRIMARY:"D1D5DB"}});s.addText(v,{x:9.5+Math.max(w,0.1)+0.1,y,w:1,h:0.5,fontSize:14,fontFace:BF,bold:i<3,color:i<3?PRIMARY:MUTED,margin:0,valign:"middle"});});
-s.addText("Why it matters: medical audit,  regulatory compliance LGPD/CFM, publishable clinical research.",{x:M,y:6.0,w:W-2*M,h:0.5,fontSize:14,fontFace:BF,color:MUTED,margin:0});}
+s.addText("Why it matters: medical audit,  regulatory compliance LGPD/CFM, publishable clinical research.",{x:M,y:6.0,w:W-2*M,h:0.5,fontSize:14,fontFace:BF,color:"4A5A57",margin:0});}
 
 // S7 custo
 {const s=base();title(s,"Effective cost per 1.000 responses");

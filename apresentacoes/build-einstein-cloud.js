@@ -47,12 +47,13 @@ s.addText("LGPD art. 11: dados sensíveis · art. 37: trilha de operações",{x:
 {const s=base();title(s,"Fundamento: Benchmark de 200 casos","10 modelos, 23 especialidades, 2.000 avaliações");
 const data=[["Modelo","Coverage","Abstenções","Velocidade"].map(h=>({text:h,options:{bold:true,color:"FFFFFF",fill:{color:DARK},fontFace:BF,fontSize:13}})),
 [["GLM-5.3","0,486","20","23,0s"],["Qwen 3.8-Max","0,437","11","36,4s"],["DeepSeek v4 Pro","0,396","3","37,4s"],["Baichuan-M3 (GPU própria)","0,392","12","33,3s"],["GPT-6 Astra ($50/M)","0,377","15","17,2s"],["Lingshu-32B (imagem)","0,274","18","19,2s"]].map((r,i)=>r.map(c=>({text:c,options:{fontFace:BF,fontSize:13,fill:{color:i%2?"FFFFFF":TINT},valign:"middle"}})))];
-s.addTable(data,{x:M,y:1.5,w:W-2*M,colW:[4.0,2.0,2.0,2.0,1.73],rowH:0.55,border:{type:"solid",pt:0.5,color:"E5E7EB"}});
-s.addShape(pres.shapes.LINE,{x:M,y:5.2,w:W-2*M,h:0,line:{color:"E3ECF5",width:0.75}});
-s.addText([T("Descoberta-chave: ",{bold:true,color:PRIMARY,fontSize:16}),T("cada modelo vence em especialidades diferentes. Não existe \'o melhor\' — existe o melhor por domínio.",{color:TEXT,fontSize:15})],{x:M,y:5.4,w:6,h:0.8,fontFace:BF,margin:0});
-s.addText([T("A arquitetura correta: ",{bold:true,color:PRIMARY,fontSize:16}),T("roteamento multi-modelo por especialidade — cada pergunta vai ao especialista certo.",{color:TEXT,fontSize:15})],{x:M,y:6.2,w:6,h:0.6,fontFace:BF,margin:0});
-s.addText("Red-team: 10/10 modelos falharam sem guardrail. Granite Guardian: 100% interceptado.",{x:7.5,y:5.4,w:5.3,h:0.8,fontSize:13,fontFace:BF,color:MUTED,margin:0});
-s.addText("AI General-purpose + LLM Inference: US$ 6.000/mês em SPs ativos cobrindo API.",{x:7.5,y:6.2,w:5.3,h:0.6,fontSize:13,fontFace:BF,color:MUTED,margin:0});}
+s.addTable(data,{x:M,y:1.5,w:W-2*M,colW:[4.0,2.0,2.0,2.0,1.73],rowH:0.6,border:{type:"solid",pt:0.5,color:"E5E7EB"}});
+s.addShape(pres.shapes.LINE,{x:M,y:5.3,w:W-2*M,h:0,line:{color:"E3ECF5",width:0.75}});
+s.addText([T("Descoberta-chave: ",{bold:true,color:PRIMARY,fontSize:15}),T("cada modelo vence em especialidades diferentes — não existe \'o melhor\'.",{color:TEXT,fontSize:14})],{x:M,y:5.5,w:6,h:0.6,fontFace:BF,margin:0});
+s.addText([T("A arquitetura: ",{bold:true,color:PRIMARY,fontSize:15}),T("roteamento multi-modelo por especialidade.",{color:TEXT,fontSize:14})],{x:M,y:6.1,w:6,h:0.5,fontFace:BF,margin:0});
+s.addText([T("Red-team: ",{bold:true,color:"DC2626",fontSize:14}),T("10/10 modelos falharam. Granite Guardian: 100%.",{color:TEXT,fontSize:13})],{x:7.5,y:5.5,w:5.3,h:0.6,fontFace:BF,margin:0});
+s.addText([T("Cobertura SP: ",{bold:true,color:PRIMARY,fontSize:14}),T("US$ 6.000/mês ativos cobrindo toda a API.",{color:TEXT,fontSize:13})],{x:7.5,y:6.1,w:5.3,h:0.5,fontFace:BF,margin:0});
+s.addText([T("Segurança: ",{bold:true,color:PRIMARY,fontSize:14}),T("PII removida antes de qualquer modelo. Trilha completa LGPD.",{color:TEXT,fontSize:13})],{x:7.5,y:6.6,w:5.3,h:0.4,fontFace:BF,margin:0});}
 
 // S6 red team
 {const s=base();title(s,"Segurança: todos falharam sem guardrail");
@@ -74,7 +75,8 @@ s.addTable(data,{x:M,y:1.5,w:W-2*M,colW:[3.5,3.0,5.43],rowH:0.8,border:{type:"so
 s.addShape(pres.shapes.LINE,{x:M,y:5.0,w:W-2*M,h:0,line:{color:"E3ECF5",width:0.75}});
 s.addText([T("A BeansTech é mera coadjuvante. ",{fontSize:18,fontFace:TF,italic:true,color:ACCENT}),T("O Einstein lidera.",{bold:true,fontSize:18,fontFace:TF,color:PRIMARY})],{x:M,y:5.2,w:W-2*M,h:0.6,margin:0});
 s.addText([T("Decisões que ficam com o Einstein: ",{bold:true,color:PRIMARY,fontSize:14}),T("quais modelos usar, quando atualizar, quais dados usar para fine-tuning, quando suspender.",{color:TEXT,fontSize:14})],{x:M,y:5.8,w:W-2*M,h:0.6,fontFace:BF,margin:0});
-s.addText([T("Decisões que ficam com a BeansTech: ",{bold:true,color:PRIMARY,fontSize:14}),T("infraestrutura, disponibilidade, monitoramento, manutenção.",{color:TEXT,fontSize:14})],{x:M,y:6.4,w:W-2*M,h:0.5,fontFace:BF,margin:0});}
+s.addText([T("Decisões que ficam com a BeansTech: ",{bold:true,color:PRIMARY,fontSize:14}),T("infraestrutura, disponibilidade, monitoramento, manutenção.",{color:TEXT,fontSize:14})],{x:M,y:6.0,w:W-2*M,h:0.5,fontFace:BF,margin:0});
+s.addText([T("Ferramenta: ",{bold:true,color:PRIMARY,fontSize:14}),T("o Einstein.Cloud não é um produto da BeansTech — é uma plataforma do Einstein, construída com apoio técnico da BeansTech. A marca, a governança e os dados são do Einstein.",{color:TEXT,fontSize:14})],{x:M,y:6.5,w:W-2*M,h:0.7,fontFace:BF,margin:0});}
 
 // S9 roadmap
 {const s=base();title(s,"Roadmap","10 meses da definição à produção");

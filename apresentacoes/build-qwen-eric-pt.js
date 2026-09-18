@@ -8,7 +8,7 @@ const DARK="1B2A4A",PRIMARY="FF6A00",ACCENT="00A8E8",BG="FFFFFF",TEXT="1B2A4A",M
 const TF="Georgia",BF="Arial"; const T=(s,o={})=>({text:s,options:o});
 let n=0;
 function base(dark=false){const s=pres.addSlide();s.background={color:dark?DARK:BG};n++;s.addText(`BeansTech · Qwen 3.8-Max · Confidencial`,{x:M,y:H-0.45,w:6,h:0.3,fontSize:10,fontFace:BF,color:dark?"8CA0C0":MUTED,margin:0});s.addText(String(n),{x:W-M-0.6,y:H-0.45,w:0.6,h:0.3,fontSize:10,fontFace:BF,color:dark?"8CA0C0":MUTED,align:"right",margin:0});return s;}
-function title(s,t,sub){s.addText(t,{x:M,y:0.4,w:W-2*M,h:0.8,fontSize:30,fontFace:TF,bold:true,color:PRIMARY,margin:0});if(sub)s.addText(sub,{x:M,y:1.2,w:W-2*M,h:0.5,fontSize:15,fontFace:BF,color:MUTED,margin:0});}
+function title(s,t,sub){s.addText(t,{x:M,y:0.4,w:W-2*M,h:0.8,fontSize:30,fontFace:TF,bold:true,color:PRIMARY,margin:0});if(sub)s.addText(sub,{x:M,y:1.2,w:W-2*M,h:0.5,fontSize:15,fontFace:BF,color:"4A5A57",margin:0});}
 
 // S1 capa
 {const s=base(true);s.addText("Qwen 3.8-Max",{x:M,y:1.5,w:8,h:1.2,fontSize:64,fontFace:TF,bold:true,color:"FFFFFF",margin:0});s.addText("na Medicina",{x:M,y:2.7,w:8,h:1.0,fontSize:48,fontFace:TF,color:"FF6A00",margin:0});s.addText("Um dos melhores modelos do mundo para apoio à decisão clínica",{x:M,y:4.0,w:8,h:0.8,fontSize:20,fontFace:BF,color:"B0C4DE",margin:0});s.addText("Benchmark: 200 casos · 10 modelos · 23 especialidades · 2.000 avaliações",{x:M,y:5.0,w:8,h:0.5,fontSize:14,fontFace:BF,color:"8CA0C0",margin:0});s.addShape(pres.shapes.LINE,{x:M,y:5.8,w:4,h:0,line:{color:PRIMARY,width:2}});s.addText("BeansTech Health → Alibaba Brasil (Eric) · Outubro 2026",{x:M,y:6.0,w:8,h:0.4,fontSize:12,fontFace:BF,color:"8CA0C0",margin:0});}
@@ -16,7 +16,7 @@ function title(s,t,sub){s.addText(t,{x:M,y:0.4,w:W-2*M,h:0.8,fontSize:30,fontFac
 // S2 benchmark
 {const s=base();title(s,"O Benchmark","O maior teste de LLMs para medicina em língua portuguesa já realizado");
 const stats=[["200","casos clínicos reais"],["10","modelos testados"],["23","especialidades médicas"],["2.000","avaliações totais"]];
-stats.forEach(([k,v],i)=>{const x=M+i*3.15;s.addText(k,{x,y:1.8,w:2.9,h:1.0,fontSize:52,fontFace:TF,bold:true,color:i===3?PRIMARY:DARK,margin:0});s.addText(v,{x,y:2.8,w:2.9,h:0.5,fontSize:14,fontFace:BF,color:MUTED,margin:0});});
+stats.forEach(([k,v],i)=>{const x=M+i*3.15;s.addText(k,{x,y:1.8,w:2.9,h:1.0,fontSize:52,fontFace:TF,bold:true,color:i===3?PRIMARY:DARK,margin:0});s.addText(v,{x,y:2.8,w:2.9,h:0.5,fontSize:14,fontFace:BF,color:"4A5A57",margin:0});});
 s.addShape(pres.shapes.LINE,{x:M,y:3.6,w:W-2*M,h:0,line:{color:"E5E7EB",width:0.75}});
 s.addText([T("Mesma régua para todos: ",{bold:true,color:DARK}),T("mesmo prompt, mesma temperatura, mesmo contexto. Avaliação por cobertura de afirmações críticas do gabarito.",{color:TEXT})],{x:M,y:3.8,w:W-2*M,h:0.8,fontSize:15,fontFace:BF,margin:0});
 const models=["GPT-6 Astra (OpenAI)","Claude Opus 5 (Anthropic)","GLM-5.3 (Z.ai)","Qwen 3.8-Max (Alibaba)","DeepSeek v4 Pro","Kimi K3 (Moonshot)","Baichuan-M3-235B","AntAngelMed-100B","MedGemma-27B","Lingshu-32B (DAMO)"];
@@ -46,15 +46,16 @@ s.addText([T("Por que multi-morbidade é o teste mais difícil: ",{bold:true,col
 {const s=base();title(s,"Pneumologia: melhor de todos","Coverage 0,75 — 3× melhor que o segundo colocado");
 const bars=[["Qwen 3.8-Max",0.75,PRIMARY],["GLM-5.3",0.25,DARK],["GPT-6 Astra",0.25,DARK],["Claude Opus 5",0.25,DARK]];
 bars.forEach(([name,val,color],i)=>{const y=1.8+i*0.9;s.addShape(pres.shapes.RECTANGLE,{x:M,y,w:val*12,h:0.6,fill:{color},line:{color}});s.addText(name,{x:M,y:y-0.05,w:3,h:0.5,fontSize:14,fontFace:BF,color:TEXT,margin:0});s.addText(String(val).replace(".",","),{x:M+val*12+0.1,y:y-0.05,w:1,h:0.5,fontSize:14,fontFace:BF,bold:true,color,margin:0});});
-s.addText("Caso: DPOC grave, VEF1 28%, exacerbador frequente. O Qwen 3.8-Max foi o único a indicar todas as condutas: terapia tripla (LABA+LAMA+CSI), reabilitação, vacinação, oxigenoterapia e avaliação para transplante.",{x:M,y:5.2,w:W-2*M,h:1.0,fontSize:15,fontFace:BF,color:TEXT,margin:0});}
-
+s.addText("Caso: DPOC grave, VEF1 28%, exacerbador frequente. O Qwen 3.8-Max foi o único a indicar todas as condutas: terapia tripla (LABA+LAMA+CSI), reabilitação, vacinação, oxigenoterapia e avaliação para transplante.",{x:M,y:4.5,w:W-2*M,h:0.8,fontSize:14,fontFace:BF,color:TEXT,margin:0});
+s.addText([T("Significância clínica: ",{bold:true,color:PRIMARY,fontSize:13}),T("DPOC afeta 6% dos brasileiros acima de 40 anos. O fenótipo exacerbador (2+ crises/ano) exige escalada terapêutica. Perder um passo custa internações e mortalidade.",{color:TEXT,fontSize:13})],{x:M,y:5.4,w:W-2*M,h:0.7,fontFace:BF,margin:0});
+s.addText([T("Onde usamos: ",{bold:true,color:PRIMARY,fontSize:13}),T("todos os portais de saúde com casos respiratórios. O Qwen 3.8-Max é o modelo padrão para pneumologia.",{color:TEXT,fontSize:13})],{x:M,y:6.1,w:W-2*M,h:0.6,fontFace:BF,margin:0});}
 // S6 raciocínio
 {const s=base();title(s,"Raciocínio documentado em 100% dos casos");
 s.addText("100%",{x:M,y:1.8,w:3,h:1.5,fontSize:80,fontFace:TF,bold:true,color:PRIMARY,margin:0});
 s.addText("dos casos com raciocínio clínico explícito antes da resposta",{x:M,y:3.3,w:4,h:0.7,fontSize:16,fontFace:BF,color:TEXT,margin:0});
 const comp=[["Qwen 3.8-Max","100%"],["GLM-5.3","100%"],["DeepSeek v4","100%"],["GPT-6 Astra","6%"],["MedGemma-27B","0%"]];
 comp.forEach(([m,v],i)=>{const y=1.8+i*0.8;s.addText(m,{x:6,y,w:3.5,h:0.6,fontSize:15,fontFace:BF,color:TEXT,margin:0,valign:"middle"});const w=parseFloat(v)/100*4;s.addShape(pres.shapes.RECTANGLE,{x:9.5,y,w:Math.max(w,0.1),h:0.5,fill:{color:i<3?PRIMARY:"D1D5DB"},line:{color:i<3?PRIMARY:"D1D5DB"}});s.addText(v,{x:9.5+Math.max(w,0.1)+0.1,y,w:1,h:0.5,fontSize:14,fontFace:BF,bold:i<3,color:i<3?PRIMARY:MUTED,margin:0,valign:"middle"});});
-s.addText("Por que importa: auditoria médica, conformidade LGPD/CFM, pesquisa clínica publicável.",{x:M,y:6.0,w:W-2*M,h:0.5,fontSize:14,fontFace:BF,color:MUTED,margin:0});}
+s.addText("Por que importa: auditoria médica, conformidade LGPD/CFM, pesquisa clínica publicável.",{x:M,y:6.0,w:W-2*M,h:0.5,fontSize:14,fontFace:BF,color:"4A5A57",margin:0});}
 
 // S7 custo
 {const s=base();title(s,"Custo efetivo por 1.000 respostas");
