@@ -74,7 +74,7 @@ s.addTable(data,{x:M,y:1.8,w:W-2*M,colW:[3.0,2.5,5.43],rowH:0.7,border:{type:"so
 s.addShape(pres.shapes.LINE,{x:M,y:4.7,w:W-2*M,h:0,line:{color:"E3ECF5",width:0.75}});
 s.addText([T("A BeansTech é mera coadjuvante. ",{fontSize:18,fontFace:TF,italic:true,color:ACCENT}),T("O Einstein lidera.",{bold:true,fontSize:18,fontFace:TF,color:PRIMARY})],{x:M,y:4.9,w:W-2*M,h:0.6,margin:0});
 s.addText([T("Decisões que ficam com o Einstein: ",{bold:true,color:PRIMARY,fontSize:14}),T("quais modelos usar, quando atualizar, quais dados usar para fine-tuning, quando suspender.",{color:TEXT,fontSize:14})],{x:M,y:5.6,w:W-2*M,h:0.6,fontFace:BF,margin:0});
-s.addText([T("Decisões que ficam com a BeansTech: ",{bold:true,color:PRIMARY,fontSize:14}),T("infraestrutura, disponibilidade, monitoramento, manutenção.",{color:TEXT,fontSize:14})],{x:M,y:6.2,w:W-2*M,h:0.5,fontFace:BF,margin:0});
+s.addText([T("Decisões que ficam com a BeansTech: ",{bold:true,color:PRIMARY,fontSize:14}),T("infraestrutura, disponibilidade, monitoramento, manutenção.",{color:TEXT,fontSize:14})],{x:M,y:6.2,w:W-2*M,h:0.5,fontFace:BF,margin:0});}
 
 // S9 roadmap
 {const s=base();title(s,"Roadmap","10 meses da definição à produção");
