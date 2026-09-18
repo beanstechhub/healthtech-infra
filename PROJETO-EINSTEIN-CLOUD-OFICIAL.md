@@ -6,7 +6,7 @@
 
 **Proponente:** BeansTech Health Ltda.
 **Sócio:** Matheus Feijão
-**Contato:** WhatsApp +55 92 5079-058 · matheus@beanstech.com.br
+**Contato:** WhatsApp +55 11 92507-9058 · matheus@beanstech.com.br
 
 **Outubro de 2026 · CONFIDENCIAL**
 
@@ -211,7 +211,7 @@ Respeitosamente,
 
 **Matheus Feijão**
 Sócio, BeansTech Health Ltda.
-WhatsApp: +55 92 5079-058
+WhatsApp: +55 11 92507-9058
 Email: matheus@beanstech.com.br
 
 ---

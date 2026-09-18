@@ -180,7 +180,7 @@ Qwen 3.8-Max always reasons before answering. The reasoning is structured, docum
 
 **Matheus Feijão**
 Partner, BeansTech Health Ltda.
-WhatsApp: +55 92 5079-058
+WhatsApp: +55 11 92507-9058
 Email: matheus@beanstech.com.br
 
 **Platform:** 9 medical portals · 3 GPU servers · 10+ models · 200-case benchmark

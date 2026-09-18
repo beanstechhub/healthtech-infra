@@ -180,7 +180,7 @@ O Qwen 3.8-Max raciocina sempre — antes de responder. O raciocínio é estrutu
 
 **Matheus Feijão**
 Sócio, BeansTech Health Ltda.
-WhatsApp: +55 92 5079-058
+WhatsApp: +55 11 92507-9058
 Email: matheus@beanstech.com.br
 
 **Plataforma:** 9 portais médicos · 3 GPUs · 10+ modelos · benchmark de 200 casos
