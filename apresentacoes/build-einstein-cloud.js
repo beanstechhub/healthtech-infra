@@ -67,11 +67,24 @@ s.addText("O modelo generativo nunca é o guardrail. O guardrail é uma camada s
 const regs=[["LGPD art. 11","Dados sensíveis processados em GPU local; anonimização automática; consentimento específico"],["LGPD art. 37","Trilha: modelo, versão, raciocínio, tokens, guardrail, timestamp"],["CFM 1.821/07","Ferramenta de apoio; nunca diagnóstico autônomo"],["CEP/CONEP","Fine-tuning com dados do Einstein somente mediante protocolo aprovado"]];
 regs.forEach(([h,b],i)=>{const col=i%2,row=Math.floor(i/2);const x=M+col*6.2,y=1.7+row*1.8;s.addShape(pres.shapes.RECTANGLE,{x,y:y+0.06,w:0.14,h:0.14,fill:{color:ACCENT},line:{color:ACCENT}});s.addText(h,{x:x+0.3,y,w:5.5,h:0.35,fontSize:15,fontFace:BF,bold:true,color:PRIMARY,margin:0});s.addText(b,{x:x+0.3,y:y+0.38,w:5.5,h:1.0,fontSize:13,fontFace:BF,color:TEXT,margin:0});});}
 {const s=base();title(s,"Governança: Einstein é protagonista","A BeansTech é coadjuvante na engenharia. O Einstein lidera na ciência, ética e decisão.");
-const data=[["Função","Einstein","BeansTech"].map(h=>({text:h,options:{bold:true,color:"FFFFFF",fill:{color:DARK},fontFace:BF,fontSize:14}})),
-[["Curadoria científica","✓ valida protocolos e acervo","—"],["Comité de ética (CEP)","✓ aprova fine-tuning e casos de uso","—"],["Decisão de modelos","✓ quais usar, quando atualizar","—"],["Suspensão","✓ pode pausar a qualquer momento","—"],["Infraestrutura","—","✓ GPU, rede, manutenção"],["Monitoramento 24×7","—","✓ disponibilidade e suporte"]].map((r,i)=>r.map(c=>({text:c,options:{fontFace:BF,fontSize:13,fill:{color:i%2?"FFFFFF":TINT},valign:"middle"}})))];
-s.addTable(data,{x:M,y:1.6,w:W-2*M,colW:[3.5,4.5,4.53],rowH:0.55,border:{type:"solid",pt:0.5,color:"E5E7EB"}});
+const roles=[
+  ["Curadoria científica","EINSTEIN","Validação clínica, protocolos, acervo"],
+  ["Comité de ética (CEP)","EINSTEIN","Aprovação de fine-tuning e casos de uso"],
+  ["Decisão de modelos","EINSTEIN","Quais usar, quando atualizar, quando suspender"],
+  ["Infraestrutura","BEANSTECH","GPU, rede, manutenção, disponibilidade"],
+  ["Monitoramento 24×7","BEANSTECH","Suporte técnico e SLA"],
+];
+roles.forEach(([func,who,desc],i)=>{
+  const col=i%2, row=Math.floor(i/2);
+  const x=M+col*6.2, y=1.6+row*1.35;
+  const isE = who==="EINSTEIN";
+  s.addShape(pres.shapes.RECTANGLE,{x,y,w:5.8,h:1.1,fill:{color:isE?TINT:"FFFFFF"},line:{color:isE?PRIMARY:"E5E7EB",width:1}});
+  s.addText(func,{x:x+0.2,y:y+0.08,w:4.2,h:0.35,fontSize:14,fontFace:BF,bold:true,color:DARK,margin:0});
+  s.addText(who,{x:x+4.5,y:y+0.08,w:1.1,h:0.35,fontSize:10,fontFace:BF,bold:true,color:isE?PRIMARY:ACCENT,align:"right",margin:0});
+  s.addText(desc,{x:x+0.2,y:y+0.45,w:5.4,h:0.55,fontSize:12,fontFace:BF,color:TEXT,margin:0});
+});
 s.addShape(pres.shapes.LINE,{x:M,y:5.5,w:W-2*M,h:0,line:{color:"E3ECF5",width:0.75}});
-s.addText([T("O Einstein.Cloud ",{bold:true,color:PRIMARY,fontSize:16}),T("não é um produto da BeansTech — ",{color:TEXT,fontSize:15}),T("é uma plataforma do Einstein",{bold:true,color:PRIMARY,fontSize:15}),T(", construída com apoio técnico da BeansTech. A marca, a governança e os dados são do Einstein.",{color:TEXT,fontSize:15})],{x:M,y:5.7,w:W-2*M,h:0.8,fontFace:BF,margin:0});}
+s.addText([T("O Einstein.Cloud ",{bold:true,color:PRIMARY,fontSize:16}),T("é uma plataforma do Einstein",{bold:true,color:PRIMARY,fontSize:15}),T(", construída com apoio técnico da BeansTech. A marca, a governança e os dados são do Einstein.",{color:TEXT,fontSize:15})],{x:M,y:5.7,w:W-2*M,h:0.8,fontFace:BF,margin:0});}
 
 // S9 roadmap
 {const s=base();title(s,"Roadmap","10 meses da definição à produção");
