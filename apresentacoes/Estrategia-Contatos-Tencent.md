@@ -138,3 +138,33 @@ Founder & CEO, Beans Tech
 4. **O elemento Hyle/Hunyuan:** para um executivo chinês, ver um brasileiro que entende a filosofia taoísta por trás do nome do modelo deles é... memorável. Use, mas com moderação — um parágrafo, não uma aula.
 
 5. **Paciência:** a Tencent responde em semanas, não dias. Não fazer follow-up antes de 2 semanas.
+
+---
+
+## Email de Posy Lu — Análise
+
+**Não consigo confirmar o email exato** sem enviar (a Tencent usa `cloudmx.qq.com` como MX, que não responde a verificação de endereço). Mas o padrão da empresa é conhecido:
+
+| Padrão | Exemplo confirmado | Probabilidade para Posy Lu |
+|---|---|---|
+| `firstname@tencent.com` | pony@tencent.com (Pony Ma) | possível → `posy@tencent.com` |
+| `firstname.lastname@tencent.com` | martinlau@tencent.com (Martin Lau) | mais provável → `posylu@tencent.com` |
+| `nomechinês@tencent.com` | — | menos provável → `xuequanlu@tencent.com` |
+
+**Candidatos em ordem de probabilidade:**
+1. `posylu@tencent.com` (seguindo o padrão Martin Lau)
+2. `posy@tencent.com` (seguindo o padrão Pony Ma)
+3. `xuequanlu@tencent.com` (nome chinês completo)
+
+**Recomendação:**
+- **LinkedIn InMail é a via mais segura** — 100% garantido de chegar à pessoa
+- Se quiser tentar email: enviar para `posylu@tencent.com` (mais provável)
+- Se bounce: tentar `posy@tencent.com`
+- Se bounce: LinkedIn definitivo
+
+**Roteiro do email para Posy Lu** (usar o mesmo texto do LinkedIn message, com subject line):
+
+```
+Subject: US$ 350M Sovereign AI Alliance in LATAM — hy.cloud × Hunyuan,
+dual-hub ready (ZPE Caucaia + solar off-grid)
+```
