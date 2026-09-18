@@ -19,7 +19,7 @@ s.addText("EINSTEIN.CLOUD",{x:M,y:1.5,w:10,h:1.2,fontSize:60,fontFace:TF,bold:tr
 s.addText("A primeira nuvem médica privada e soberana do Brasil",{x:M,y:2.8,w:10,h:0.8,fontSize:26,fontFace:TF,bold:true,color:"E8B931",margin:0});
 s.addShape(pres.shapes.LINE,{x:M,y:4.0,w:3.5,h:0,line:{color:ACCENT,width:2}});
 s.addText("Proposta ao Conselho Deliberativo · Hospital Israelita Albert Einstein",{x:M,y:4.2,w:9,h:0.5,fontSize:16,fontFace:BF,color:"D0DCE8",margin:0});
-s.addText("BeansTech Health · Matheus Feijão · Outubro 2026",{x:M,y:5.0,w:8,h:0.4,fontSize:13,fontFace:BF,color:"AAB8CC",margin:0});}
+s.addText("BeansTech Health · Matheus Feijão · Setembro 2026",{x:M,y:5.0,w:8,h:0.4,fontSize:13,fontFace:BF,color:"AAB8CC",margin:0});}
 
 // S2 o problema
 {const s=base();title(s,"O Problema","Três barreiras para o uso de IA em saúde no Brasil");
@@ -45,13 +45,30 @@ s.addText("LGPD art. 11: dados sensíveis · art. 37: trilha de operações",{x:
 
 // S5 benchmark
 {const s=base();title(s,"Fundamento: Benchmark de 200 casos","10 modelos, 23 especialidades, 2.000 avaliações — o maior teste de LLM para medicina em PT-BR");
-const data=[["Modelo","Coverage","Abst.","Velocidade"].map(h=>({text:h,options:{bold:true,color:"FFFFFF",fill:{color:DARK},fontFace:BF,fontSize:14}})),
-[["GLM-5.3 (Z.ai)","0,486","20","23,0s"],["Qwen 3.8-Max (Alibaba)","0,437","11","36,4s"],["DeepSeek v4 Pro","0,396","3","37,4s"],["Baichuan-M3 (GPU própria)","0,392","12","33,3s"],["GPT-6 Astra (OpenAI)","0,377","15","17,2s"],["Claude Opus 5 (Anthropic)","0,347","6","23,7s"],["Lingshu-32B (DAMO)","0,274","18","19,2s"]].map((r,i)=>r.map(c=>({text:c,options:{fontFace:BF,fontSize:13,fill:{color:i%2?"FFFFFF":TINT},valign:"middle"}})))];
-s.addTable(data,{x:M,y:1.6,w:W-2*M,colW:[4.0,1.8,1.3,1.93],rowH:0.55,border:{type:"solid",pt:0.5,color:"E5E7EB"}});
+const results=[
+  ["GLM-5.3 (Z.ai)","0,486","20","23s",1],
+  ["Qwen 3.8-Max (Alibaba)","0,437","11","36s",2],
+  ["DeepSeek v4 Pro","0,396","3","37s",3],
+  ["Baichuan-M3 (GPU própria)","0,392","12","33s",4],
+  ["GPT-6 Astra (OpenAI)","0,377","15","17s",5],
+  ["Claude Opus 5 (Anthropic)","0,347","6","24s",6],
+  ["Lingshu-32B (DAMO)","0,274","18","19s",7],
+];
+results.forEach(([name,cov,abst,speed,rank],i)=>{
+  const col=i%2, row=Math.floor(i/2);
+  const x=M+col*6.2, y=1.6+row*1.0;
+  const isTop = rank<=3;
+  s.addShape(pres.shapes.RECTANGLE,{x,y,w:5.8,h:0.8,fill:{color:isTop?TINT:"FFFFFF"},line:{color:isTop?PRIMARY:"E5E7EB",width:1}});
+  s.addText(`${rank}º`,{x:x+0.15,y:y+0.08,w:0.5,h:0.6,fontSize:24,fontFace:TF,bold:true,color:isTop?PRIMARY:MUTED,margin:0,valign:"middle"});
+  s.addText(name,{x:x+0.8,y:y+0.08,w:3.2,h:0.35,fontSize:13,fontFace:BF,bold:isTop,color:DARK,margin:0});
+  s.addText(`cov ${cov}`, {x:x+0.8,y:y+0.4,w:1.5,h:0.35,fontSize:13,fontFace:BF,bold:true,color:isTop?PRIMARY:DARK,margin:0});
+  s.addText(`${abst} abst · ${speed}`,{x:x+2.4,y:y+0.4,w:2.5,h:0.35,fontSize:11,fontFace:BF,color:MUTED,margin:0});
+});
+// 7º card na posição central (sobra da grade 2x4)
 s.addShape(pres.shapes.LINE,{x:M,y:5.8,w:W-2*M,h:0,line:{color:"E3ECF5",width:0.75}});
-s.addText([T("Descoberta-chave: ",{bold:true,color:PRIMARY,fontSize:15}),T("cada modelo vence em especialidades diferentes — não existe 'o melhor'. A arquitetura correta é roteamento multi-modelo por especialidade.",{color:TEXT,fontSize:14})],{x:M,y:6.0,w:6.5,h:0.8,fontFace:BF,margin:0});
-s.addText([T("Red-team: ",{bold:true,color:"DC2626",fontSize:14}),T("10/10 falharam. Granite Guardian: 100%.",{color:TEXT,fontSize:13})],{x:7.5,y:6.0,w:5.3,h:0.5,fontFace:BF,margin:0});
-s.addText([T("SPs ativos: ",{bold:true,color:PRIMARY,fontSize:14}),T("US$ 6.000/mês cobrindo API.",{color:TEXT,fontSize:13})],{x:7.5,y:6.5,w:5.3,h:0.4,fontFace:BF,margin:0});}
+s.addText([T("Descoberta: ",{bold:true,color:PRIMARY,fontSize:15}),T("cada modelo vence em especialidades diferentes. A arquitetura é roteamento multi-modelo.",{color:TEXT,fontSize:14})],{x:M,y:6.0,w:6.5,h:0.6,fontFace:BF,margin:0});
+s.addText([T("Red-team: ",{bold:true,color:"DC2626",fontSize:14}),T("10/10 falharam sem guardrail. Granite Guardian: 100%.",{color:TEXT,fontSize:13})],{x:7.5,y:6.0,w:5.3,h:0.6,fontFace:BF,margin:0});}
+
 
 // S6 red team
 {const s=base();title(s,"Segurança: todos falharam sem guardrail");
