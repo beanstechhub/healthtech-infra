@@ -13,3 +13,5 @@ keycloak	deploy/keycloak	Dockerfile	-	8080	4090	id.beanstech.com.br
 dodr-app	beanshealth/dodr.ai/web	Dockerfile	BUILD_TARGET=app,NEXT_PUBLIC_APP_URL=https://app.dodr.ai	3001	4101	app.dodr.ai
 directus	deploy/directus	Dockerfile	-	8055	4080	cms.beanstech.com.br
 healthdash	deploy/healthdash	Dockerfile	-	8080	4060	health.beanstech.com.br
+hy-site	deploy/site-hycloud	Dockerfile	-	80	4070	hy.cloud
+granitic-site	deploy/site-graniticcloud	Dockerfile	-	80	4071	granitic.cloud
