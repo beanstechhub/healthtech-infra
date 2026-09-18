@@ -27,19 +27,20 @@ s.addText([T("Modelos avaliados: ",{bold:true,color:PRIMARY}),T(models.join(" ·
 const rows=[["1º","GLM-5.3","0,486","23,0s","Z.ai"],["TOP 3","Qwen 3.8-Max","0,437","36,4s","Alibaba"],["3º","DeepSeek v4 Pro","0,396","37,4s","DeepSeek"],["4º","Baichuan-M3-235B","0,392","33,3s","GPU própria"],["5º","GPT-6 Astra","0,377","17,2s","OpenAI"],["6º","Claude Opus 5","0,347","23,7s","Anthropic"]];
 const data=[["Rank","Modelo","Coverage","Velocidade","Provedor"].map(h=>({text:h,options:{bold:true,color:"FFFFFF",fill:{color:DARK},fontFace:BF,fontSize:13}})),
 ...rows.map((r,i)=>r.map((c,j)=>({text:c,options:{fontFace:BF,fontSize:13,color:i===1?PRIMARY:DARK,bold:i===1,fill:{color:i===1?"FFF3E0":i%2?"FFFFFF":TINT},valign:"middle"}})))];
-s.addTable(data,{x:M,y:1.7,w:W-2*M,colW:[1.2,3.5,2.0,2.0,2.53],rowH:0.55,border:{type:"solid",pt:0.5,color:"E5E7EB"}});
+s.addTable(data,{x:M,y:1.5,w:W-2*M,colW:[1.2,3.5,2.0,2.0,2.53],rowH:0.62,border:{type:"solid",pt:0.5,color:"E5E7EB"}});
 s.addShape(pres.shapes.RECTANGLE,{x:0,y:6.0,w:W,h:0.9,fill:{color:TINT},line:{color:TINT}});
 s.addText("O Qwen 3.8-Max supera GPT-6 Astra e Claude Opus 5 — e, com ajustes de fine-tuning, se aperfeiçoará ainda mais.",{x:M,y:6.1,w:W-2*M,h:0.7,fontSize:16,fontFace:TF,italic:true,color:PRIMARY,margin:0,valign:"middle"});}
 
 // S4 multi-morbidade
 {const s=base();title(s,"Multi-morbidade: excelência do Qwen","O cenário mais difícil e mais comum em hospitais brasileiros");
-s.addText("0,62",{x:M,y:1.8,w:4,h:1.5,fontSize:96,fontFace:TF,bold:true,color:PRIMARY,margin:0});
-s.addText("coverage — 2× melhor que qualquer outro modelo",{x:M,y:3.3,w:4,h:0.8,fontSize:16,fontFace:BF,color:TEXT,margin:0});
+s.addText("0,62",{x:M,y:1.5,w:4,h:1.5,fontSize:96,fontFace:TF,bold:true,color:PRIMARY,margin:0});
+s.addText("coverage — 2× melhor que qualquer outro modelo",{x:M,y:3.0,w:4,h:0.8,fontSize:16,fontFace:BF,color:TEXT,margin:0});
 const cases2=[["Idosa 82 anos, 8 medicamentos, DRC aguda","0,75","0,33"],["Cirrose Child C com HCC","0,62","0,33"],["DM2 + ICC + DRC + desnutrição","0,62","0,33"]];
 const data=[["Caso","Qwen 3.8-Max","GPT-6 Astra"].map(h=>({text:h,options:{bold:true,color:"FFFFFF",fill:{color:DARK},fontFace:BF,fontSize:13}})),
 ...cases2.map((r,i)=>r.map(c=>({text:c,options:{fontFace:BF,fontSize:14,fill:{color:i%2?"FFFFFF":TINT},valign:"middle"}})))];
-s.addTable(data,{x:5.5,y:1.8,w:7.2,colW:[4.2,1.5,1.5],rowH:0.6,border:{type:"solid",pt:0.5,color:"E5E7EB"}});
-s.addText("Pacientes complexos, politratados, com interações medicamentosas — exatamente onde o Qwen 3.8-Max raciocina melhor.",{x:M,y:5.2,w:W-2*M,h:0.8,fontSize:15,fontFace:BF,color:TEXT,margin:0});}
+s.addTable(data,{x:5.5,y:1.5,w:7.2,colW:[4.2,1.5,1.5],rowH:0.7,border:{type:"solid",pt:0.5,color:"E5E7EB"}});
+s.addText("Pacientes complexos, politratados, com interações medicamentosas — exatamente onde o Qwen 3.8-Max raciocina melhor.",{x:M,y:4.0,w:5,h:1.0,fontSize:15,fontFace:BF,color:TEXT,margin:0});
+s.addText([T("Por que multi-morbidade é o teste mais difícil: ",{bold:true,color:PRIMARY,fontSize:14}),T("o modelo precisa raciocinar sobre interações medicamentosas, ajuste renal, hepático, e prioridades conflitantes. É onde a maioria dos modelos falha.",{color:TEXT,fontSize:14})],{x:M,y:5.2,w:W-2*M,h:0.9,fontFace:BF,margin:0});}
 
 // S5 pneumologia
 {const s=base();title(s,"Pneumologia: melhor de todos","Coverage 0,75 — 3× melhor que o segundo colocado");
@@ -65,17 +66,19 @@ s.addText([T("O Qwen 3.8-Max é ",{color:TEXT}),T("11× mais barato",{bold:true,
 {const s=base();title(s,"Lingshu-32B (base Qwen2.5-VL): imagem médica","O melhor modelo aberto para VQA médica multimodal");
 const data=[["Benchmark","Lingshu-32B","GPT-4.1","Claude Sonnet 4"].map(h=>({text:h,options:{bold:true,color:"FFFFFF",fill:{color:DARK},fontFace:BF,fontSize:13}})),
 [["Média (7 benchmarks)",66.6,63.4,61.5],["VQA-RAD (radiologia)",76.5,65.0,"—"],["SLAKE (radiologia)",89.2,72.2,"—"],["MIMIC-CXR (laudos)",67.1,57.1,"—"]].map((r,i)=>r.map(c=>({text:String(c).includes(".")?String(c).replace(".",","):String(c),options:{fontFace:BF,fontSize:14,fill:{color:i%2?"FFFFFF":TINT},valign:"middle"}})))];
-s.addTable(data,{x:M,y:1.7,w:W-2*M,colW:[4.0,3.0,3.0,2.03],rowH:0.55,border:{type:"solid",pt:0.5,color:"E5E7EB"}});
-s.addText("12 modalidades: RX · TC · RM · ultrassom · histopatologia · dermatoscopia · fundoscopia · OCT · endoscopia · microscopia · fotografia · PET",{x:M,y:4.8,w:W-2*M,h:0.5,fontSize:14,fontFace:BF,color:PRIMARY,bold:true,margin:0});}
+s.addTable(data,{x:M,y:1.5,w:W-2*M,colW:[4.0,3.0,3.0,2.03],rowH:0.62,border:{type:"solid",pt:0.5,color:"E5E7EB"}});
+s.addText("12 modalidades suportadas:",{x:M,y:4.5,w:3,h:0.4,fontSize:14,fontFace:BF,color:PRIMARY,bold:true,margin:0});
+s.addText("RX · TC · RM · Ultrassom · Histopatologia · Dermatoscopia · Fundoscopia · OCT · Endoscopia · Microscopia · Fotografia · PET",{x:M,y:4.9,w:W-2*M,h:0.5,fontSize:14,fontFace:BF,color:PRIMARY,margin:0});
+s.addText([T("Vantagem: ",{bold:true,color:PRIMARY,fontSize:14}),T("o Lingshu foi treinado especificamente para medicina. O fine-tuning da DAMO Academy sobre a base Qwen2.5-VL acrescentou 10+ pontos em benchmarks médicos. É o único modelo aberto que ganha do GPT-4.1 em VQA médica.",{color:TEXT,fontSize:14})],{x:M,y:5.6,w:W-2*M,h:1.0,fontFace:BF,margin:0});}
 
 // S9-11 sugestões
 {const s=base();title(s,"Sugestões para tornar o Qwen o Nº 1","6 ações concretas");
-const sug=[["1. Fine-tuning PT-BR médico","+15-20 pts em coverage com PCDT/bulas/diretrizes BR"],["2. Lingshu radiologia brasileira","Melhor modelo de RX do mundo em PT com dados Einstein/Sírio"],["3. Qwen-Med dedicado","Modelo médico oficial (como MedGemma, mas aberto)"],["4. Qwen-Flash-Medical","Versão destilada <5s para triagem em PS/UPA"],["5. Presença em São Paulo","Latência <15s (vs 36s atual via Singapura)"],["6. Validação com Einstein","Estudo publicado: 'Qwen validado para decisão clínica em PT'"]];
+const sug=[["1. Fine-tuning PT-BR médico","+15-20 pts em coverage com PCDT/bulas/diretrizes BR"],["2. Lingshu radiologia brasileira","Melhor modelo de RX do mundo em PT com dados de hospitais parceiros"],["3. Qwen-Med dedicado","Modelo médico oficial (como MedGemma, mas aberto)"],["4. Qwen-Flash-Medical","Versão destilada <5s para triagem em PS/UPA"],["5. Presença em São Paulo","Latência <15s (vs 36s atual via Singapura)"],["6. Programa de validação aberto","Estudo publicado com sociedades médicas e hospitais parceiros"]];
 sug.forEach(([h,b],i)=>{const col=i%2,row=Math.floor(i/2);const x=M+col*6.2,y=1.7+row*1.6;s.addShape(pres.shapes.RECTANGLE,{x,y:y+0.08,w:0.14,h:0.14,fill:{color:PRIMARY},line:{color:PRIMARY}});s.addText(h,{x:x+0.3,y,w:5.6,h:0.35,fontSize:15,fontFace:BF,bold:true,color:DARK,margin:0});s.addText(b,{x:x+0.3,y:y+0.38,w:5.6,h:0.9,fontSize:13,fontFace:BF,color:TEXT,margin:0});});}
 
 // S12 roadmap + contato
 {const s=base();title(s,"Roadmap e Contato");
-const phases=[["Fase 1","Fine-tune Qwen PT-BR médico","6 meses","+15-20 pts"],["Fase 2","Lingshu radiologia BR","6 meses","Melhor RX do mundo"],["Fase 3","Qwen Medical dedicado","12 meses","Competir com MedGemma"],["Fase 4","Presença Brasil (SP)","3 meses","Latência <15s"],["Fase 5","Validação Einstein","12 meses","Publicação conjunta"]];
+const phases=[["Fase 1","Fine-tune Qwen PT-BR médico","6 meses","+15-20 pts"],["Fase 2","Lingshu radiologia BR","6 meses","Melhor RX do mundo"],["Fase 3","Qwen Medical dedicado","12 meses","Competir com MedGemma"],["Fase 4","Presença Brasil (SP)","3 meses","Latência <15s"],["Fase 5","Programa de validação","12 meses","Estudo publicado"]];
 phases.forEach(([f,a,d,r],i)=>{const y=1.6+i*0.8;s.addText(f,{x:M,y,w:1.2,h:0.6,fontSize:14,fontFace:BF,bold:true,color:PRIMARY,margin:0,valign:"middle"});s.addText(a,{x:M+1.3,y,w:4.5,h:0.6,fontSize:14,fontFace:BF,color:TEXT,margin:0,valign:"middle"});s.addText(d,{x:M+6,y,w:1.5,h:0.6,fontSize:14,fontFace:BF,color:MUTED,margin:0,valign:"middle"});s.addText(r,{x:M+7.6,y,w:4.5,h:0.6,fontSize:14,fontFace:BF,bold:true,color:ACCENT,margin:0,valign:"middle"});});
 s.addShape(pres.shapes.LINE,{x:M,y:6.0,w:W-2*M,h:0,line:{color:"E5E7EB",width:0.75}});
 s.addText("Matheus Feijão · WhatsApp +55 11 92507-9058 · matheus@beanstech.com.br",{x:M,y:6.2,w:8,h:0.5,fontSize:14,fontFace:BF,color:DARK,bold:true,margin:0});}
