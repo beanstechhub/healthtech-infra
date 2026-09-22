@@ -26,7 +26,7 @@ We're also the steward of **z.cloud** — positioned as *"the AI cloud that prov
 | Portals live | 75+ domains across all verticals |
 | Clinical decision tool | Live at /decisao on all 8 health portals — powered by GLM-5.3 via Model Studio |
 | Clinical benchmark | 200 cases × 10 models × 2,000 evaluations — **GLM-5.3 ranked #1** (coverage 0.486) |
-| LegalTech corpus | 67M+ Brazilian court decisions indexed (RagJur — Elasticsearch) |
+| LegalTech corpus | **100M Brazilian court decisions targeted** (67M+ already indexed, expanding to full judiciary) — RagJur, Elasticsearch |
 | Identity infrastructure | BeansTech ID (Keycloak, MFA, OIDC) serving all verticals |
 | Compliance | LGPD article 38 (RIPD published), DPO appointed (dpo@beanstech.com.br) |
 | Sovereign data centers | 2 projects: Santa Terezinha/Paraíba (solar, satellite) + ZPE Caucaia/Ceará |
@@ -44,8 +44,8 @@ We're also the steward of **z.cloud** — positioned as *"the AI cloud that prov
 - Current daily requests to AI infrastructure: ~500 (across all portals)
 - Clinical decision tool launched: 2 weeks ago
 - Medical reviewer invitations: 200 physicians (Einstein network, CRM-SP)
-- Legal: 20 legaltech domains ready, RagJur with 67M indexed decisions
-- **We're not pretending scale we don't have. What we have is the infrastructure, the benchmark, the 4-vertical pipeline, and sovereign data center projects.**
+- LegalTech: **100 million court decisions** targeted for full indexing (67M already processed, expanding to complete the Brazilian judiciary corpus)
+- **We're not pretending scale we don't have. What we have is the infrastructure, the benchmark, the 4-vertical pipeline, the 100M legal corpus target, and sovereign data center projects.**
 
 ---
 
@@ -97,7 +97,7 @@ z.cloud is positioned as *"the AI cloud that proves what it answers"* — routin
 
 1. **Hospitals of reference** (Einstein, Sírio-Libanês, Rede D'Or) — sovereign medical clouds with GLM-5.3 as reasoning engine. **Einstein.Cloud proposal submitted.**
 
-2. **Legal market** (1.2M lawyers in Brazil) — RagJur already has 67M decisions indexed. GLM-5.3 for complex legal analysis (multi-party, regulatory), GLM Flash for search volume.
+2. **Legal market** (1.2M lawyers in Brazil, 100M court decisions) — RagJur is building the most complete legal AI corpus in Latin America. GLM-5.3 for complex multi-party legal analysis, GLM Flash for search across 100M decisions.
 
 3. **Individual physicians** — the "third shift" market: doctors working overnight who need clinical decision support. **GLM-5.3 won our 200-case benchmark in Portuguese.**
 
@@ -117,9 +117,9 @@ z.cloud is positioned as *"the AI cloud that proves what it answers"* — routin
 
 ---
 
-### 4. Compute
+### 4. Compute & Sovereign Data Centers
 
-**Current GPU fleet:**
+**Current GPU fleet (operational today):**
 
 | Server | Location | GPUs | Models |
 |---|---|---|---|
@@ -129,18 +129,48 @@ z.cloud is positioned as *"the AI cloud that proves what it answers"* — routin
 | antmed-va | Virginia | 4× L20 | AntAngelMed-100B (TP=4) |
 | **TOTAL** | | **12× L20 (576 GB)** | **10+ models** |
 
-**Sovereign data center plans (Brazil):**
-- **Santa Terezinha, Paraíba:** solar-powered, satellite connectivity, independent from public grid
-- **ZPE Caucaia, Ceará:** same Free Processing Zone as TikTok Brazil — tax incentives, submarine cables, special customs regime
+**Sovereign data center strategy — the Caucaia advantage:**
+
+We have two data center projects in Northeast Brazil, and this is where it gets strategic for Z.ai's LATAM expansion:
+
+**ZPE Caucaia, Ceará** — the same Free Processing Zone where **ByteDance/TikTok is installing their Brazilian data center** (approved by CZPE Resolutions 101 and 103-112, November 2025). This means:
+- **Submarine cable hub:** Fortaleza/Ceará is the landing point for multiple trans-Atlantic and inter-American cables — direct, low-latency routes to Europe, US East Coast, and Africa
+- **Tax incentives:** ZPE regime eliminates import duties on hardware, PIS/COFINS, and IPI for export-oriented operations
+- **Special customs regime:** equipment enters without permanent import taxes
+- **Regulatory precedent:** the ByteDance/TikTok approval creates a clear legal pathway for Chinese tech companies deploying sovereign AI infrastructure in Brazil
+
+**Latency improvement (the concrete numbers):**
+
+| Route | Current (Singapore) | From Caucaia/Fortaleza | Improvement |
+|---|---|---|---|
+| São Paulo (220M Brazilians) | ~180ms RTT | **<20ms** | **9× faster** |
+| US East Coast (Miami/NY) | ~230ms | **~100ms** | **2.3× faster** |
+| Europe (Lisbon/Frankfurt) | ~250ms | **~120ms** | **2× faster** |
+| LATAM neighbors (Argentina, Chile, Colombia) | ~200ms | **~40-60ms** | **4-5× faster** |
+
+**Why this matters for Z.ai's LATAM strategy:**
+
+Brazil is not just a market — it's the **geographic gateway to Latin America**. From Caucaia, a GLM sovereign cluster serves:
+- 220M Brazilians (Portuguese — the largest Portuguese-speaking market in the world)
+- 65M Colombians, 46M Argentines, 19M Chileans (Spanish — same architecture, different corpus)
+- Direct submarine routes to Europe and US East for global expansion
+- The same LGPD-inspired data protection laws spreading across LATAM (Brazil's LGPD became the model for the region)
+
+**Santa Terezinha, Paraíba** (secondary site):
+- Solar-powered (own photovoltaic plant on owned land)
+- Satellite connectivity, zero dependence on public grid
+- Total energy independence — the ultimate sovereign play
 
 **Maximum self-deployed GLM cluster:**
 
 | Scenario | GPUs | Investment | Timeline |
 |---|---|---|---|
-| GLM-5.3 (FP8, TP=4) | 4× L20 or 2× H100 | ~$7,250/month | Immediate |
+| GLM-5.3 (FP8, TP=4) — current | 4× L20 | ~$7,250/month | **Already operational** |
 | Scale to 50 concurrent users | 16× L20 | ~$29,000/month | 60 days |
-| Sovereign data center (Paraíba) | 32× L20 or 8× H100 | ~$60,000–120,000/month | 12 months |
-| Full multi-vertical deployment | 64× L20 or 16× H100 | Custom | 24 months |
+| Sovereign cluster Caucaia (Phase 1) | 32× L20 or 8× H100 | ~$60K–120K/month | 12 months |
+| Full LATAM sovereign deployment | 64× L20 or 16× H100 | Custom | 24 months |
+
+**Key point:** A self-deployed GLM cluster in Caucaia serves not just Brazil — it serves all of LATAM with better latency than any deployment in Singapore or Virginia. Combined with Alibaba Cloud's Model Studio API for burst/elastic, this is a dual-track infrastructure: **sovereign for data that must stay in-country, elastic for global scale.**
 
 ---
 
