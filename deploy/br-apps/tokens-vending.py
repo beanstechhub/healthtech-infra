@@ -5,7 +5,7 @@ por request. SQLite local em /var/lib/tokens-vending.
 Padrão de segredos: /usr/local/etc/tokens/<NOME> (mesmo esquema do shim).
 """
 from __future__ import annotations
-import hmac, os, re, secrets, sqlite3, time
+import hmac, json, os, re, secrets, sqlite3, time
 from datetime import datetime, timezone
 from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse
