@@ -51,7 +51,7 @@ async def refresh():
         tasks.append(probe(c, "flash-va · lingshu-i-8b :8005", "GPUs", f"{FLASH}:8005/v1/models", headers={"Authorization": f"Bearer {tok2}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
         tasks.append(probe(c, "flash-va · baichuan-m2 :8006", "GPUs", f"{FLASH}:8006/v1/models", headers={"Authorization": f"Bearer {tok2}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
         tasks.append(probe(c, "flash-va · theia :8007", "GPUs", f"{FLASH}:8007/v1/models", headers={"Authorization": f"Bearer {tok4}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
-        tasks.append(probe(c, "flash-va · hunyuan-ocr :8008", "GPUs", f"{FLASH}:8008/v1/models", headers={"Authorization": f"Bearer {tok4}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
+        # hunyuan-ocr :8008 removido — serviço desativado (crash-loop no profiling do encoder)
         tasks.append(probe(c, "flash-va · qwen3-embedding :8010", "GPUs", f"{FLASH}:8010/v1/models", headers={"Authorization": f"Bearer {tok4}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
         # serviços multimídia (sem contrato OpenAI — sonda TCP/HTTP crua)
         tasks.append(probe(c, "flash-va · hunyuan3d :8009 (3D)", "GPUs", f"{FLASH}:8009/", ok=(200, 400, 404, 405)))
