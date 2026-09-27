@@ -14,6 +14,7 @@ const MODELS = [
   { id: 'granite-4.1', name: 'Granite-4.1-30B', short: 'Gr41 · Síntese', tag: 'SÍNTESE', role: 'Verificação', desc: 'IBM Granite 4.1 FP8. Camada 3 das 6.', zh: 'IBM', zh_pt: 'IBM', specs: { arch: '30B MoE', quant: 'FP8', vram: '44,4 GB', lat: '~0.5s' }, paper: '', host: 'flash-va', color: '#666' },
   { id: 'granite-guardian', name: 'Granite-Guardian-3B', short: 'Guardião', tag: 'GUARDIÃO', role: 'Segurança', desc: 'IBM Granite Guardian. Camada 2.', zh: 'IBM', zh_pt: 'IBM', specs: { arch: '3B', quant: 'BF16', vram: '8,9 GB', lat: '<0.3s' }, paper: '', host: 'flash-va', color: '#666' },
   { id: 'theia', name: 'Theia-8B', short: 'Theia · Compliance', tag: 'COMPLIANCE', role: 'Análise financeira', desc: 'Chainbase Theia 8B. On-chain e compliance.', zh: 'Chainbase', zh_pt: 'Chainbase', specs: { arch: '8B', quant: 'FP8', vram: '8,5 GB', lat: '<0.5s' }, paper: '', host: 'flash-va', color: '#C9963C' },
+  { id: 'hy4-preview', name: 'Hy4-Preview-780B', short: 'Hy4 · Fronteira', tag: 'A GIGANTE', role: 'Raciocínio de fronteira', desc: 'Tencent Hy4-preview 780B MoE. Flagship em implantação própria (Shenzhen).', zh: '混元', zh_pt: 'Hunyuan (Tencent)', specs: { arch: 'MoE 780B', quant: 'Q4_K_M', vram: '435 GiB · 8 GPUs', lat: '24 t/s' }, paper: '', host: 'hy4-sz', color: '#003C6B' },
 ]
 
 const EXAMPLES = [
@@ -157,6 +158,45 @@ export default function ChatMed() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ model, messages: [{ role: 'user', content }], attachment: att || undefined }),
       })
+      const ctype = resp.headers.get('content-type') || ''
+
+      if (ctype.includes('text/event-stream')) {
+        // streaming: a resposta cresce na tela; raciocínio do M3/Hy4 aparece como indicador
+        updateActive(s => ({ ...s, messages: [...s.messages, { role: 'assistant', content: '', streaming: true, model: MODELS.find(m => m.id === model)?.name, thinking: 0 }] }))
+        setLoading(false)
+        const reader = resp.body.getReader()
+        const dec = new TextDecoder()
+        let buf = ''
+        const patchLast = patch => updateActive(s => {
+          const msgs = [...s.messages]
+          msgs[msgs.length - 1] = { ...msgs[msgs.length - 1], ...(typeof patch === 'function' ? patch(msgs[msgs.length - 1]) : patch) }
+          return { ...s, messages: msgs }
+        })
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) break
+          buf += dec.decode(value, { stream: true })
+          let sep
+          while ((sep = buf.indexOf('\n\n')) >= 0) {
+            const evt = buf.slice(0, sep)
+            buf = buf.slice(sep + 2)
+            const dline = evt.split('\n').find(l => l.startsWith('data:'))
+            if (!dline) continue
+            let j
+            try { j = JSON.parse(dline.slice(5).trim()) } catch { continue }
+            if (j.error) { patchLast({ content: `Erro: ${j.error}`, error: true, streaming: false }); continue }
+            if (j.reasoning) { patchLast(m => ({ thinking: (m.thinking || 0) + 1 })); continue }
+            if (j.delta) { patchLast(m => ({ content: m.content + j.delta })); continue }
+            if (j.meta) {
+              const { content: mc, ...meta } = j.meta
+              patchLast({ content: mc, streaming: false, tokens: meta.tokens?.total || 0, latency: meta.latency?.vllm || 0, ...meta })
+            }
+          }
+        }
+        patchLast({ streaming: false })
+        return
+      }
+
       const data = await resp.json()
       setLoading(false)
       if (data.error) {
@@ -193,6 +233,8 @@ export default function ChatMed() {
         .guard-badge{font-family:Inter,sans-serif;font-size:10px;color:#2D7A4F;background:rgba(45,122,79,.08);border:1px solid rgba(45,122,79,.25);border-radius:4px;padding:3px 8px;display:inline-block;margin-top:8px}
         .md p{margin:2px 0;line-height:1.8}
         .disc{font-family:Inter,sans-serif;font-size:10px;color:#B0392E;line-height:1.5;padding:8px 0 0}
+        .dots::after{content:'';animation:dots 1.2s steps(4,end) infinite}
+        @keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
         .inp{flex:1;background:#E8F1F8;border:1px solid #D0DCE4;border-radius:10px;padding:14px 20px;font-family:Georgia,serif;font-size:14px;color:#1A1A2E;resize:none;outline:none;min-height:52px}
         .inp:focus{border-color:#005B96}
         .btn{background:#005B96;color:#fff;border:none;border-radius:10px;padding:14px 28px;font-family:Inter,sans-serif;font-size:14px;cursor:pointer}
@@ -282,6 +324,11 @@ export default function ChatMed() {
                 )}
                 {msg.attach && !msg.attach.type?.startsWith('image/') && (
                   <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, opacity: .85, marginBottom: 6 }}>📎 {msg.attach.name}</div>
+                )}
+                {msg.role === 'assistant' && msg.streaming && (msg.thinking || 0) > 0 && !msg.content && (
+                  <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: '#5A6A7A', fontStyle: 'italic' }}>
+                    🧠 raciocínio profundo em curso<span className="dots" />
+                  </div>
                 )}
                 {msg.role === 'user'
                   ? msg.content

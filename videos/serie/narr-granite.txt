@@ -1,0 +1,1 @@
+A família Granite, da IBM. O Granite 4.1, 30 bilhões de parâmetros em MoE, é a nossa camada de síntese e verificação: a terceira das seis camadas da cadeia. O Granite Guardian, 3 bilhões, é o guardião: classifica cada entrada antes de qualquer processamento e filtra o que não deve passar. Rigor IBM dentro da nossa frota soberana.

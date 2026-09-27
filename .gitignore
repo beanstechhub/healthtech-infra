@@ -62,3 +62,23 @@ apresentacoes/node_modules/
 !apresentacoes/GraniticCloud-IBM-Parceria-EN.pptx
 !apresentacoes/build-ibm-deck.js
 !TABELA-PRECOS-R.md
+
+# docs de negócio/arquitetura na raiz (2026-09)
+!/*.md
+# roteiros e scripts de vídeo — mídia (mp4/wav/png) fica fora
+!/videos/
+!/videos/*
+!/videos/serie/
+!/videos/serie/*.sh
+!/videos/serie/*.txt
+!/videos/*.sh
+!/videos/*.py
+!/videos/*.txt
+videos/*.mp4
+videos/*.wav
+videos/*.png
+videos/shots/
+videos/serie/*.mp4
+videos/serie/*.wav
+videos/hero-*.mp4
+videos/serie/vod-urls-serie.txt

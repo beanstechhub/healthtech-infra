@@ -1,0 +1,1 @@
+A família Qwen, da Alibaba. O texto: do qwen-plus rápido ao Qwen 3 de ponta. A visão: Qwen-VL para imagens e OCR. A voz: a síntese que narra estes vídeos. Os embeddings que indexam os julgados. O Qwen-Image que gera imagens. E o Wan, que gera vídeo. Uma família inteira dentro da nossa frota e do nosso pipeline.

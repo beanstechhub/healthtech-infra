@@ -1,0 +1,1 @@
+Duas formas de usar os modelos da BeansTech. No plano de tokens, você contrata pacotes mensais com volume incluso e preço reduzido: previsibilidade para operação contínua. No pagamento por API, você paga por uso, por token consumido: ideal para começar, integrar e escalar por demanda. Sem lock-in: a mesma frota soberana, o mesmo compliance LGPD, nos dois modelos.
