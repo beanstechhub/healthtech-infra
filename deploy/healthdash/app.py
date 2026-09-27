@@ -44,7 +44,7 @@ async def refresh():
         tasks.append(probe(c, "elite-va · lingshu-32b :8002", "GPUs", f"{ELITE}:8002/v1/models", headers={"Authorization": f"Bearer {tok2}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
         tasks.append(probe(c, "elite-va · antangelmed :8000 (TP=2)", "GPUs", f"{ELITE}:8000/v1/models", headers={"Authorization": f"Bearer {tok5}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
         # flash-va (gn9gc-8x Blackwell)
-        tasks.append(probe(c, "flash-va · glm-5.3-flash :8001 (TP=8)", "GPUs", f"{FLASH}:8001/v1/models", headers={"Authorization": f"Bearer {tok4}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
+        # glm-5.3-flash :8001 removido — self-host abandonado, o Flash roda via Model Studio (qwen probe acima)
         tasks.append(probe(c, "flash-va · granite-4.1 :8002", "GPUs", f"{FLASH}:8002/v1/models", headers={"Authorization": f"Bearer {tok1}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
         tasks.append(probe(c, "flash-va · granite-guardian :8003", "GPUs", f"{FLASH}:8003/v1/models", headers={"Authorization": f"Bearer {tok1}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
         tasks.append(probe(c, "flash-va · medgemma-4b :8004", "GPUs", f"{FLASH}:8004/v1/models", headers={"Authorization": f"Bearer {tok1}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))

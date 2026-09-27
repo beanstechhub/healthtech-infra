@@ -23,6 +23,30 @@ FLASH = "47.85.207.155"
 
 TOKEN = open("/usr/local/etc/ollama-shim-token").read().strip()
 
+# ── venda de tokens: keys bth_* compradas no tokens-vending (Pix) ──
+VENDING_DB = "/var/lib/tokens-vending/vending.db"
+CUST_COST = 1  # tokens debitados por request de chat/generate
+
+def _cust(k: str, charge: bool):
+    """Valida key de cliente no SQLite do vending; se charge=True, debita CUST_COST."""
+    if not k.startswith("bth_"):
+        return False
+    import sqlite3
+    con = sqlite3.connect(VENDING_DB, timeout=10)
+    try:
+        with con:
+            r = con.execute("SELECT balance FROM api_keys WHERE key=? AND active=1", (k,)).fetchone()
+            if not r or r[0] < (CUST_COST if charge else 0):
+                return False
+            if charge:
+                con.execute("UPDATE api_keys SET balance=balance-? WHERE key=?", (CUST_COST, k))
+                con.execute("INSERT INTO ledger(key,delta,reason,ts) VALUES(?,?,?,datetime('now'))", (k, -CUST_COST, "shim"))
+        return True
+    except Exception:
+        return False
+    finally:
+        con.close()
+
 ROUTES = {
     "medgemma-27b":     (ELITE,  8001, "medgemma-27b",   "GPU_GATEWAY_TOKEN"),
     "medgemma:27b":     (ELITE,  8001, "medgemma-27b",   "GPU_GATEWAY_TOKEN"),
@@ -61,7 +85,20 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def _authed(self):
-        return self.headers.get("Authorization", "") == f"Bearer {TOKEN}"
+        a = self.headers.get("Authorization", "")
+        if a == f"Bearer {TOKEN}":
+            return True
+        return _cust(a.removeprefix("Bearer ").strip(), charge=False)
+
+    def _charge(self):
+        """Debita 1 token de clientes bth_* em requests de inferência. False = bloqueado (já respondeu 402)."""
+        k = self.headers.get("Authorization", "").removeprefix("Bearer ").strip()
+        if not k.startswith("bth_"):
+            return True
+        if _cust(k, charge=True):
+            return True
+        self._reply(402, json.dumps({"error": "saldo de tokens insuficiente — recarregue em chat.beanstech.ai/tokens"}).encode())
+        return False
 
     def do_GET(self):
         p = self.path.split("?")[0]
@@ -89,6 +126,8 @@ class Handler(BaseHTTPRequestHandler):
             req = json.loads(raw or b"{}")
         except Exception:
             return self._reply(400, b'{"error":"json invalido"}')
+        if not self._charge():  # débito de tokens (clientes bth_*)
+            return
         host, port, target_model, keyname = resolve(req.get("model", ""))
         stream = bool(req.get("stream", False))
 
