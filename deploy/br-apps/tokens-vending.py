@@ -7,7 +7,7 @@ Padrão de segredos: /usr/local/etc/tokens/<NOME> (mesmo esquema do shim).
 from __future__ import annotations
 import hmac, os, re, secrets, sqlite3, time
 from datetime import datetime, timezone
-from fastapi import FastAPI, Header, HTTPException
+from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel
 
@@ -15,8 +15,11 @@ DB = os.environ.get("VENDING_DB", "/var/lib/tokens-vending/vending.db")
 TOKENS_DIR = "/usr/local/etc/tokens"
 ADMIN = open(f"{TOKENS_DIR}/VENDING_ADMIN_TOKEN").read().strip() if os.path.exists(f"{TOKENS_DIR}/VENDING_ADMIN_TOKEN") else os.environ.get("VENDING_ADMIN_TOKEN", "")
 PIX_KEY = open(f"{TOKENS_DIR}/PIX_KEY").read().strip() if os.path.exists(f"{TOKENS_DIR}/PIX_KEY") else os.environ.get("PIX_KEY", "")
+STRIPE_KEY = open(f"{TOKENS_DIR}/STRIPE_SECRET_KEY").read().strip() if os.path.exists(f"{TOKENS_DIR}/STRIPE_SECRET_KEY") else ""
+STRIPE_WEBHOOK = open(f"{TOKENS_DIR}/STRIPE_WEBHOOK_SECRET").read().strip() if os.path.exists(f"{TOKENS_DIR}/STRIPE_WEBHOOK_SECRET") else ""
 MERCHANT = os.environ.get("PIX_MERCHANT", "BEANS TECH")
 CITY = os.environ.get("PIX_CITY", "Fortaleza")
+BASE_URL = os.environ.get("BASE_URL", "https://beansmed.com.br")
 
 # pacotes: id → (tokens, preço R$)
 PACKS = {
@@ -75,6 +78,34 @@ def pix_brcode(key: str, amount: float, txid: str) -> str:
 def new_key() -> str:
     return "bth_" + secrets.token_urlsafe(30)[:38]
 
+def _stripe_post(path: str, data: dict):
+    """POST no api.stripe.com (host fixo, form-encoded). Sem URL dinâmica."""
+    import http.client, urllib.parse
+    if not STRIPE_KEY:
+        return None, 0
+    conn = http.client.HTTPSConnection("api.stripe.com", timeout=30)
+    body = urllib.parse.urlencode(data)
+    conn.request("POST", path, body, {"Authorization": f"Bearer {STRIPE_KEY}",
+                                      "Content-Type": "application/x-www-form-urlencoded"})
+    r = conn.getresponse()
+    out = json.loads(r.read() or b"{}")
+    conn.close()
+    return out, r.status
+
+def _credit(order_id: str) -> dict:
+    """Marca pedido como pago e credita os tokens (idempotente)."""
+    c = db()
+    with c:
+        o = c.execute("SELECT tokens, key, status FROM orders WHERE id=?", (order_id,)).fetchone()
+        if not o:
+            c.close()
+            raise HTTPException(404, "pedido não encontrado")
+        if o[2] != "paid":
+            c.execute("UPDATE orders SET status='paid', paid_at=? WHERE id=?", (now(), order_id))
+            c.execute("UPDATE api_keys SET balance=balance+? WHERE key=?", (o[0], o[1]))
+            c.execute("INSERT INTO ledger(key,delta,reason,ts) VALUES(?,?,?,?)", (o[1], o[0], f"stripe {order_id}", now()))
+    return {"status": "paid", "key": o[1], "saldo": o[0]}
+
 def require_admin(admin: str | None):
     if not ADMIN or not admin or not hmac.compare_digest(admin, ADMIN):
         raise HTTPException(403, "admin token inválido")
@@ -102,18 +133,32 @@ def buy(b: Buy):
         c.execute("INSERT INTO api_keys(key,label,created_at) VALUES(?,?,?)", (key, b.email, now()))
         c.execute("INSERT INTO orders(id,pack,tokens,amount,key,created_at) VALUES(?,?,?,?,?,?)",
                   (oid, b.pack, pack["tokens"], pack["preco"], key, now()))
+    # pagamento: Stripe (Pix automático via webhook) ou BR Code estático
+    stripe_url = None
+    if STRIPE_KEY:
+        sess, code = _stripe_post("/v1/checkout/sessions", {
+            "mode": "payment",
+            "payment_method_types[0]": "pix",
+            "line_items[0][quantity]": "1",
+            "line_items[0][price_data][currency]": "brl",
+            "line_items[0][price_data][unit_amount]": str(int(round(pack["preco"] * 100))),
+            "line_items[0][price_data][product_data][name]": f"BeansMed {pack['nome']} — {pack['tokens']} tokens",
+            "metadata[order]": oid,
+            "success_url": f"{BASE_URL}/?paid=1",
+            "cancel_url": f"{BASE_URL}/?cancel=1",
+        })
+        if code == 200:
+            stripe_url = sess.get("url")
     brcode = pix_brcode(PIX_KEY, pack["preco"], oid) if PIX_KEY else None
     qr_svg = None
     if brcode:
-        import qrcode, qrcode.image.svg
+        import qrcode, qrcode.image.svg, io
         img = qrcode.make(brcode, image_factory=qrcode.image.svg.SvgPathImage, box_size=10)
-        import io
-        buf = io.StringIO()
-        img.save(buf)
-        qr_svg = buf.getvalue()
+        buf = io.StringIO(); img.save(buf); qr_svg = buf.getvalue()
     return {"order": oid, "key": key, "tokens": pack["tokens"], "preco": pack["preco"],
+            "stripe_url": stripe_url,
             "pix_brcode": brcode, "pix_key": PIX_KEY or None, "qr_svg": qr_svg,
-            "instrucoes": "Pague pelo Pix copia-e-cola (ou QR) e o saldo é liberado após confirmação do financeiro."}
+            "instrucoes": "Pague pelo Pix (QR ou copia-e-cola). Com Stripe o saldo libera sozinho após o pagamento; sem Stripe, após confirmação do financeiro."}
 
 @app.get("/admin/stats")
 def stats(authorization: str = Header(default="")):
@@ -194,6 +239,35 @@ def confirm(oid: str, authorization: str = Header(default="")):
         c.execute("INSERT INTO ledger(key,delta,reason,ts) VALUES(?,?,?,?)", (o[1], o[0], f"pix {oid}", now()))
     return {"status": "paid", "key": o[1], "saldo": o[0]}
 
+@app.post("/stripe/webhook")
+async def stripe_webhook(request: Request):
+    """Webhook Stripe: checkout.session.completed → credita tokens automaticamente.
+    Assinatura verificada com HMAC-SHA256 (Stripe-Signature: t=...,v1=...)."""
+    if not STRIPE_WEBHOOK:
+        raise HTTPException(503, "webhook Stripe não configurado")
+    raw = await request.body()
+    sig = request.headers.get("stripe-signature", "")
+    parts = dict(p.split("=", 1) for p in sig.split(",") if "=" in p) if sig else {}
+    ts, v1 = parts.get("t", ""), parts.get("v1", "")
+    if not (ts.isdigit() and re.fullmatch(r"[0-9a-f]{64}", v1)):
+        raise HTTPException(400, "assinatura malformada")
+    import hmac as _hmac, hashlib
+    signed = f"{ts}.".encode() + raw
+    expected = _hmac.new(STRIPE_WEBHOOK.encode(), signed, hashlib.sha256).hexdigest()
+    if not _hmac.compare_digest(expected, v1):
+        raise HTTPException(400, "assinatura inválida")
+    if abs(time.time() - int(ts)) > 300:  # janela anti-replay: 5 min
+        raise HTTPException(400, "timestamp fora da janela")
+    try:
+        event = json.loads(raw)
+    except Exception:
+        raise HTTPException(400, "json inválido")
+    if event.get("type") == "checkout.session.completed":
+        oid = (event.get("data", {}).get("object", {}).get("metadata", {}) or {}).get("order")
+        if oid and re.match(r"^PD[0-9a-f]{16}$", oid):
+            return _credit(oid)
+    return {"received": True}
+
 @app.get("/")
 def index():
     packs = "".join(
@@ -228,10 +302,12 @@ async function buy(pid){{
   if(!email) return;
   const r = await fetch('buy',{{method:'POST',headers:{{'Content-Type':'application/json'}},body:JSON.stringify({{pack:pid,email}})}}).then(r=>r.json());
   const d = document.getElementById('result'); d.style.display='block';
-  d.innerHTML = `<span class=ok>Pedido ${{r.order}} criado — saldo liberado após confirmação do pagamento.</span>
+  const pagamento = r.stripe_url
+    ? `<p><a href="${{r.stripe_url}}" style="color:#7fd1c1;font-weight:700">→ Pagar com Pix (Stripe) — saldo libera sozinho</a></p>`
+    : `<p>Pix copia-e-cola — R$ ${{r.preco.toFixed(2)}}:</p><code>${{r.pix_brcode || 'Pix não configurado — entre em contato: financeiro@beanstech.com.br'}}</code><div class=qr>${{r.qr_svg || ''}}</div>`;
+  d.innerHTML = `<span class=ok>Pedido ${{r.order}} criado — saldo liberado após o pagamento.</span>
     <p>Sua API key (guarde-a):</p><code>${{r.key}}</code>
-    <p>Pix copia-e-cola — R$ ${{r.preco.toFixed(2)}}:</p><code>${{r.pix_brcode || 'Pix não configurado — entre em contato: financeiro@beanstech.com.br'}}</code>
-    <div class=qr>${{r.qr_svg || ''}}</div>
+    ${{pagamento}}
     <p class=ok id=st>aguardando pagamento…</p>`;
   const poll = setInterval(async () => {{
     const o = await fetch('order/' + r.order).then(x=>x.json());
