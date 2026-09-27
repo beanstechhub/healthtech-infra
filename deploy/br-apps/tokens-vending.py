@@ -1,6 +1,7 @@
-"""tokens.beanstech — ponto de venda de tokens de IA para os portais BeansTech.
-Vende pacotes (Pix BR Code estático), emite API keys bth_* com saldo, e o
-ollama-shim debita por request. SQLite local em /var/lib/tokens-vending.
+"""BeansMed tokens — ponto de venda de tokens de IA para os portais Beanstech.
+Casa: beansmed.com.br (também em chat.beanstech.ai/tokens). Vende pacotes
+(Pix BR Code estático), emite API keys bth_* com saldo, e o ollama-shim debita
+por request. SQLite local em /var/lib/tokens-vending.
 Padrão de segredos: /usr/local/etc/tokens/<NOME> (mesmo esquema do shim).
 """
 from __future__ import annotations
@@ -114,6 +115,25 @@ def buy(b: Buy):
             "pix_brcode": brcode, "pix_key": PIX_KEY or None, "qr_svg": qr_svg,
             "instrucoes": "Pague pelo Pix copia-e-cola (ou QR) e o saldo é liberado após confirmação do financeiro."}
 
+@app.get("/admin/stats")
+def stats(authorization: str = Header(default="")):
+    """Dashboard da vertical tokens: vendas, receita, consumo por key."""
+    require_admin(authorization.removeprefix("Bearer ").strip())
+    c = db()
+    tot = c.execute("SELECT COUNT(*), COALESCE(SUM(amount),0), COALESCE(SUM(tokens),0) FROM orders WHERE status='paid'").fetchone()
+    pend = c.execute("SELECT COUNT(*), COALESCE(SUM(amount),0) FROM orders WHERE status='pending'").fetchone()
+    keys = c.execute("SELECT COUNT(*), COALESCE(SUM(balance),0) FROM api_keys WHERE active=1").fetchone()
+    consumo = c.execute("SELECT COALESCE(SUM(-delta),0) FROM ledger WHERE delta<0").fetchone()[0]
+    por_pack = c.execute("SELECT pack, COUNT(*), SUM(tokens) FROM orders WHERE status='paid' GROUP BY pack").fetchall()
+    top_keys = c.execute("SELECT k.label, k.balance, COALESCE(SUM(-l.delta),0) FROM api_keys k LEFT JOIN ledger l ON l.key=k.key WHERE k.active=1 GROUP BY k.key ORDER BY 3 DESC LIMIT 10").fetchall()
+    c.close()
+    return {"vendas_pagas": {"pedidos": tot[0], "receita_brl": round(tot[1], 2), "tokens_vendidos": tot[2]},
+            "vendas_pendentes": {"pedidos": pend[0], "valor_brl": round(pend[1], 2)},
+            "keys_ativas": keys[0], "saldo_em_circulacao": keys[1],
+            "tokens_consumidos": consumo,
+            "por_pacote": [dict(zip(("pack", "pedidos", "tokens"), r)) for r in por_pack],
+            "top_consumidores": [dict(zip(("email", "saldo", "consumidos"), r)) for r in top_keys]}
+
 @app.get("/order/{oid}")
 def order(oid: str):
     if not re.match(r"^PD[0-9a-f]{16}$", oid):
@@ -183,9 +203,9 @@ def index():
         for pid, p in PACKS.items())
     pix_aviso = "" if PIX_KEY else '<p class=aviso>⚠ Chave Pix não configurada — configure /usr/local/etc/tokens/PIX_KEY</p>'
     return f"""<!doctype html><html lang=pt-br><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
-<title>BeansTech — Tokens de IA</title>
+<title>BeansMed — Tokens de Excelência</title>
 <style>body{{font:15px/1.5 -apple-system,Segoe UI,Inter,Arial;background:#0b1512;color:#e8f0ee;margin:0;padding:32px;max-width:1100px}}
-h1{{font-size:26px;margin:0 0 6px}}.sub{{color:#8fa7a2;margin-bottom:26px}}
+h1{{font-size:26px;margin:0 0 6px}}h1 .b{{color:#7fd1c1}}.sub{{color:#8fa7a2;margin-bottom:26px}}
 .packs{{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}}
 .pack{{border:1px solid #1f2f2b;border-radius:12px;padding:22px;text-align:center;background:#101c18}}
 .nome{{font-weight:700;font-size:17px;color:#7fd1c1}}.tok{{margin:8px 0;color:#a9bcb8}}.preco{{font-size:24px;font-weight:700;margin:10px 0}}
@@ -193,9 +213,12 @@ button{{background:#7fd1c1;color:#06211a;border:0;border-radius:8px;padding:10px
 button:hover{{background:#96dbcd}}.aviso{{color:#f2a65a}}
 #result{{display:none;margin-top:26px;border:1px solid #1f2f2b;border-radius:12px;padding:22px;background:#101c18}}
 code{{display:block;background:#06211a;padding:12px;border-radius:8px;margin:8px 0;word-break:break-all;font-size:12px;color:#a9bcb8}}
-.ok{{color:#7fd1c1;font-weight:700}}.qr{{margin:12px auto;width:220px}}</style>
-<h1>BeansTech — Tokens de IA</h1>
-<div class=sub>Creditos para as ferramentas de apoio à decisão clínica (/decisao) e chat dos portais BeansTech. 1 token = 1 pergunta.</div>
+.ok{{color:#7fd1c1;font-weight:700}}.qr{{margin:12px auto;width:220px}}
+.chain{{border:1px solid #1f2f2b;border-radius:12px;padding:18px;margin-top:26px;background:#101c18;color:#a9bcb8;font-size:13.5px}}
+.chain b{{color:#7fd1c1}}</style>
+<h1>Beans<span class=b>Med</span> — Tokens de Excelência</h1>
+<div class=sub>IA médica auditável para apoio à decisão clínica: consulta de excelência (235B com raciocínio), chat clínico (MedGemma-27B) e camada de segurança Granite. Pix, saldo imediato, API key própria.</div>
+<div class=chain><b>O que um token aciona:</b> chat clínico = 1 token · consulta de excelência (Baichuan-M3 235B, 6 camadas de verificação anti-alucinação) = 5 tokens — o motor do <b>/decisao</b> presente em 8 portais.</div>
 {pix_aviso}
 <div class=packs>{packs}</div>
 <div id=result></div>
@@ -203,7 +226,7 @@ code{{display:block;background:#06211a;padding:12px;border-radius:8px;margin:8px
 async function buy(pid){{
   const email = prompt('Seu e-mail para receber a API key:');
   if(!email) return;
-  const r = await fetch('/tokens/buy',{{method:'POST',headers:{{'Content-Type':'application/json'}},body:JSON.stringify({{pack:pid,email}})}}).then(r=>r.json());
+  const r = await fetch('buy',{{method:'POST',headers:{{'Content-Type':'application/json'}},body:JSON.stringify({{pack:pid,email}})}}).then(r=>r.json());
   const d = document.getElementById('result'); d.style.display='block';
   d.innerHTML = `<span class=ok>Pedido ${{r.order}} criado — saldo liberado após confirmação do pagamento.</span>
     <p>Sua API key (guarde-a):</p><code>${{r.key}}</code>
@@ -211,7 +234,7 @@ async function buy(pid){{
     <div class=qr>${{r.qr_svg || ''}}</div>
     <p class=ok id=st>aguardando pagamento…</p>`;
   const poll = setInterval(async () => {{
-    const o = await fetch('/tokens/order/' + r.order).then(x=>x.json());
+    const o = await fetch('order/' + r.order).then(x=>x.json());
     if (o.status === 'paid') {{ document.getElementById('st').textContent = '✓ pagamento confirmado — saldo disponível!'; clearInterval(poll); }}
   }}, 15000);
 }}

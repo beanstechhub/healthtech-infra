@@ -20,6 +20,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 ELITE = "47.85.187.149"
 FLASH = "47.85.207.155"
+M3VA = "47.85.201.160"   # m3-va (Virgínia) — camada de excelência 235B
 
 TOKEN = open("/usr/local/etc/ollama-shim-token").read().strip()
 
@@ -27,8 +28,8 @@ TOKEN = open("/usr/local/etc/ollama-shim-token").read().strip()
 VENDING_DB = "/var/lib/tokens-vending/vending.db"
 CUST_COST = 1  # tokens debitados por request de chat/generate
 
-def _cust(k: str, charge: bool):
-    """Valida key de cliente no SQLite do vending; se charge=True, debita CUST_COST."""
+def _cust(k: str, charge: bool, cost: int = 1):
+    """Valida key de cliente no SQLite do vending; se charge=True, debita cost tokens."""
     if not k.startswith("bth_"):
         return False
     import sqlite3
@@ -36,11 +37,11 @@ def _cust(k: str, charge: bool):
     try:
         with con:
             r = con.execute("SELECT balance FROM api_keys WHERE key=? AND active=1", (k,)).fetchone()
-            if not r or r[0] < (CUST_COST if charge else 0):
+            if not r or r[0] < (cost if charge else 0):
                 return False
             if charge:
-                con.execute("UPDATE api_keys SET balance=balance-? WHERE key=?", (CUST_COST, k))
-                con.execute("INSERT INTO ledger(key,delta,reason,ts) VALUES(?,?,?,datetime('now'))", (k, -CUST_COST, "shim"))
+                con.execute("UPDATE api_keys SET balance=balance-? WHERE key=?", (cost, k))
+                con.execute("INSERT INTO ledger(key,delta,reason,ts) VALUES(?,?,?,datetime('now'))", (k, -cost, "shim"))
         return True
     except Exception:
         return False
@@ -60,9 +61,17 @@ ROUTES = {
     "baichuan-m2":      (FLASH,  8006, "baichuan-m2",    "GPU2_GATEWAY_TOKEN"),
     "lingshu-32b":      (ELITE,  8002, "lingshu-32b",    "GPU2_GATEWAY_TOKEN"),
     "antangelmed":      (ELITE,  8000, "antangelmed",    "ANTMED_API_TOKEN"),
+    # Roteamento de Excelência — Baichuan-M3-235B (m3-va, Virgínia), 5 tokens/request
+    "excellence":       (M3VA,   8000, "baichuan-m3",   "M3_API_TOKEN"),
+    "baichuan-m3":      (M3VA,   8000, "baichuan-m3",   "M3_API_TOKEN"),
+    "m3":               (M3VA,   8000, "baichuan-m3",   "M3_API_TOKEN"),
+    "m3-235b":          (M3VA,   8000, "baichuan-m3",   "M3_API_TOKEN"),
 }
 DEFAULT = (ELITE, 8001, "medgemma-27b", "GPU_GATEWAY_TOKEN")
 TOKENS = {}  # preenchido no boot a partir do KMS local
+
+# custo em tokens por modelo (clientes bth_*) — excelência custa 5, demais 1
+CUST_COST = {"baichuan-m3": 5}
 
 def resolve(model: str):
     m = (model or "").strip().lower()
@@ -90,14 +99,16 @@ class Handler(BaseHTTPRequestHandler):
             return True
         return _cust(a.removeprefix("Bearer ").strip(), charge=False)
 
-    def _charge(self):
-        """Debita 1 token de clientes bth_* em requests de inferência. False = bloqueado (já respondeu 402)."""
+    def _charge(self, target_model):
+        """Roteamento de Excelência: debita o custo do modelo (bth_*).
+        False = bloqueado (já respondeu 402)."""
         k = self.headers.get("Authorization", "").removeprefix("Bearer ").strip()
         if not k.startswith("bth_"):
             return True
-        if _cust(k, charge=True):
+        cost = CUST_COST.get(target_model, 1)
+        if _cust(k, charge=True, cost=cost):
             return True
-        self._reply(402, json.dumps({"error": "saldo de tokens insuficiente — recarregue em chat.beanstech.ai/tokens"}).encode())
+        self._reply(402, json.dumps({"error": f"saldo de tokens insuficiente para {target_model} (custa {cost}) — recarregue em beansmed.com.br"}).encode())
         return False
 
     def do_GET(self):
@@ -126,9 +137,9 @@ class Handler(BaseHTTPRequestHandler):
             req = json.loads(raw or b"{}")
         except Exception:
             return self._reply(400, b'{"error":"json invalido"}')
-        if not self._charge():  # débito de tokens (clientes bth_*)
-            return
         host, port, target_model, keyname = resolve(req.get("model", ""))
+        if not self._charge(target_model):  # débito de tokens (clientes bth_*, custo por camada)
+            return
         stream = bool(req.get("stream", False))
 
         if p == "/api/chat":
@@ -209,7 +220,8 @@ class Handler(BaseHTTPRequestHandler):
         sys.stderr.write(f"[shim] {self.address_string()} {fmt % args}\n")
 
 def load_tokens():
-    for name in ("GPU_GATEWAY_TOKEN", "GPU2_GATEWAY_TOKEN", "ANTMED_API_TOKEN"):
+    # carrega exatamente os segredos que as ROUTES declaram (padrão /usr/local/etc/tokens/<NOME>)
+    for name in sorted({r[3] for r in ROUTES.values()}):
         try:
             TOKENS[name] = open(f"/usr/local/etc/tokens/{name}").read().strip()
         except Exception:

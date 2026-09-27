@@ -10,7 +10,7 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, JSONResponse
 
 E = os.environ
-SITES = ["dodr.ai", "app.dodr.ai", "beanshealth.com.br", "exame.tech", "prontuario.tech", "drogaria.tech", "drhealth.tech", "portaldodentista.ai", "petiq.tech", "id.beanstech.com.br", "cms.beanstech.com.br", "chat.beanstech.ai"]
+SITES = ["dodr.ai", "app.dodr.ai", "beanshealth.com.br", "exame.tech", "prontuario.tech", "drogaria.tech", "drhealth.tech", "portaldodentista.ai", "petiq.tech", "id.beanstech.com.br", "cms.beanstech.com.br", "chat.beanstech.ai", "beansmed.com.br"]
 DECISAO = ["beanshealth.com.br", "dodr.ai", "drogaria.tech", "exame.tech", "prontuario.tech", "petiq.tech", "drhealth.tech", "portaldodentista.ai"]
 ELITE = "http://47.85.187.149"   # gn9gc-4x Blackwell (medgemma-27b, lingshu-32b, antangelmed)
 FLASH = "http://47.85.207.155"   # gn9gc-8x Blackwell (glm-5.3-flash, granite, guardian, medgemma-4b, lingshu-i, baichuan-m2, theia)
@@ -62,6 +62,9 @@ async def refresh():
         tasks.append(probe(c, "m3-va · baichuan-m3 (Virgínia)", "GPUs", f"{E.get('EXCELLENCE_BASE_URL','')}/models", headers={"Authorization": f"Bearer {tok3}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
         tasks.append(probe(c, "Model Studio · qwen", "GPUs", f"{E.get('QWEN_BASE_URL','')}/models", headers={"Authorization": f"Bearer {E.get('QWEN_API_KEY','')}"}, extract=lambda r: f"{len(r.json().get('data',[]))} modelos"))
         tasks.append(probe(c, "medpubr (CPU BR)", "Brasil", f"{E.get('MEDPUBR_URL','')}/health", extract=lambda r: ", ".join(k for k, v in r.json()["models"].items() if v)))
+        # BeansMed — ponto de venda de tokens (beansmed.com.br) + excelência M3 via shim
+        tasks.append(probe(c, "BeansMed tokens (venda)", "Brasil", "https://beansmed.com.br/healthz", extract=lambda r: f"pix {'ON' if r.json().get('pix') else 'pendente'}"))
+        tasks.append(probe(c, "shim · excelência M3-235B", "Brasil", "http://172.17.0.1:8080/api/tags", headers={"Authorization": f"Bearer {E.get('OLLAMA_API_KEY','')}"}, extract=lambda r: f"{len(r.json().get('models', []))} rotas"))
         es_auth = httpx.BasicAuth(E.get("RAGMED_ES_USER", "elastic"), E.get("RAGMED_ES_PASSWORD", ""))
         async def es():
             t = time.perf_counter()
