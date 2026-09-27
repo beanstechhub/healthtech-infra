@@ -1,0 +1,12 @@
+[Unit]
+Description=Hy4 — watcher: merge das partes + sha256 + start llama.cpp
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/hy4-watcher.sh
+Restart=always
+RestartSec=15
+
+[Install]
+WantedBy=multi-user.target

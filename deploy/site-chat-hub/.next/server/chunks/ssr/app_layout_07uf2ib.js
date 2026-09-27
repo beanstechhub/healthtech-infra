@@ -1,0 +1,3 @@
+module.exports=[62925,a=>{"use strict";var b=a.i(7997);a.s(["default",0,function({children:a}){return(0,b.jsx)("html",{lang:"pt-BR",children:(0,b.jsx)("body",{children:a})})},"metadata",0,{title:"chat.beanstech.ai — 14 modelos, chat soberano",description:"Chat com IA médica soberana. GPUs locais, território brasileiro, LGPD por design."}])},19325,a=>{a.n(a.i(62925))}];
+
+//# sourceMappingURL=app_layout_07uf2ib.js.map

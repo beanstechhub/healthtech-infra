@@ -16,3 +16,8 @@ healthdash	deploy/healthdash	Dockerfile	-	8080	4060	health.beanstech.com.br
 hy-site	deploy/site-hycloud	Dockerfile	-	80	4070	hy.cloud
 granitic-site	deploy/site-graniticcloud	Dockerfile	-	80	4071	granitic.cloud
 ai-playground	deploy/ai-playground	Dockerfile	-	8090	4091	beanstech.ai
+brazilz-site	deploy/site-brazilzcloud	Dockerfile	-	80	4082	brazil.z.cloud
+chatmed-next	deploy/site-chatmed-next	Dockerfile	-	3000	4077	chatmed.beanstech.ai
+chatmed-test	deploy/site-chatmed-test	Dockerfile	-	3000	4078	teste.beanshealth.com.br
+chat-hub	deploy/site-chat-hub	Dockerfile	-	3000	4091	chat.beanstech.ai
+chatvc-next	deploy/site-chatvc-next	Dockerfile	-	3000	4076	chatvc.beanstech.ai

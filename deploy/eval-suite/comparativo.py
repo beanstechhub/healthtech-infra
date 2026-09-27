@@ -4,7 +4,9 @@ Roda do br-apps. Para cada modelo × caso: envia, mede latência/tokens, avalia 
 Resultado: JSON + TSV + mapa de competências por domínio."""
 import sys, json, time, os, subprocess, re, collections, concurrent.futures
 
-OUT = sys.argv[1] if len(sys.argv) > 1 else "/tmp/eval-comparativo"
+OUT = os.path.realpath(sys.argv[1]) if len(sys.argv) > 1 else "/tmp/eval-comparativo"
+# saída restrita a /tmp, /data ou $HOME — caminho de CLI não pode escapar
+assert OUT.startswith((os.path.realpath("/tmp"), "/data", os.path.expanduser("~"))), "OUT deve ficar sob /tmp, /data ou $HOME"
 CASES_FILE = "/tmp/eval/cases-200.json"
 os.makedirs(OUT, exist_ok=True)
 cases = json.load(open(CASES_FILE))

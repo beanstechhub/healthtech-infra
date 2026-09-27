@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "mimosa-hook-status/v1",
+  "recordedAt": "2026-09-27T02:27:20.879Z",
+  "sessionId": "sess_16ce0881-5bb8-40f8-900b-c4d4e2509d5d",
+  "event": "PostToolUse",
+  "toolName": "Write",
+  "file": "/tmp/kc_test_gate.sh",
+  "outcome": "inconclusive",
+  "coverage": "partial",
+  "findingCount": 0,
+  "durationMs": 9,
+  "hostState": "hook_complete",
+  "reportHint": ".mimosa/reports/"
+}

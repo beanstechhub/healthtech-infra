@@ -10,9 +10,10 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, JSONResponse
 
 E = os.environ
-SITES = ["dodr.ai", "app.dodr.ai", "beanshealth.com.br", "exame.tech", "prontuario.tech", "drogaria.tech", "drhealth.tech", "portaldodentista.ai", "petiq.tech", "id.beanstech.com.br", "cms.beanstech.com.br"]
+SITES = ["dodr.ai", "app.dodr.ai", "beanshealth.com.br", "exame.tech", "prontuario.tech", "drogaria.tech", "drhealth.tech", "portaldodentista.ai", "petiq.tech", "id.beanstech.com.br", "cms.beanstech.com.br", "chat.beanstech.ai"]
 DECISAO = ["beanshealth.com.br", "dodr.ai", "drogaria.tech", "exame.tech", "prontuario.tech", "petiq.tech", "drhealth.tech", "portaldodentista.ai"]
-GPU2 = "http://43.98.194.204"
+ELITE = "http://47.85.187.149"   # gn9gc-4x Blackwell (medgemma-27b, lingshu-32b, antangelmed)
+FLASH = "http://47.85.207.155"   # gn9gc-8x Blackwell (glm-5.3-flash, granite, guardian, medgemma-4b, lingshu-i, baichuan-m2, theia)
 STATE: dict = {"at": None, "checks": []}
 
 async def probe(client, name, group, url, ok=(200,), headers=None, extract=None):
@@ -37,11 +38,27 @@ async def refresh():
         tasks = []
         for s in SITES: tasks.append(probe(c, s, "Portais", f"https://{s}/", ok=(200, 301, 302, 307, 308)))
         for s in DECISAO: tasks.append(probe(c, f"{s}/decisao", "Apoio à decisão", f"https://{s}/decisao"))
-        tok1 = E.get("OLLAMA_API_KEY", ""); tok2 = E.get("GPU2_API_KEY", ""); tok3 = E.get("EXCELLENCE_API_KEY", "")
-        tasks.append(probe(c, "elite-health · Ollama GPU0", "GPUs", f"{E.get('OLLAMA_BASE_URL','')}/api/ps", headers={"Authorization": f"Bearer {tok1}"}, extract=ollama_ps))
-        tasks.append(probe(c, "elite-health-2 · lingshu-32b :8001", "GPUs", f"{GPU2}:8001/v1/models", headers={"Authorization": f"Bearer {tok2}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
-        tasks.append(probe(c, "elite-health-2 · baichuan-m2 :8002", "GPUs", f"{GPU2}:8002/v1/models", headers={"Authorization": f"Bearer {tok2}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
-        tasks.append(probe(c, "elite-health-2 · lingshu-i-8b :8003", "GPUs", f"{GPU2}:8003/v1/models", headers={"Authorization": f"Bearer {tok2}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
+        tok1 = E.get("GPU_API_KEY", ""); tok2 = E.get("GPU2_API_KEY", ""); tok3 = E.get("EXCELLENCE_API_KEY", ""); tok4 = E.get("FLASH_API_KEY", ""); tok5 = E.get("ANTMED_API_KEY", "")
+        # elite-va (gn9gc-4x Blackwell)
+        tasks.append(probe(c, "elite-va · medgemma-27b :8001", "GPUs", f"{ELITE}:8001/v1/models", headers={"Authorization": f"Bearer {tok1}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
+        tasks.append(probe(c, "elite-va · lingshu-32b :8002", "GPUs", f"{ELITE}:8002/v1/models", headers={"Authorization": f"Bearer {tok2}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
+        tasks.append(probe(c, "elite-va · antangelmed :8000 (TP=2)", "GPUs", f"{ELITE}:8000/v1/models", headers={"Authorization": f"Bearer {tok5}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
+        # flash-va (gn9gc-8x Blackwell)
+        tasks.append(probe(c, "flash-va · glm-5.3-flash :8001 (TP=8)", "GPUs", f"{FLASH}:8001/v1/models", headers={"Authorization": f"Bearer {tok4}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
+        tasks.append(probe(c, "flash-va · granite-4.1 :8002", "GPUs", f"{FLASH}:8002/v1/models", headers={"Authorization": f"Bearer {tok1}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
+        tasks.append(probe(c, "flash-va · granite-guardian :8003", "GPUs", f"{FLASH}:8003/v1/models", headers={"Authorization": f"Bearer {tok1}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
+        tasks.append(probe(c, "flash-va · medgemma-4b :8004", "GPUs", f"{FLASH}:8004/v1/models", headers={"Authorization": f"Bearer {tok1}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
+        tasks.append(probe(c, "flash-va · lingshu-i-8b :8005", "GPUs", f"{FLASH}:8005/v1/models", headers={"Authorization": f"Bearer {tok2}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
+        tasks.append(probe(c, "flash-va · baichuan-m2 :8006", "GPUs", f"{FLASH}:8006/v1/models", headers={"Authorization": f"Bearer {tok2}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
+        tasks.append(probe(c, "flash-va · theia :8007", "GPUs", f"{FLASH}:8007/v1/models", headers={"Authorization": f"Bearer {tok4}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
+        tasks.append(probe(c, "flash-va · hunyuan-ocr :8008", "GPUs", f"{FLASH}:8008/v1/models", headers={"Authorization": f"Bearer {tok4}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
+        tasks.append(probe(c, "flash-va · qwen3-embedding :8010", "GPUs", f"{FLASH}:8010/v1/models", headers={"Authorization": f"Bearer {tok4}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
+        # serviços multimídia (sem contrato OpenAI — sonda TCP/HTTP crua)
+        tasks.append(probe(c, "flash-va · hunyuan3d :8009 (3D)", "GPUs", f"{FLASH}:8009/", ok=(200, 400, 404, 405)))
+        tasks.append(probe(c, "flash-va · compliance deepfake :8011", "GPUs", f"{FLASH}:8011/health", ok=(200, 404)))
+        # hy4-sz (Shenzhen) — Hy4-preview 780B Q4_K_M via llama.cpp
+        if E.get("HY4_SZ_URL"):
+            tasks.append(probe(c, "hy4-sz · Hy4-preview 780B (llama.cpp)", "GPUs", f"{E['HY4_SZ_URL']}/v1/models", headers={"Authorization": f"Bearer {E.get('HY4_API_KEY','')}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
         tasks.append(probe(c, "m3-va · baichuan-m3 (Virgínia)", "GPUs", f"{E.get('EXCELLENCE_BASE_URL','')}/models", headers={"Authorization": f"Bearer {tok3}"}, extract=lambda r: ", ".join(m["id"] for m in r.json()["data"])))
         tasks.append(probe(c, "Model Studio · qwen", "GPUs", f"{E.get('QWEN_BASE_URL','')}/models", headers={"Authorization": f"Bearer {E.get('QWEN_API_KEY','')}"}, extract=lambda r: f"{len(r.json().get('data',[]))} modelos"))
         tasks.append(probe(c, "medpubr (CPU BR)", "Brasil", f"{E.get('MEDPUBR_URL','')}/health", extract=lambda r: ", ".join(k for k, v in r.json()["models"].items() if v)))

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>chat.beanstech.ai — Dashboard 3D</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<style>
+:root{
+  --bg:#0a0f1a;--bg2:#111827;--panel:#1a2235;--border:#2a3448;
+  --text:#e2e8f0;--muted:#718096;--accent:#D97757;--accent2:#3b82f6;
+  --green:#10b981;--yellow:#f59e0b;--red:#ef4444;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;overflow:hidden}
+#canvas-container{position:fixed;inset:0;z-index:1}
+#hud{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:flex-start;padding:16px 24px;pointer-events:none}
+#hud .brand{pointer-events:auto}
+#hud h1{font-size:28px;font-weight:400;color:var(--text);text-shadow:0 2px 8px rgba(0,0,0,0.5)}
+#hud h1 em{color:var(--accent);font-style:normal}
+#hud .sub{font-size:12px;color:var(--muted);font-family:Arial,sans-serif;margin-top:4px}
+#stats{pointer-events:auto;background:rgba(26,34,53,0.9);border:1px solid var(--border);border-radius:10px;padding:12px 16px;min-width:200px}
+#stats .row{display:flex;justify-content:space-between;font-family:Arial,sans-serif;font-size:12px;margin:4px 0}
+#stats .row .val{color:var(--green);font-weight:bold}
+#stats .row .val.warn{color:var(--yellow)}
+#stats .row .val.err{color:var(--red)}
+#panel{position:fixed;bottom:0;left:0;right:0;height:auto;max-height:340px;background:rgba(26,34,53,0.95);border-top:1px solid var(--border);z-index:10;overflow-y:auto;padding:16px 24px;transition:max-height 0.3s ease}
+#panel.collapsed{max-height:0;padding:0 24px;border:none}
+#panel h3{font-size:14px;color:var(--accent);margin-bottom:12px;font-family:Arial,sans-serif;text-transform:uppercase;letter-spacing:1px}
+.endpoint-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.endpoint{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:12px 14px;cursor:pointer;transition:border-color 0.2s}
+.endpoint:hover{border-color:var(--accent)}
+.endpoint .name{font-size:13px;font-weight:bold;font-family:Arial,sans-serif;color:var(--text)}
+.endpoint .meta{font-size:11px;color:var(--muted);font-family:Arial,sans-serif;margin-top:4px}
+.endpoint .status{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.endpoint .status.up{background:var(--green);box-shadow:0 0 6px var(--green)}
+.endpoint .status.down{background:var(--red);box-shadow:0 0 6px var(--red)}
+.endpoint .port{font-family:monospace;font-size:11px;color:var(--accent2);margin-top:2px}
+#articles{margin-top:16px;padding-top:12px;border-top:1px solid var(--border)}
+#articles h4{font-size:12px;color:var(--muted);margin-bottom:8px;font-family:Arial,sans-serif}
+#articles .links{display:flex;flex-wrap:wrap;gap:8px}
+#articles a{color:var(--accent2);font-size:11px;font-family:Arial,sans-serif;text-decoration:none;padding:4px 10px;background:var(--panel);border:1px solid var(--border);border-radius:6px}
+#articles a:hover{border-color:var(--accent2)}
+#toggle-panel{position:fixed;bottom:12px;right:12px;z-index:11;background:var(--accent);color:var(--bg);border:none;border-radius:6px;padding:8px 14px;font-family:Arial,sans-serif;font-size:12px;cursor:pointer}
+#labels{position:fixed;inset:0;z-index:5;pointer-events:none}
+.node-label{position:absolute;font-family:Arial,sans-serif;font-size:10px;color:var(--text);text-shadow:0 1px 4px rgba(0,0,0,0.8);pointer-events:none;white-space:nowrap}
+.node-label .type{color:var(--accent);font-size:8px;text-transform:uppercase;letter-spacing:0.5px}
+#gen-status{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:20;background:rgba(26,34,53,0.95);border:1px solid var(--accent);border-radius:12px;padding:20px 32px;display:none;text-align:center}
+#gen-status .spinner{display:inline-block;width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+#gen-status .text{font-family:Arial,sans-serif;font-size:13px;color:var(--text)}
+</style>
+</head>
+<body>
+<div id="canvas-container"></div>
+<div id="labels"></div>
+
+<div id="hud">
+  <div class="brand">
+    <h1>chat.<em>beanstech</em>.ai</h1>
+    <div class="sub">3D Fleet Dashboard · 17 modelos soberanos · 8 GPUs Blackwell · 5 portais em produção</div>
+  </div>
+  <div id="stats">
+    <div class="row"><span>Hosts GPU</span><span class="val">4</span></div>
+    <div class="row"><span>Modelos</span><span class="val">17</span></div>
+    <div class="row"><span>VRAM Total</span><span class="val">1,62 TB</span></div>
+    <div class="row"><span>Portais</span><span class="val">5</span></div>
+    <div class="row"><span>Chats</span><span class="val">100k+</span></div>
+  </div>
+</div>
+
+<div id="panel">
+  <h3>Endpoints da Frota</h3>
+  <div class="endpoint-grid" id="endpoints"></div>
+  <div id="articles">
+    <h4>Referências nacionais e internacionais</h4>
+    <div class="links">
+      <a href="https://huggingface.co/zai-org/GLM-5.3-Flash" target="_blank">GLM-5.3 (Z.ai)</a>
+      <a href="https://huggingface.co/tencent/Hunyuan3D-2" target="_blank">Hunyuan3D-2 (Tencent)</a>
+      <a href="https://huggingface.co/google/medgemma-27b-it" target="_blank">MedGemma-27B (Google)</a>
+      <a href="https://huggingface.co/baichuan-inc/Baichuan-M3-235B-GPTQ-INT4" target="_blank">Baichuan-M3 (Baichuan)</a>
+      <a href="https://huggingface.co/prov-gigapath/prov-gigapath" target="_blank">Prov-GigaPath (Pathology)</a>
+      <a href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash" target="_blank">DeepSeek-V4-Flash</a>
+      <a href="https://huggingface.co/facebook/seamless-m4t-v2-large" target="_blank">SeamlessM4T (Meta)</a>
+      <a href="https://huggingface.co/google/siglip2-so400m-patch14-384" target="_blank">SigLIP2 (Google)</a>
+      <a href="https://huggingface.co/arcinstitute/evo2_7b" target="_blank">Evo-2 (Arc Institute)</a>
+      <a href="https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2026/lei/l15504.htm" target="_blank">Redata — Lei 15.504/2026</a>
+      <a href="https://recipes.vllm.ai/zai-org/GLM-5.3-Flash" target="_blank">vLLM Recipes</a>
+      <a href="https://health.beanstech.com.br" target="_blank">Monitoramento ao vivo</a>
+    </div>
+  </div>
+</div>
+<button id="toggle-panel">Endpoints</button>
+<button id="btn-3d" style="position:fixed;bottom:12px;left:12px;z-index:11;background:var(--green);color:var(--bg);border:none;border-radius:6px;padding:8px 14px;font-family:Arial,sans-serif;font-size:12px;cursor:pointer">⚡ Gerar 3D</button>
+<input type="file" id="img-input" accept="image/*" style="display:none">
+<div id="gen-queue" style="position:fixed;top:80px;right:12px;z-index:11;background:rgba(26,34,53,0.95);border:1px solid var(--border);border-radius:8px;padding:10px 14px;display:none;font-family:Arial,sans-serif;font-size:11px;color:var(--muted)">
+  <div style="color:var(--accent);font-weight:bold;margin-bottom:6px">Fila de geração 3D</div>
+  <div id="gen-items"></div>
+</div>
+
+<div id="gen-status">
+  <div class="spinner"></div>
+  <div class="text" id="gen-text">Gerando modelo 3D...</div>
+</div>
+
+<script>
+// ═══════════════ DADOS DA FROTA ═══════════════
+const FLEET = [
+  {host:"elite-va",type:"Blackwell 4x",ip:"47.85.187.149",gpu:4,vram:288,
+   models:[
+    {name:"medgemma-27b",port:8001,role:"Clínico multimodal",status:"up",gpu:0},
+    {name:"lingshu-32b",port:8002,role:"Visão médica",status:"up",gpu:1},
+    {name:"antangelmed",port:8000,role:"MoE clínico 100B (TP=2)",status:"up",gpu:"2-3"},
+   ]},
+  {host:"flash-va",type:"Blackwell 8x",ip:"47.85.207.155",gpu:8,vram:576,
+   models:[
+    {name:"granite-4.1",port:8002,role:"Síntese (TP=4)",status:"up",gpu:"4-7"},
+    {name:"granite-guardian",port:8003,role:"Guardrail",status:"up",gpu:0},
+    {name:"medgemma-4b",port:8004,role:"Triagem leve",status:"up",gpu:1},
+    {name:"lingshu-i-8b",port:8005,role:"Visão (TP=2)",status:"up",gpu:"0-1"},
+    {name:"baichuan-m2",port:8006,role:"Apoio clínico (TP=2)",status:"up",gpu:"2-3"},
+    {name:"theia",port:8007,role:"Compliance/Web3",status:"up",gpu:4},
+    {name:"qwen3-embedding",port:8010,role:"Embedding (TP=2)",status:"up",gpu:"2-3"},
+    {name:"hunyuan3d",port:8009,role:"3D Generation",status:"up",gpu:6},
+   ]},
+  {host:"m3-va",type:"L20 4x",ip:"47.85.201.160",gpu:4,vram:192,
+   models:[
+    {name:"baichuan-m3-235b",port:8000,role:"Excelência clínica (TP=4)",status:"up",gpu:"0-3"},
+   ]},
+  {host:"hy4-sz",type:"Blackwell 8x",ip:"47.112.128.3",gpu:8,vram:576,
+   models:[
+    {name:"hy4-preview",port:8001,role:"Tencent flagship 780B",status:"loading",gpu:"0-7"},
+   ]},
+];
+
+// ═══════════════ CENA 3D ═══════════════
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x0a0f1a, 0.0015);
+const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 3000);
+camera.position.set(0, 80, 220);
+const renderer = new THREE.WebGLRenderer({antialias:true,alpha:false});
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setClearColor(0x0a0f1a);
+document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.minDistance = 50;
+controls.maxDistance = 500;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.5;
+
+// luzes
+scene.add(new THREE.AmbientLight(0x404060, 0.8));
+const keyLight = new THREE.DirectionalLight(0xD97757, 1.2);
+keyLight.position.set(100, 150, 100);
+scene.add(keyLight);
+const rimLight = new THREE.DirectionalLight(0x3b82f6, 0.6);
+rimLight.position.set(-100, 80, -100);
+scene.add(rimLight);
+
+// grid floor
+const grid = new THREE.GridHelper(600, 40, 0x1a2235, 0x111827);
+scene.add(grid);
+
+// partículas de fundo
+const particleGeo = new THREE.BufferGeometry();
+const particleCount = 3000;
+const positions = new Float32Array(particleCount * 3);
+for(let i=0;i<particleCount;i++){
+  positions[i*3] = (Math.random()-0.5)*800;
+  positions[i*3+1] = Math.random()*300;
+  positions[i*3+2] = (Math.random()-0.5)*800;
+}
+particleGeo.setAttribute('position', new THREE.BufferAttribute(positions,3));
+const particles = new THREE.Points(particleGeo, new THREE.PointsMaterial({color:0x2a3448,size:1.5,transparent:true,opacity:0.6}));
+scene.add(particles);
+
+// ═══════════════ NÓS DA FROTA ═══════════════
+const nodes = [];
+const connections = [];
+const labelDivs = [];
+const COLORS = {up:0x10b981, loading:0xf59e0b, down:0xef4444, host:0xD97757};
+const HOST_SPACING = 180;
+
+FLEET.forEach((host, hi) => {
+  const angle = (hi / FLEET.length) * Math.PI * 2;
+  const hx = Math.cos(angle) * HOST_SPACING * 0.6;
+  const hz = Math.sin(angle) * HOST_SPACING * 0.6;
+
+  // host cube
+  const hostGeo = new THREE.BoxGeometry(20, 20, 20);
+  const hostMat = new THREE.MeshPhongMaterial({color:COLORS.host, transparent:true, opacity:0.9});
+  const hostMesh = new THREE.Mesh(hostGeo, hostMat);
+  hostMesh.position.set(hx, 25, hz);
+  scene.add(hostMesh);
+  nodes.push({mesh:hostMesh, type:'host', data:host, originalY:25});
+
+  // label do host
+  const label = document.createElement('div');
+  label.className = 'node-label';
+  label.innerHTML = `<div>${host.host}</div><div class="type">${host.type} · ${host.vram}GB</div>`;
+  label.style.left = '0'; label.style.top = '0';
+  document.getElementById('labels').appendChild(label);
+  labelDivs.push({el:label, mesh:hostMesh});
+
+  // modelos orbitando o host
+  host.models.forEach((model, mi) => {
+    const mAngle = (mi / host.models.length) * Math.PI * 2;
+    const radius = 35 + (model.name.length > 10 ? 10 : 5);
+    const mx = hx + Math.cos(mAngle) * radius;
+    const mz = hz + Math.sin(mAngle) * radius;
+
+    const color = COLORS[model.status] || COLORS.up;
+    const geo = new THREE.SphereGeometry(model.port === 8000 || model.name.includes('235b') || model.name.includes('hy4') ? 8 : 5, 16, 16);
+    const mat = new THREE.MeshPhongMaterial({color, transparent:true, opacity:0.95, emissive:color, emissiveIntensity:0.3});
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(mx, 18, mz);
+    scene.add(mesh);
+    nodes.push({mesh, type:'model', data:model, host:host, originalY:18});
+
+    // conexão host→modelo
+    const lineGeo = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(hx, 25, hz),
+      new THREE.Vector3(mx, 18, mz)
+    ]);
+    const line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({color:0x2a3448, transparent:true, opacity:0.5}));
+    scene.add(line);
+    connections.push(line);
+
+    // label do modelo
+    const ml = document.createElement('div');
+    ml.className = 'node-label';
+    ml.innerHTML = `<div>${model.name}</div><div class="type">${model.role}</div>`;
+    ml.style.fontSize = '9px';
+    document.getElementById('labels').appendChild(ml);
+    labelDivs.push({el:ml, mesh});
+  });
+});
+
+// conexão central (network core)
+const coreGeo = new THREE.IcosahedronGeometry(12, 2);
+const coreMat = new THREE.MeshPhongMaterial({color:0xD97757, wireframe:true, transparent:true, opacity:0.3});
+const core = new THREE.Mesh(coreGeo, coreMat);
+core.position.set(0, 40, 0);
+scene.add(core);
+nodes.push({mesh:core, type:'core', data:{name:'BEANSTECH CORE'}, originalY:40});
+
+// linhas do core para cada host
+FLEET.forEach((host, hi) => {
+  const angle = (hi / FLEET.length) * Math.PI * 2;
+  const hx = Math.cos(angle) * HOST_SPACING * 0.6;
+  const hz = Math.sin(angle) * HOST_SPACING * 0.6;
+  const lineGeo = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(0, 40, 0),
+    new THREE.Vector3(hx, 25, hz)
+  ]);
+  const line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({color:0xD97757, transparent:true, opacity:0.15}));
+  scene.add(line);
+});
+
+// ═══════════════ ANIMAÇÃO ═══════════════
+let time = 0;
+const tmpVec = new THREE.Vector3();
+
+function animate() {
+  requestAnimationFrame(animate);
+  time += 0.01;
+  controls.update();
+
+  // pulsação do core
+  core.rotation.y += 0.005;
+  core.rotation.x += 0.002;
+  core.scale.setScalar(1 + Math.sin(time * 2) * 0.1);
+
+  // flutuação suave dos nós
+  nodes.forEach((node, i) => {
+    if(node.type === 'model') {
+      node.mesh.position.y = node.originalY + Math.sin(time * 1.5 + i) * 2;
+      node.mesh.rotation.y += 0.01;
+    }
+    if(node.type === 'host') {
+      node.mesh.rotation.y += 0.005;
+      node.mesh.rotation.x = Math.sin(time * 0.5) * 0.1;
+    }
+  });
+
+  // partículas giram lentamente
+  particles.rotation.y += 0.0002;
+
+  // atualiza labels (projeção 3D→2D)
+  labelDivs.forEach(({el, mesh}) => {
+    mesh.getWorldPosition(tmpVec);
+    tmpVec.project(camera);
+    if(tmpVec.z < 1) {
+      const x = (tmpVec.x + 1) / 2 * innerWidth;
+      const y = (-tmpVec.y + 1) / 2 * innerHeight;
+      el.style.transform = `translate(${x - 40}px, ${y - 20}px)`;
+      el.style.opacity = camera.position.distanceTo(mesh.position) < 300 ? 1 : 0;
+    }
+  });
+
+  renderer.render(scene, camera);
+}
+animate();
+
+// ═══════════════ ENDPOINTS PANEL ═══════════════
+const endpointsDiv = document.getElementById('endpoints');
+FLEET.forEach(host => {
+  host.models.forEach(model => {
+    const div = document.createElement('div');
+    div.className = 'endpoint';
+    div.innerHTML = `
+      <div class="name"><span class="status ${model.status}"></span>${model.name}</div>
+      <div class="meta">${model.role} · GPU ${model.gpu}</div>
+      <div class="port">http://${host.ip}:${model.port}/v1</div>
+    `;
+    div.onclick = () => {
+      window.open(`http://${host.ip}:${model.port}/v1/models`, '_blank');
+    };
+    endpointsDiv.appendChild(div);
+  });
+});
+
+// toggle panel
+const panel = document.getElementById('panel');
+document.getElementById('toggle-panel').onclick = () => {
+  panel.classList.toggle('collapsed');
+};
+
+// ═══════════════ GERADOR 3D (via Hunyuan3D na Blackwell) ═══════════════
+const API_3D = '/api/3d'; // proxy via Caddy → flash-va:8009
+const genQueue = document.getElementById('gen-queue');
+const genItems = document.getElementById('gen-items');
+
+function addGenItem(name) {
+  genQueue.style.display = 'block';
+  const item = document.createElement('div');
+  item.textContent = `⏳ ${name}`;
+  item.style.cssText = 'margin:4px 0;color:var(--yellow)';
+  genItems.appendChild(item);
+  return item;
+}
+function updateGenItem(item, status, name) {
+  if(status === 'done') { item.textContent = `✅ ${name}`; item.style.color = 'var(--green)'; }
+  else if(status === 'error') { item.textContent = `❌ ${name}`; item.style.color = 'var(--red)'; }
+  else item.textContent = `⏳ ${status} — ${name}`;
+}
+
+async function generate3DFromImage(b64data, name) {
+  const item = addGenItem(name);
+  try {
+    updateGenItem(item, 'enviando', name);
+    const sendResp = await fetch(`${API_3D}/send`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({image: b64data})
+    });
+    const {uid} = await sendResp.json();
+    if(!uid) throw new Error('UID não retornado');
+    updateGenItem(item, 'gerando mesh', name);
+
+    let result;
+    for(let i=0; i<60; i++) {
+      await new Promise(r => setTimeout(r, 5000));
+      const statusResp = await fetch(`${API_3D}/status/${uid}`);
+      result = await statusResp.json();
+      if(result.status === 'completed' || result.status === 'failed') break;
+      updateGenItem(item, `processando ${i*5}s`, name);
+    }
+
+    if(result.status === 'completed' && result.model_base64) {
+      updateGenItem(item, 'carregando 3D', name);
+      const binary = atob(result.model_base64);
+      const bytes = new Uint8Array(binary.length);
+      for(let i=0; i<binary.length; i++) bytes[i] = binary.charCodeAt(i);
+
+      const loader = new THREE.GLTFLoader();
+      loader.parse(bytes.buffer, '', (gltf) => {
+        const obj = gltf.scene;
+        const box = new THREE.Box3().setFromObject(obj);
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scale = 25 / maxDim;
+        obj.scale.setScalar(scale);
+        obj.position.set((Math.random()-0.5)*80, 15, (Math.random()-0.5)*80);
+        // cor highlight para modelo gerado
+        obj.traverse(child => {
+          if(child.isMesh) {
+            child.material = new THREE.MeshPhongMaterial({color:0xD97757, wireframe:false, transparent:true, opacity:0.85});
+          }
+        });
+        scene.add(obj);
+        nodes.push({mesh:obj, type:'generated', data:{name:`3D: ${name}`}, originalY:15});
+        updateGenItem(item, 'done', name);
+
+        // remove da fila após 5s
+        setTimeout(() => { item.remove(); if(!genItems.children.length) genQueue.style.display = 'none'; }, 5000);
+      });
+    } else {
+      updateGenItem(item, 'error', name);
+    }
+  } catch(err) {
+    updateGenItem(item, `erro: ${err.message}`, name);
+  }
+}
+
+// botão + input de arquivo
+const btn3d = document.getElementById('btn-3d');
+const imgInput = document.getElementById('img-input');
+btn3d.onclick = () => imgInput.click();
+imgInput.onchange = (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const b64 = reader.result.split(',')[1];
+    generate3DFromImage(b64, file.name);
+  };
+  reader.readAsDataURL(file);
+  imgInput.value = '';
+};
+
+// drag & drop
+document.addEventListener('dragover', e => { e.preventDefault(); btn3d.style.background = 'var(--accent)'; });
+document.addEventListener('dragleave', () => { btn3d.style.background = 'var(--green)'; });
+document.addEventListener('drop', e => {
+  e.preventDefault();
+  btn3d.style.background = 'var(--green)';
+  const file = e.dataTransfer.files[0];
+  if(file && file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const b64 = reader.result.split(',')[1];
+      generate3DFromImage(b64, file.name);
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// API pública
+window.generate3D = generate3DFromImage;
+
+// resize
+addEventListener('resize', () => {
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+</script>
+</body>
+</html>

@@ -22,25 +22,30 @@ MODEL_STUDIO = {
     "region": "Singapore (API)",
 }
 
+ELITE = E.get("ELITE_URL", "http://47.85.187.149")      # gn9gc-4x · 4× L20N 72GB Blackwell
+FLASH = E.get("FLASH_URL", "http://47.85.207.155")      # gn9gc-8x · 8× L20N 72GB Blackwell
+
 GPU_FLEET = [
-    {"name": "MedGemma-27B FP8", "port": 8001, "host": E.get("GPU1_URL", "http://8.222.169.230"), "gpu": 0, "label": "elite-health GPU 0", "type": "vllm"},
-    {"name": "MedGemma-1.5-4B FP8", "port": 8004, "host": E.get("GPU1_URL", "http://8.222.169.230"), "gpu": 0, "label": "elite-health GPU 0", "type": "vllm"},
-    {"name": "Granite-4.1-30B FP8", "port": 8002, "host": E.get("GPU1_URL", "http://8.222.169.230"), "gpu": 1, "label": "elite-health GPU 1", "type": "vllm"},
-    {"name": "Granite-Guardian-3.2", "port": 8003, "host": E.get("GPU1_URL", "http://8.222.169.230"), "gpu": 1, "label": "elite-health GPU 1", "type": "vllm"},
-    {"name": "Lingshu-32B FP8", "port": 8001, "host": E.get("GPU2_URL", "http://43.98.194.204"), "gpu": 0, "label": "elite-health-2 GPU 0", "type": "vllm"},
-    {"name": "Baichuan-M2-32B INT4", "port": 8002, "host": E.get("GPU2_URL", "http://43.98.194.204"), "gpu": 1, "label": "elite-health-2 GPU 1", "type": "vllm"},
-    {"name": "Lingshu-I-8B", "port": 8003, "host": E.get("GPU2_URL", "http://43.98.194.204"), "gpu": 1, "label": "elite-health-2 GPU 1", "type": "vllm"},
+    # elite-va (4× L20N)
+    {"name": "MedGemma-27B FP8", "port": 8001, "host": ELITE, "gpu": 0, "label": "elite-va GPU 0", "type": "vllm"},
+    {"name": "Lingshu-32B FP8", "port": 8002, "host": ELITE, "gpu": 1, "label": "elite-va GPU 1", "type": "vllm"},
+    {"name": "AntAngelMed-100B FP8", "port": 8000, "host": ELITE, "gpu": "2-3 (TP=2)", "label": "elite-va GPUs 2-3", "type": "vllm"},
+    # flash-va (8× L20N)
+    {"name": "GLM-5.3-Flash FP8", "port": 8001, "host": FLASH, "gpu": "0-7 (TP=8)", "label": "flash-va 8 GPUs", "type": "vllm"},
+    {"name": "Granite-4.1-30B FP8", "port": 8002, "host": FLASH, "gpu": "4-7 (TP=4)", "label": "flash-va GPUs 4-7", "type": "vllm"},
+    {"name": "Granite-Guardian-3.2", "port": 8003, "host": FLASH, "gpu": 0, "label": "flash-va GPU 0", "type": "vllm"},
+    {"name": "MedGemma-1.5-4B FP8", "port": 8004, "host": FLASH, "gpu": 1, "label": "flash-va GPU 1", "type": "vllm"},
+    {"name": "Lingshu-I-8B", "port": 8005, "host": FLASH, "gpu": "0-1 (TP=2)", "label": "flash-va GPUs 0-1", "type": "vllm"},
+    {"name": "Baichuan-M2-32B INT4", "port": 8006, "host": FLASH, "gpu": "2-3 (TP=2)", "label": "flash-va GPUs 2-3", "type": "vllm"},
+    {"name": "Theia (Web3/Compliance)", "port": 8007, "host": FLASH, "gpu": 4, "label": "flash-va GPU 4", "type": "vllm"},
+    # m3-va (4× L20)
     {"name": "Baichuan-M3-235B INT4", "port": 8000, "host": E.get("M3_URL", "http://47.85.201.160"), "gpu": "0-3", "label": "m3-va Virginia", "type": "vllm"},
-    {"name": "AntAngelMed-100B FP8", "port": 8000, "host": E.get("ANTMED_URL", "http://47.85.94.203"), "gpu": "0-3", "label": "antmed-va Virginia", "type": "vllm"},
 ]
 
 GPUS = [
-    {"name": "elite-health GPU 0", "host": E.get("GPU1_URL", "http://8.222.169.230"), "type": "L20 48GB", "models": ["medgemma-27b", "medgemma-4b"]},
-    {"name": "elite-health GPU 1", "host": E.get("GPU1_URL", "http://8.222.169.230"), "type": "L20 48GB", "models": ["granite-4.1", "granite-guardian"]},
-    {"name": "elite-health-2 GPU 0", "host": E.get("GPU2_URL", "http://43.98.194.204"), "type": "L20 48GB", "models": ["lingshu-32b"]},
-    {"name": "elite-health-2 GPU 1", "host": E.get("GPU2_URL", "http://43.98.194.204"), "type": "L20 48GB", "models": ["baichuan-m2", "lingshu-i-8b"]},
-    {"name": "m3-va GPU 0-3 (TP=4)", "host": E.get("M3_URL", "http://47.85.201.160"), "type": "4× L20 48GB", "models": ["baichuan-m3-235b"]},
-    {"name": "antmed-va GPU 0-3 (TP=4)", "host": E.get("ANTMED_URL", "http://47.85.201.160"), "type": "4× L20 48GB", "models": ["antangelmed-100b"]},
+    {"name": "elite-va (Blackwell 4× L20N)", "host": ELITE, "type": "4× L20N 72GB", "models": ["medgemma-27b", "lingshu-32b", "antangelmed"]},
+    {"name": "flash-va (Blackwell 8× L20N)", "host": FLASH, "type": "8× L20N 72GB", "models": ["glm-5.3-flash", "granite-4.1", "granite-guardian", "medgemma-4b", "lingshu-i-8b", "baichuan-m2", "theia"]},
+    {"name": "m3-va (4× L20, TP=4)", "host": E.get("M3_URL", "http://47.85.201.160"), "type": "4× L20 48GB", "models": ["baichuan-m3-235b"]},
 ]
 
 STATE: dict = {"at": None, "models": [], "gpus": []}
@@ -84,6 +89,14 @@ async def probe_medpubr(client):
     except Exception as ex:
         return {'model': 'medpubr (embed/rerank/PII)', 'ok': False, 'code': 0, 'ms': 0, 'detail': type(ex).__name__}
 
+def _token_for(g):
+    n = g["name"].lower()
+    if "glm-5.3-flash" in n or "theia" in n: return E.get("FLASH_TOKEN", "")
+    if "m3-235b" in n: return E.get("M3_TOKEN", "")
+    if "antangelmed" in n: return E.get("ANTMED_TOKEN", "")
+    if "lingshu-32b" in n or "baichuan-m2" in n or "lingshu-i" in n: return E.get("GPU2_TOKEN", "")
+    return E.get("GPU_TOKEN", "")
+
 async def probe_gpu(client, gpu):
     try:
         r = await client.get(f"{gpu['host']}:9200/gpu-status" if False else f"{gpu['host']}/v1/models", timeout=5)
@@ -99,7 +112,7 @@ async def refresh():
             tasks.append(probe_model(c, m, MODEL_STUDIO["base"], MODEL_STUDIO["key"]))
         # GPU fleet
         for g in GPU_FLEET:
-            token = E.get("GPU_TOKEN", "") if "8.222" in g["host"] else E.get("GPU2_TOKEN", "") if "43.98" in g["host"] else E.get("M3_TOKEN", "") if "47.85.201" in g["host"] else E.get("ANTMED_TOKEN", "")
+            token = _token_for(g)
             tasks.append(probe_model(c, g["name"], f"{g['host']}:{g['port']}", token))
         # medpubr
         tasks.append(asyncio.ensure_future(probe_medpubr(c)))
@@ -142,7 +155,7 @@ async def test_model(request: Request):
             # Find in GPU fleet
             g = next((g for g in GPU_FLEET if g["name"] == model), None)
             if not g: return JSONResponse({"error": f"unknown model: {model}"}, status_code=400)
-            token = E.get("GPU_TOKEN", "") if "8.222" in g["host"] else E.get("GPU2_TOKEN", "") if "43.98" in g["host"] else E.get("M3_TOKEN", "") if "47.85.201" in g["host"] else E.get("ANTMED_TOKEN", "")
+            token = _token_for(g)
             r = await httpx.AsyncClient().post(
                 f"{g['host']}:{g['port']}/v1/chat/completions",
                 headers={"Authorization": f"Bearer {token}", "content-type": "application/json"},

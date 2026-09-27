@@ -1,0 +1,17 @@
+[Unit]
+Description=llama.cpp (patch hyv4) — Hy4-preview Q4_K_M 780B, 8x RTX PRO 5000 72GB
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+# Binário nativo: build com commit 0cea36222 + 0001-hyv4-architecture.patch (CUDA 13.0, sm_120).
+# Stock llama.cpp NÃO carrega hyv4 ("The hyv4 architecture is not upstream").
+WorkingDirectory=/data/llama.cpp/build-cuda/bin
+Environment=LD_LIBRARY_PATH=/data/llama.cpp/build-cuda/bin:/usr/local/cuda-13.0/lib64
+Restart=always
+RestartSec=30
+TimeoutStartSec=0
+ExecStart=/data/llama.cpp/build-cuda/bin/llama-server --host 0.0.0.0 --port 8001 -m /data/models/Hy4-preview-Q4/Hy4-preview-Q4_K_M.gguf -ngl 999 --ctx-size 32768 --parallel 8 --api-key 17dcJpIETTbXaO_Js-SBfkCIuCNAwISyyBmLmxy6W0gDXDEb --jinja
+
+[Install]
+WantedBy=multi-user.target

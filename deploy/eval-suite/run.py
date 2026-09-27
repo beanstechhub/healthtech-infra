@@ -2,7 +2,10 @@
 """Suite de avaliação — roteia casos para modelos e gera mapa de competências."""
 import sys, json, time, os, subprocess, re, collections
 
-OUT = sys.argv[1]; CASES_FILE = sys.argv[2]; SYSTEM = sys.argv[3]; MODELS = sys.argv[4:]
+OUT = os.path.realpath(sys.argv[1]); CASES_FILE = os.path.realpath(sys.argv[2]); SYSTEM = sys.argv[3]; MODELS = sys.argv[4:]
+# saída e entrada ficam restritas a /tmp, /data ou $HOME — caminhos de CLI não podem escapar
+_allowed = (os.path.realpath("/tmp"), "/data", os.path.expanduser("~"))
+assert OUT.startswith(_allowed) and CASES_FILE.startswith(_allowed), "OUT/CASES_FILE devem ficar sob /tmp, /data ou $HOME"
 cases = json.load(open(CASES_FILE))
 results = []
 

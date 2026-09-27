@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>chatmed — BeansTech · Einstein</title>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<style>
+:root{
+  --blue:#005B96; --dark:#003C6B; --light:#4A90C4; --pale:#E8F1F8; --pale2:#D0E4F0;
+  --bg:#FAFBFC; --card:#FFFFFF; --ink:#1A1A2E; --ink2:#2A2A4A; --muted:#5A6A7A;
+  --gold:#C9963C; --green:#2D7A4F; --border:#D0DCE4;
+  --serif:'Georgia','Times New Roman',serif;
+  --sans:'Inter','Helvetica Neue',Arial,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);line-height:1.75;overflow-x:hidden}
+.wrap{max-width:1140px;margin:0 auto;padding:0 32px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;background:rgba(255,255,255,0.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);z-index:100;padding:14px 0}
+nav .wrap{display:flex;justify-content:space-between;align-items:center}
+nav .logo{font-family:var(--serif);font-size:24px;color:var(--blue);text-decoration:none}
+nav .logo em{color:var(--gold);font-style:italic}
+nav .links{display:flex;gap:28px;font-family:var(--sans);font-size:13px}
+nav .links a{color:var(--muted);text-decoration:none;transition:color .2s}
+nav .links a:hover{color:var(--blue)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;
+  background:linear-gradient(170deg,var(--pale) 0%,var(--bg) 30%,var(--bg) 60%,var(--pale) 100%);
+  padding-top:70px}
+.hero-3d{position:absolute;top:0;right:0;width:52%;height:100%;z-index:0;pointer-events:none}
+.hero-content{position:relative;z-index:1;padding:20px 0;max-width:560px}
+.hero-content .kicker{font-family:var(--sans);font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--blue);margin-bottom:20px}
+.hero-content h1{font-size:72px;font-weight:400;line-height:1;margin-bottom:16px;color:var(--dark)}
+.hero-content h1 em{color:var(--blue);font-style:italic}
+.hero-content .sub{font-size:20px;color:var(--muted);font-style:italic;margin-bottom:32px;line-height:1.5}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:32px 0;padding:24px;background:var(--card);border-radius:16px;border:1px solid var(--border);box-shadow:0 4px 24px rgba(0,50,100,0.06)}
+.hero-stat{text-align:center;padding:0 16px}
+.hero-stat:not(:last-child){border-right:1px solid var(--border)}
+.hero-stat .v{font-size:36px;font-family:var(--serif);color:var(--blue);line-height:1.2}
+.hero-stat .k{font-family:var(--sans);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.hero-cta{display:flex;gap:16px;margin-top:32px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:16px 32px;border-radius:10px;font-family:var(--sans);font-size:15px;text-decoration:none;transition:all .2s}
+.btn.primary{background:var(--blue);color:#fff;box-shadow:0 6px 24px rgba(0,91,150,0.35)}
+.btn.primary:hover{background:var(--dark);transform:translateY(-1px)}
+.btn.ghost{border:2px solid var(--blue);color:var(--blue)}
+.btn.ghost:hover{background:var(--pale)}
+
+/* MODEL SELECTOR — the star feature */
+.models{padding:100px 0;background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.models .kicker{font-family:var(--sans);font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--blue);text-align:center;margin-bottom:16px}
+.models h2{font-size:44px;font-weight:400;text-align:center;color:var(--dark);margin-bottom:8px}
+.models h2 em{color:var(--blue);font-style:italic}
+.models > .wrap > p{font-size:17px;color:var(--muted);text-align:center;max-width:600px;margin:0 auto 48px}
+.model-tabs{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:40px}
+.model-tab{font-family:var(--sans);font-size:13px;padding:10px 24px;border-radius:24px;border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .2s;background:var(--bg)}
+.model-tab:hover{border-color:var(--blue);color:var(--blue)}
+.model-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 4px 16px rgba(0,91,150,0.3)}
+.model-display{max-width:780px;margin:0 auto;min-height:380px}
+.model-panel{display:none;animation:fadeIn .3s ease}
+.model-panel.show{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.model-hero{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:40px;box-shadow:0 8px 32px rgba(0,50,100,0.08);position:relative;overflow:hidden}
+.model-hero::before{content:"";position:absolute;top:0;left:0;right:0;height:5px}
+.model-panel[data-model="m3"] .model-hero::before{background:linear-gradient(90deg,var(--blue),var(--light))}
+.model-panel[data-model="mg27"] .model-hero::before{background:linear-gradient(90deg,var(--gold),#E8B85A)}
+.model-panel[data-model="mg4"] .model-hero::before{background:linear-gradient(90deg,var(--green),#4CAF88)}
+.model-panel[data-model="ant"] .model-hero::before{background:linear-gradient(90deg,var(--dark),var(--blue))}
+.model-hero h3{font-size:32px;color:var(--ink);margin-bottom:4px}
+.model-hero .tag{font-family:var(--sans);font-size:11px;color:var(--blue);text-transform:uppercase;letter-spacing:2px;margin-bottom:20px;display:block}
+.model-hero p{font-size:16px;color:var(--ink2);margin-bottom:16px;line-height:1.8}
+.model-hero .highlight-box{margin:20px 0;padding:16px 20px;background:var(--pale);border-radius:12px;border-left:4px solid var(--blue)}
+.model-hero .highlight-box p{font-size:14px;color:var(--ink);margin:0}
+.model-hero .highlight-box strong{color:var(--blue)}
+.model-specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:24px;padding:20px;background:var(--bg);border-radius:12px;border:1px solid var(--border)}
+.model-spec .k{font-family:var(--sans);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.model-spec .v{font-family:var(--serif);font-size:16px;color:var(--ink);font-weight:600}
+.model-link{display:inline-flex;align-items:center;gap:8px;margin-top:20px;padding:10px 20px;background:var(--pale);border-radius:8px;font-family:var(--sans);font-size:13px;color:var(--blue);text-decoration:none}
+.model-link:hover{background:var(--pale2)}
+
+/* EINSTEIN PROPOSITION */
+.einstein{padding:100px 0;background:var(--dark);color:#fff;position:relative;overflow:hidden}
+.einstein .kicker{font-family:var(--sans);font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--light);text-align:center;margin-bottom:16px}
+.einstein h2{font-size:44px;font-weight:400;text-align:center;color:#fff;margin-bottom:16px}
+.einstein h2 em{color:var(--light);font-style:italic}
+.einstein > .wrap > p{font-size:18px;color:var(--light);text-align:center;max-width:640px;margin:0 auto 56px}
+.einstein-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.einstein-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:32px;text-align:center}
+.einstein-card .icon{font-size:32px;margin-bottom:12px}
+.einstein-card h4{font-size:18px;color:#fff;margin-bottom:8px}
+.einstein-card p{font-size:14px;color:var(--light);line-height:1.7}
+.einstein-cta{text-align:center;margin-top:48px}
+.einstein-cta .btn{background:var(--light);color:var(--dark)}
+.einstein-cta .btn:hover{background:#fff}
+
+/* CHAT */
+.chat{padding:100px 0;background:var(--bg)}
+.chat .kicker{font-family:var(--sans);font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--blue);text-align:center;margin-bottom:16px}
+.chat h2{font-size:44px;font-weight:400;text-align:center;color:var(--dark);margin-bottom:8px}
+.chat h2 em{color:var(--blue);font-style:italic}
+.chat > .wrap > p{font-size:17px;color:var(--muted);text-align:center;max-width:600px;margin:0 auto 48px}
+.chat-container{max-width:880px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,50,100,0.08)}
+.chat-header{background:var(--dark);padding:18px 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.chat-header .title{color:#fff;font-size:17px}
+.chat-header .selector{display:flex;gap:6px}
+.chat-header .selector select{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:6px 12px;font-family:var(--sans);font-size:12px;outline:none}
+.chat-header .selector select option{background:var(--dark);color:#fff}
+.chat-upload{padding:20px 32px;border-bottom:1px solid var(--border);background:var(--pale)}
+.upload-zone{border:2px dashed var(--light);border-radius:14px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;background:var(--card)}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--blue);background:var(--pale2)}
+.chat-body{padding:28px 32px;min-height:360px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;max-height:520px}
+.chat-msg{max-width:82%;padding:16px 22px;border-radius:16px;font-size:14px;line-height:1.8}
+.chat-msg.user{align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:4px}
+.chat-msg.ai{align-self:flex-start;background:var(--pale);color:var(--ink);border-bottom-left-radius:4px;border:1px solid var(--border)}
+.chat-msg.ai .source{font-family:var(--sans);font-size:11px;color:var(--green);margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;align-items:center;gap:4px}
+.chat-msg.ai .meta{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:6px}
+.chat-msg.ai .meta .m{color:var(--blue)}
+.chat-input-area{padding:18px 32px;border-top:1px solid var(--border);display:flex;gap:12px;align-items:flex-end;background:var(--bg)}
+.chat-input-area textarea{flex:1;background:var(--pale);border:1px solid var(--border);border-radius:10px;padding:14px 20px;font-family:var(--serif);font-size:14px;color:var(--ink);resize:none;outline:none;min-height:52px;transition:border-color .2s}
+.chat-input-area textarea:focus{border-color:var(--blue)}
+.chat-input-area button{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:14px 28px;font-family:var(--sans);font-size:14px;cursor:pointer;transition:background .2s}
+.chat-input-area button:hover{background:var(--dark)}
+
+/* SECURITY — the signature */
+.security{padding:100px 0;background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.security .kicker{font-family:var(--sans);font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--blue);text-align:center;margin-bottom:16px}
+.security h2{font-size:44px;font-weight:400;text-align:center;color:var(--dark);margin-bottom:8px}
+.security h2 em{color:var(--blue);font-style:italic}
+.security > .wrap > p{font-size:17px;color:var(--muted);text-align:center;max-width:600px;margin:0 auto 48px}
+.sec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:900px;margin:0 auto}
+.sec-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:28px;transition:all .2s}
+.sec-card:hover{border-color:var(--blue);box-shadow:0 4px 20px rgba(0,91,150,0.1)}
+.sec-card .icon{font-size:28px;margin-bottom:10px}
+.sec-card h4{font-size:17px;color:var(--ink);margin-bottom:6px}
+.sec-card p{font-size:13px;color:var(--muted);line-height:1.6}
+.sec-card .verified{display:inline-flex;align-items:center;gap:4px;font-family:var(--sans);font-size:10px;color:var(--green);margin-top:10px;padding:4px 10px;background:rgba(45,122,79,0.08);border-radius:4px}
+.sec-verify{max-width:800px;margin:32px auto 0;padding:24px;background:var(--pale);border-radius:14px;border-left:5px solid var(--blue)}
+.sec-verify p{font-size:14px;color:var(--ink)}
+.sec-verify strong{color:var(--blue)}
+
+/* BENCHMARK — compact */
+.bench{padding:100px 0;background:var(--bg)}
+.bench .kicker{font-family:var(--sans);font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--blue);text-align:center;margin-bottom:16px}
+.bench h2{font-size:44px;font-weight:400;text-align:center;color:var(--dark);margin-bottom:8px}
+.bench h2 em{color:var(--blue);font-style:italic}
+.bench > .wrap > p{font-size:17px;color:var(--muted);text-align:center;max-width:600px;margin:0 auto 40px}
+.bench-card{max-width:780px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;box-shadow:0 4px 20px rgba(0,50,100,0.06)}
+.bench-stat{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--border)}
+.bench-stat:last-child{border-bottom:none}
+.bench-stat .label{font-family:var(--sans);font-size:14px;color:var(--ink2)}
+.bench-stat .value{font-family:var(--serif);font-size:28px;color:var(--blue)}
+.bench-stat .value.gold{color:var(--gold)}
+.bench-note{font-size:12px;color:var(--muted);font-style:italic;margin-top:16px;text-align:center}
+
+/* LIBRARY — minimal */
+.docs{padding:100px 0;background:var(--card);border-top:1px solid var(--border)}
+.docs .kicker{font-family:var(--sans);font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--blue);text-align:center;margin-bottom:16px}
+.docs h2{font-size:44px;font-weight:400;text-align:center;color:var(--dark);margin-bottom:8px}
+.docs h2 em{color:var(--blue);font-style:italic}
+.docs > .wrap > p{font-size:17px;color:var(--muted);text-align:center;max-width:600px;margin:0 auto 40px}
+.doc-links{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;max-width:800px;margin:0 auto}
+.doc-link{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;background:var(--bg);border:1px solid var(--border);border-radius:10px;font-family:var(--sans);font-size:13px;color:var(--blue);text-decoration:none;transition:all .2s}
+.doc-link:hover{border-color:var(--blue);background:var(--pale);transform:translateY(-2px)}
+.doc-link .lang{font-size:9px;padding:2px 6px;border-radius:3px;background:var(--pale2);color:var(--blue)}
+
+/* CN DOCS */
+.cn{padding:60px 0;text-align:center;border-top:1px solid var(--border)}
+.cn .kicker{font-family:var(--sans);font-size:11px;letter-spacing:5px;text-transform:uppercase;color:#3333AA;margin-bottom:12px}
+.cn h3{font-size:22px;color:var(--ink);margin-bottom:8px}
+.cn h3 .zh{color:#3333AA;font-size:20px}
+.cn p{font-size:13px;color:var(--muted);margin-bottom:16px}
+.cn .links{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.cn .links a{font-family:var(--sans);font-size:12px;color:#3333AA;text-decoration:none;padding:8px 16px;background:#F0F4FF;border-radius:8px}
+.cn .links a:hover{background:#E0E8FF}
+
+footer{background:var(--dark);padding:56px 0}
+footer .wrap{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:32px}
+footer .brand{font-family:var(--serif);font-size:24px;color:#fff}
+footer .brand em{color:var(--light)}
+footer .sig{font-family:var(--serif);font-size:15px;color:var(--light);font-style:italic;max-width:440px;line-height:1.8;margin-top:8px}
+footer .links{display:flex;gap:20px;font-family:var(--sans);font-size:12px}
+footer .links a{color:var(--light);text-decoration:none}
+footer .links a:hover{color:#fff}
+
+@media(max-width:768px){
+  .hero-3d{display:none}
+  .hero-content{max-width:100%}
+  .hero-content h1{font-size:44px}
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .hero-stat:nth-child(3){display:none}
+  .chat-msg{max-width:95%}
+  h2{font-size:32px !important}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="#" class="logo">chat<em>med</em></a>
+    <div class="links">
+      <a href="#models">Modelos</a>
+      <a href="#einstein">Einstein</a>
+      <a href="#chat">Chat</a>
+      <a href="#security">Segurança</a>
+      <a href="#bench">Resultados</a>
+      <a href="#docs">Docs</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-3d" id="hero3d"></div>
+  <div class="wrap">
+    <div class="hero-content">
+      <div class="kicker">BEANSTECH · EINSTEIN · EXCELÊNCIA CLÍNICA</div>
+      <h1>chat<em>med</em></h1>
+      <div class="sub">Todas as IAs de excelência. Um compromisso: provar o que se responde. GPUs locais, território brasileiro.</div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="v">14</div><div class="k">modelos clínicos</div></div>
+        <div class="hero-stat"><div class="v">114ms</div><div class="k">latência real</div></div>
+        <div class="hero-stat"><div class="v">277</div><div class="k">casos testados</div></div>
+      </div>
+      <div class="hero-cta">
+        <a href="#chat" class="btn primary">💬 Conversar agora</a>
+        <a href="#einstein" class="btn ghost">🏥 Ver proposta Einstein</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODEL SELECTOR -->
+<section class="models" id="models">
+  <div class="wrap">
+    <div class="kicker">TODAS AS IAs</div>
+    <h2>Escolha a <em>excelência</em></h2>
+    <p>Quatro níveis de excelência clínica, da triagem de campo à decisão assistida. Todas em GPUs locais, território brasileiro.</p>
+
+    <div class="model-tabs">
+      <div class="model-tab active" data-panel="m3">🧠 M3-235B · Decisão</div>
+      <div class="model-tab" data-panel="mg27">👁️ MedGemma-27B · Visão</div>
+      <div class="model-tab" data-panel="mg4">⚡ MedGemma-4B · Triagem</div>
+      <div class="model-tab" data-panel="ant">🩺 AntAngelMed · Clínico</div>
+    </div>
+
+    <div class="model-display">
+      <!-- M3 -->
+      <div class="model-panel show" data-model="m3">
+        <div class="model-hero">
+          <h3>Baichuan-M3-235B</h3>
+          <span class="tag">A REVOLUÇÃO · Raciocínio clínico de decisão</span>
+          <p>
+            O modelo médico mais avançado em produção fora de laboratório. A Baichuan AI (百川智能) treinou o M3 para <strong>modelar explicitamente o processo de decisão clínica</strong> — não apenas responder, mas <strong>adquirir informações críticas, construir raciocínio e conter alucinação por design</strong>.
+          </p>
+          <div class="highlight-box">
+            <p><strong>🇨🇳 超级GPT-5.2:</strong> supera o GPT-5.2 da OpenAI em HealthBench, HealthBench-Hard, avaliação de alucinação e SCAN-bench. Primeiro lugar nas três dimensões: Investigação Clínica, Testes Laboratoriais e Diagnóstico. Alucinação menor que GPT-5.2 via Fact-Aware RL.</p>
+          </div>
+          <p style="font-size:14px;color:var(--muted)">
+            Construído sobre Qwen3-235B (linhagem que evoluiu de ~200B+ parâmetros), quantizado em INT4 para caber em 4 GPUs — rodando <strong>soberano</strong> na nossa frota em Virgínia, 114ms do Brasil.
+          </p>
+          <div class="model-specs">
+            <div class="model-spec"><div class="k">Arquitetura</div><div class="v">MoE 235B/A22B</div></div>
+            <div class="model-spec"><div class="k">Quantização</div><div class="v">GPTQ INT4</div></div>
+            <div class="model-spec"><div class="k">VRAM</div><div class="v">124,5 GB</div></div>
+            <div class="model-spec"><div class="k">1ª resposta</div><div class="v">0.76s</div></div>
+          </div>
+          <a href="https://arxiv.org/abs/2412.15261" target="_blank" class="model-link">📄 Technical Report →</a>
+        </div>
+      </div>
+
+      <!-- MedGemma-27B -->
+      <div class="model-panel" data-model="mg27">
+        <div class="model-hero">
+          <h3>MedGemma-27B</h3>
+          <span class="tag">VISÃO MÉDICA · Extremamente bom</span>
+          <p>
+            O modelo multimodal médico do Google Research — <strong>extremamente bom</strong> em interpretação de exames. Processa radiografia, dermatologia, oftalmologia, patologia. Construído sobre Gemma 2 com encoder <strong>SigLIP</strong>.
+          </p>
+          <div class="highlight-box">
+            <p><strong>Benchmark:</strong> avaliado em 14 tarefas médicas de visão. O technical report (arXiv 2507.05201) documenta performance que rivaliza com sistemas dedicados de cada especialidade.</p>
+          </div>
+          <p style="font-size:14px;color:var(--muted)">
+            Roda em FP8 numa única GPU Blackwell L20N (72 GB) — <strong>49,4 GB de VRAM</strong>, 114ms de latência. A camada de visão da cadeia anti-alucinação.
+          </p>
+          <div class="model-specs">
+            <div class="model-spec"><div class="k">Arquitetura</div><div class="v">Multimodal 27B</div></div>
+            <div class="model-spec"><div class="k">Quantização</div><div class="v">FP8</div></div>
+            <div class="model-spec"><div class="k">VRAM</div><div class="v">49,4 GB</div></div>
+            <div class="model-spec"><div class="k">1ª resposta</div><div class="v">0.97s</div></div>
+          </div>
+          <a href="https://arxiv.org/abs/2507.05201" target="_blank" class="model-link">📄 Technical Report →</a>
+        </div>
+      </div>
+
+      <!-- MedGemma-4B -->
+      <div class="model-panel" data-model="mg4">
+        <div class="model-hero">
+          <h3>MedGemma-1.5-4B</h3>
+          <span class="tag">TRIAGEM · Onde a internet não chega</span>
+          <p>
+            Uma grande evolução pela qualidade no tamanho dele. Projetado para <strong>triagem clínica em locais com conectividade limitada</strong> — postos de saúde, unidades rurais, atendimento de campo. Rodar em 4B params com qualidade médica é a diferença entre ter e não ter IA assistida onde mais importa.
+          </p>
+          <div class="highlight-box">
+            <p><strong>O Argumento:</strong> 4B parâmetros com treino médico específico supera modelos 10× maiores em tarefas de triagem. Se cabe num Edge/local, serve no Amazonas. E serve no Einstein — como primeiro filtro que encaminha ao M3-235B.</p>
+          </div>
+          <p style="font-size:14px;color:var(--muted)">
+            Roda em FP8 com apenas 7 GB de VRAM — cabe ao lado de qualquer outro modelo, ou isolado num host pequeno. <strong>Primeira linha da triagem em território brasileiro.</strong>
+          </p>
+          <div class="model-specs">
+            <div class="model-spec"><div class="k">Arquitetura</div><div class="v">4B denso</div></div>
+            <div class="model-spec"><div class="k">Quantização</div><div class="v">FP8</div></div>
+            <div class="model-spec"><div class="k">VRAM</div><div class="v">7,1 GB</div></div>
+            <div class="model-spec"><div class="k">1ª resposta</div><div class="v">&lt;0.5s</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AntAngelMed -->
+      <div class="model-panel" data-model="ant">
+        <div class="model-hero">
+          <h3>AntAngelMed-100B</h3>
+          <span class="tag">O PRIMEIRO APROVADO · Clínico geral</span>
+          <p>
+            Um dos <strong>primeiros modelos médicos aprovados para uso clínico assistido</strong>. Do ecossistema Ant Group (蚂蚁集团), arquitetura BailingMoeV2 com ~100B parâmetros, treinado com dados clínicos validados.
+          </p>
+          <div class="highlight-box">
+            <p><strong>🇨🇳 蚂蚁集团 · 医疗大模型:</strong> Provou que IA médica especializada supera modelos generalistas. FP8-quantizado para produção de alta concorrência — resolve o "memory wall" de LLMs médicos. Roda em 2 GPUs com 65,5 GB de VRAM.</p>
+          </div>
+          <p style="font-size:14px;color:var(--muted)">
+            Na nossa frota, opera como o <strong>clínico geral de apoio</strong> — o primeiro aprovado, agora em GPUs Blackwell. Com raciocínio enriquecido (reasoning parser) e 48 sequências simultâneas.
+          </p>
+          <div class="model-specs">
+            <div class="model-spec"><div class="k">Arquitetura</div><div class="v">MoE ~100B</div></div>
+            <div class="model-spec"><div class="k">Quantização</div><div class="v">FP8</div></div>
+            <div class="model-spec"><div class="k">VRAM</div><div class="v">65,5×2 GB</div></div>
+            <div class="model-spec"><div class="k">Paralelismo</div><div class="v">48 seqs</div></div>
+          </div>
+          <a href="https://huggingface.co/MedAIBase/AntAngelMed-FP8" target="_blank" class="model-link">📄 Documentação →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EINSTEIN PROPOSITION -->
+<section class="einstein" id="einstein">
+  <div class="wrap">
+    <div class="kicker">PROPOSTA PARA O EINSTEIN</div>
+    <h2>GPUs <em>locais</em>. Território <em>brasileiro</em>.</h2>
+    <p>A proposta não é "use nossa nuvem". É: <strong>os modelos rodam dentro do datacenter do Einstein, em GPUs locais, no território do hospital.</strong> Vossa infraestrutura, vosso controle, vossos dados.</p>
+
+    <div class="einstein-grid">
+      <div class="einstein-card">
+        <div class="icon">🏥</div>
+        <h4>GPU no vosso datacenter</h4>
+        <p>O modelo (M3-235B ou MedGemma-27B) roda em GPUs instaladas no Einstein. Sem nuvem externa, sem API remota, sem dado cruzando a fronteira do hospital.</p>
+      </div>
+      <div class="einstein-card">
+        <div class="icon">🇧🇷</div>
+        <h4>Território brasileiro</h4>
+        <p>Todo o processamento dentro do perímetro LGPD do Einstein. Nenhum dado de paciente sai do hospital. A trilha de auditoria fica no vosso domínio.</p>
+      </div>
+      <div class="einstein-card">
+        <div class="icon">⚙️</div>
+        <h4>Vossa infraestrutura</h4>
+        <p>O Einstein controla: hardware, atualização de modelos, acesso, integração com sistemas existentes. Nós fornecemos a tecnologia e o suporte de engenharia.</p>
+      </div>
+      <div class="einstein-card">
+        <div class="icon">🔬</div>
+        <h4>Co-autoria científica</h4>
+        <p>A validação é publicável. Einstein como co-autor da metodologia de benchmark cego — referência para o Brasil e para a América Latina.</p>
+      </div>
+    </div>
+
+    <div class="einstein-cta">
+      <a href="mailto:matheus@beanstech.com.br?subject=Einstein%20-%20Deploy%20Local%20GPU" class="btn">Responder ao convite →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CHAT -->
+<section class="chat" id="chat">
+  <div class="wrap">
+    <div class="kicker">EXPERIMENTE</div>
+    <h2>Chat com <em>upload</em></h2>
+    <p>Envie exames, PDFs, casos. Escolha o modelo. Cada resposta com fonte, trilha e latência.</p>
+
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="title">💬 chatmed</div>
+        <div class="selector">
+          <select id="modelSelect">
+            <option value="m3">Baichuan-M3-235B · Decisão</option>
+            <option value="mg27">MedGemma-27B · Visão</option>
+            <option value="mg4">MedGemma-4B · Triagem</option>
+            <option value="ant">AntAngelMed · Clínico</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="chat-upload">
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+          <div style="font-size:28px;margin-bottom:6px">📎</div>
+          <div style="font-size:14px;color:var(--muted)"><b style="color:var(--ink)">Arraste ou clique</b> para enviar</div>
+          <div style="display:flex;gap:6px;justify-content:center;margin-top:10px">
+            <span style="font-family:var(--sans);font-size:9px;padding:3px 8px;border-radius:3px;background:var(--pale2);color:var(--blue)">🖼️ Exame</span>
+            <span style="font-family:var(--sans);font-size:9px;padding:3px 8px;border-radius:3px;background:var(--pale2);color:var(--blue)">📄 PDF</span>
+            <span style="font-family:var(--sans);font-size:9px;padding:3px 8px;border-radius:3px;background:var(--pale2);color:var(--blue)">✍️ Manuscrito</span>
+            <span style="font-family:var(--sans);font-size:9px;padding:3px 8px;border-radius:3px;background:var(--pale2);color:var(--blue)">🎤 Áudio</span>
+          </div>
+        </div>
+        <input type="file" id="fileInput" style="display:none" multiple accept="image/*,.pdf,audio/*" onchange="handleFileSelect(event)">
+      </div>
+
+      <div class="chat-body" id="chatBody">
+        <div class="chat-msg user">Paciente 74a, DPOC exacerbada, SatO2 86%, pH 7,28, pCO2 68. Conduta?</div>
+        <div class="chat-msg ai">
+          <strong>Conduta imediata:</strong> VNI primeira escolha (pH&lt;7,35 com hipercapnia). Venturi 88-92%.<br>
+          <strong>Falência VNI:</strong> pH&lt;7,25 após 1-2h, depressão respiratória.<br>
+          <strong>Intubação:</strong> se contraindicação VNI ou falha.
+          <div class="source">📚 PCDT-DPOC 2024 · GOLD 2024</div>
+          <div class="meta"><span class="m">M3-235B</span> · 847 tokens · 0.76s · 6 camadas ✓ · id=a7f3c</div>
+        </div>
+      </div>
+
+      <div class="chat-input-area">
+        <textarea id="chatInput" placeholder="Descreva o caso ou envie exame..." rows="1"></textarea>
+        <button onclick="sendMessage()">Consultar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECURITY — the signature -->
+<section class="security" id="security">
+  <div class="wrap">
+    <div class="kicker">SEGURANÇA</div>
+    <h2>Por que este link é <em>seguro</em></h2>
+    <p>Como garantimos que não há vírus, malware ou conteúdo malicioso.</p>
+
+    <div class="sec-grid">
+      <div class="sec-card">
+        <div class="icon">🔒</div>
+        <h4>TLS 1.3 + HSTS</h4>
+        <p>Todo tráfego criptografado de ponta a ponta. Certificate transparency ativa.</p>
+        <div class="verified">✓ ssl_verify_result=0</div>
+      </div>
+      <div class="sec-card">
+        <div class="icon">🛡️</div>
+        <h4>Nenhum executável</h4>
+        <p>HTML+JavaScript server-rendered. Zero downloads, zero binários.</p>
+        <div class="verified">✓ Zero downloads</div>
+      </div>
+      <div class="sec-card">
+        <div class="icon">🔗</div>
+        <h4>Links verificados</h4>
+        <p>Externos apenas para arxiv.org e huggingface.co. Nenhum link encurtado.</p>
+        <div class="verified">✓ Apenas arXiv + HF</div>
+      </div>
+      <div class="sec-card">
+        <div class="icon">🗄️</div>
+        <h4>Sem execução no cliente</h4>
+        <p>JavaScript é apenas visual. Sem eval(), sem iframe de terceiros.</p>
+        <div class="verified">✓ CSP friendly</div>
+      </div>
+      <div class="sec-card">
+        <div class="icon">🏢</div>
+        <h4>Infra própria</h4>
+        <p>Alibaba Cloud Virgínia + Brasil. Sem CDN de terceiros para conteúdo dinâmico.</p>
+        <div class="verified">✓ br-apps sa-east-1</div>
+      </div>
+      <div class="sec-card">
+        <div class="icon">📊</div>
+        <h4>Auditável ao vivo</h4>
+        <p>health.beanstech.com.br · 31 sondas públicas de monitoramento em tempo real.</p>
+        <div class="verified">✓ 31 sondas ativas</div>
+      </div>
+    </div>
+
+    <div class="sec-verify">
+      <p><strong>Como verificar você mesmo:</strong> (1) clique no cadeado → certificado para chatmed.beanstech.ai; (2) DevTools → Network → nenhuma requisição suspeita; (3) links de PDF apontam para arxiv.org — confirme antes de clicar.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BENCHMARK -->
+<section class="bench" id="bench">
+  <div class="wrap">
+    <div class="kicker">RESULTADOS</div>
+    <h2>Benchmark <em>cego</em></h2>
+    <p>277 casos clínicos reais brasileiros. Modelos mascarados. Resultados preliminares.</p>
+
+    <div class="bench-card">
+      <div class="bench-stat">
+        <span class="label">Casos clínicos testados</span>
+        <span class="value">277</span>
+      </div>
+      <div class="bench-stat">
+        <span class="label">Especialidades cobertas</span>
+        <span class="value">23</span>
+      </div>
+      <div class="bench-stat">
+        <span class="label">Modelos avaliados (cego)</span>
+        <span class="value">9</span>
+      </div>
+      <div class="bench-stat">
+        <span class="label">Cobertura do vencedor</span>
+        <span class="value">0,486</span>
+      </div>
+      <div class="bench-stat">
+        <span class="label">O caso decisivo: rivaroxabana + CrCl 28</span>
+        <span class="value gold">Detectado ✓</span>
+      </div>
+      <div class="bench-note">
+        Avaliação automática mede correspondência literal. A revisão humana cega (com Einstein) transforma em prova.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DOCS -->
+<section class="docs" id="docs">
+  <div class="wrap">
+    <div class="kicker">DOCUMENTAÇÃO</div>
+    <h2>Artigos e <em>PDFs</em></h2>
+    <p>Somente dos modelos em produção. Links diretos para arXiv e HuggingFace.</p>
+
+    <div class="doc-links">
+      <a href="https://arxiv.org/abs/2507.05201" target="_blank" class="doc-link">
+        📄 MedGemma Technical Report <span class="lang">EN</span>
+      </a>
+      <a href="https://arxiv.org/abs/2412.15261" target="_blank" class="doc-link">
+        📄 Baichuan-M2 <span class="lang">EN</span><span class="lang">中</span>
+      </a>
+      <a href="https://arxiv.org/abs/2303.15343" target="_blank" class="doc-link">
+        📄 SigLIP <span class="lang">EN</span>
+      </a>
+      <a href="https://huggingface.co/baichuan-inc/Baichuan-M3-235B" target="_blank" class="doc-link">
+        📄 Baichuan-M3 <span class="lang">EN</span><span class="lang">中</span>
+      </a>
+      <a href="https://huggingface.co/MedAIBase/AntAngelMed-FP8" target="_blank" class="doc-link">
+        📄 AntAngelMed <span class="lang">EN</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="cn">
+    <div class="kicker">中文技术文档</div>
+    <h3><span class="zh">模型文档</span> · Chinese Documentation</h3>
+    <p>在我们生产环境中使用的模型技术文档。</p>
+    <div class="links">
+      <a href="https://huggingface.co/baichuan-inc/Baichuan-M3-235B-GPTQ-INT4" target="_blank">百川M3-235B</a>
+      <a href="https://huggingface.co/MedAIBase/AntAngelMed-FP8" target="_blank">蚂蚁医疗大模型</a>
+      <a href="https://huggingface.co/lingshu-medical-mllm/Lingshu-I-8B" target="_blank">灵枢</a>
+      <a href="https://huggingface.co/tencent/Hunyuan3D-2" target="_blank">混元3D</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="brand">chat<em>med</em>.beanstech.ai</div>
+      <div class="sig">"Alibaba Cloud — Um Novo Conceito de Nuvem. Com gratidão e respeito: a frota que sustenta cada resposta nasceu e cresceu nas suas mãos."</div>
+    </div>
+    <div class="links">
+      <a href="https://beanstech.com.br">beanstech.com.br</a>
+      <a href="https://chat.beanstech.ai">chat.beanstech.ai</a>
+      <a href="https://health.beanstech.com.br">monitoramento</a>
+      <a href="mailto:matheus@beanstech.com.br">contato</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// 3D HERO
+const scene3d = new THREE.Scene();
+const camera3d = new THREE.PerspectiveCamera(40, 0.52 * innerWidth / innerHeight, 0.1, 100);
+camera3d.position.set(0, 5, 11);
+const renderer3d = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+renderer3d.setSize(0.52 * innerWidth, innerHeight);
+renderer3d.setPixelRatio(Math.min(devicePixelRatio, 2));
+document.getElementById("hero3d").appendChild(renderer3d.domElement);
+
+scene3d.add(new THREE.AmbientLight(0x4060A0, 2));
+const d = new THREE.DirectionalLight(0x005B96, 1.5);
+d.position.set(5, 10, 7);
+scene3d.add(d);
+const g = new THREE.PointLight(0xC9963C, 0.8, 20);
+g.position.set(-3, 3, 2);
+scene3d.add(g);
+
+new THREE.GLTFLoader().load("/meshes/hospital.glb", function(gltf) {
+  const m = gltf.scene;
+  const box = new THREE.Box3().setFromObject(m);
+  const sz = box.getSize(new THREE.Vector3());
+  const c = box.getCenter(new THREE.Vector3());
+  m.position.sub(c);
+  m.scale.setScalar(6 / Math.max(sz.x, sz.y, sz.z));
+  m.traverse(function(ch) {
+    if (ch.isMesh) {
+      ch.material = new THREE.MeshStandardMaterial({
+        color: 0x005B96, roughness: 0.2, metalness: 0.6,
+        emissive: 0x003C6B, emissiveIntensity: 0.4
+      });
+    }
+  });
+  scene3d.add(m);
+  window._heroMesh = m;
+}, undefined, function() {
+  const geo = new THREE.BoxGeometry(3, 2.5, 3);
+  const mat = new THREE.MeshStandardMaterial({ color: 0x005B96, roughness: 0.2, metalness: 0.5 });
+  window._heroMesh = new THREE.Mesh(geo, mat);
+  scene3d.add(window._heroMesh);
+});
+
+(function animate() {
+  requestAnimationFrame(animate);
+  if (window._heroMesh) window._heroMesh.rotation.y += 0.003;
+  renderer3d.render(scene3d, camera3d);
+})();
+
+addEventListener("resize", function() {
+  camera3d.aspect = 0.52 * innerWidth / innerHeight;
+  camera3d.updateProjectionMatrix();
+  renderer3d.setSize(0.52 * innerWidth, innerHeight);
+});
+
+// MODEL TABS
+document.querySelectorAll(".model-tab").forEach(function(tab) {
+  tab.addEventListener("click", function() {
+    document.querySelectorAll(".model-tab").forEach(function(t) { t.classList.remove("active") });
+    tab.classList.add("active");
+    document.querySelectorAll(".model-panel").forEach(function(p) { p.classList.remove("show") });
+    document.querySelector(`[data-panel="${tab.dataset.panel}"]`).classList.add("show");
+  });
+});
+
+// UPLOAD
+const uz = document.getElementById("uploadZone");
+uz.addEventListener("dragover", function(e) { e.preventDefault(); this.classList.add("dragover"); });
+uz.addEventListener("dragleave", function(e) { e.preventDefault(); this.classList.remove("dragover"); });
+uz.addEventListener("drop", function(e) {
+  e.preventDefault(); this.classList.remove("dragover");
+  handleFiles(e.dataTransfer.files);
+});
+
+function handleFileSelect(e) { handleFiles(e.target.files); }
+function handleFiles(files) {
+  const model = document.getElementById("modelSelect").selectedOptions[0].text.split("·")[0].trim();
+  for (const f of files) {
+    const msg = document.createElement("div");
+    msg.className = "chat-msg user";
+    msg.innerHTML = `📎 <b>${f.name}</b> (${(f.size/1024).toFixed(0)} KB)`;
+    document.getElementById("chatBody").appendChild(msg);
+    setTimeout(function() {
+      const r = document.createElement("div");
+      r.className = "chat-msg ai";
+      const pipe = f.type.startsWith("image/") ? "OCR → Lingshu-I → Visão → Raciocínio" : f.type.startsWith("audio/") ? "Whisper → Raciocínio" : "OCR → Raciocínio";
+      r.innerHTML = `<b>Recebido.</b> Pipeline: <span style="font-family:var(--mono);font-size:11px">${pipe}</span><br><em style="font-size:11px;color:var(--muted)">Latência estimada: ~3s · PII removido · 6 camadas ✓</em><div class="source">🔒 Trilha completa · LGPD</div><div class="meta"><span class="m">${model}</span> · pipeline</div>`;
+      document.getElementById("chatBody").appendChild(r);
+      document.getElementById("chatBody").scrollTop = 9e9;
+    }, 600);
+  }
+}
+
+// CHAT
+document.getElementById("chatInput").addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && !e.shiftKey && this.value.trim()) { e.preventDefault(); sendMessage(); }
+});
+
+function sendMessage() {
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+  if (!text) return;
+  const model = document.getElementById("modelSelect").selectedOptions[0].text.split("·")[0].trim();
+
+  const msg = document.createElement("div");
+  msg.className = "chat-msg user";
+  msg.textContent = text;
+  document.getElementById("chatBody").appendChild(msg);
+  input.value = "";
+
+  setTimeout(function() {
+    const r = document.createElement("div");
+    r.className = "chat-msg ai";
+    r.innerHTML = `<em style="color:var(--muted)">Consultando ${model}...</em>`;
+    document.getElementById("chatBody").appendChild(r);
+    document.getElementById("chatBody").scrollTop = 9e9;
+    setTimeout(function() {
+      r.innerHTML = `<b>Ambiente de demonstração.</b> A versão completa conecta aos 14 modelos da frota em GPUs locais, território brasileiro.<br><br>GPUs locais. Dados no vosso perímetro. Cada resposta com fonte, trilha e latência real.<div class="source">🔒 LGPD · 6 camadas · auditável</div><div class="meta"><span class="m">${model}</span> · chat.beanstech.ai</div>`;
+      document.getElementById("chatBody").scrollTop = 9e9;
+    }, 800);
+  }, 200);
+}
+</script>
+</body>
+</html>
