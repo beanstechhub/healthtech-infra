@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+"""ragmed.ai — coletor 1: PCDT (Protocolos Clínicos e Diretrizes Terapêuticas) / CONITEC.
+
+Fonte oficial: https://www.gov.br/conitec/pt-br/protocolos-clinicos-e-diretrizes-terapeuticas
+(índice paginado no padrão gov.br). Baixa os PDFs dos protocolos e dos relatórios de
+recomendação para RAGMED_RAW/pcdt-conitec/, com manifest auditável e incremental por sha256.
+Os PDFs são mantidos íntegros: a numeração de página do arquivo é o que sustenta a citação
+"versão/página" no Evidence-BR.
+
+uso: python3 coletor_pcdt_conitec.py [--max N] [--so-protocolos]
+"""
+import argparse
+import re
+import sys
+import time
+
+from ragmed_common import PAUSE_S, extrair_links, fetch, fetch_pdf_doc, fonte_dir
+
+INDICE = "https://www.gov.br/conitec/pt-br/protocolos-clinicos-e-diretrizes-terapeuticas"
+# gov.br pagina com ?bcpAntiCache e filtros; o índice completo usa paginação por query
+PAGINAS = [INDICE] + [f"{INDICE}?page={n}" for n in range(2, 12)]
+PADRAO_PDF = re.compile(r"\.pdf($|\?)", re.I)
+FILTRA_RUIDO = re.compile(r"cartilha|manual-para-avaliacao|formulario|template", re.I)
+
+
+def coletar(max_docs, so_protocolos):
+    d = fonte_dir("pcdt-conitec")
+    baixados, pulados, erros = 0, 0, []
+    vistos = set()
+    for pagina in PAGINAS:
+        if baixados >= max_docs:
+            break
+        try:
+            html = fetch(pagina)
+        except RuntimeError as e:
+            erros.append(f"índice {pagina}: {e}")
+            continue
+        links = extrair_links(html, PADRAO_PDF, base_url=pagina)
+        if not links and pagina != INDICE:
+            break  # última página
+        for url, titulo in links:
+            if len(vistos) >= max_docs:
+                break
+            if url in vistos or FILTRA_RUIDO.search(url) or FILTRA_RUIDO.search(titulo):
+                continue
+            if so_protocolos and not re.search(r"pcdt|protocolo", url + " " + titulo, re.I):
+                continue
+            vistos.add(url)
+            try:
+                path, novo = fetch_pdf_doc("pcdt-conitec", url, titulo)
+                if novo:
+                    baixados += 1
+                    print(f"  novo: {path}")
+                else:
+                    pulados += 1
+                time.sleep(PAUSE_S)
+            except (RuntimeError, ValueError) as e:
+                erros.append(f"{url[:100]}: {e}")
+    print(f"pcdt-conitec: {baixados} novos, {pulados} já presentes, {len(erros)} erros → {d}")
+    for e in erros[:20]:
+        print(f"  ERRO {e}")
+    return 0 if baixados or pulados else (1 if erros else 0)
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--max", type=int, default=1000)
+    ap.add_argument("--so-protocolos", action="store_true")
+    a = ap.parse_args()
+    sys.exit(coletar(a.max, a.so_protocolos))

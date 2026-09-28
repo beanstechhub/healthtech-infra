@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+"""ragmed.ai — coletor 2: Bulário ANVISA (dados abertos, bulk-first).
+
+Fonte oficial: https://dados.anvisa.gov.br/dados/ — pacote "Bulas de Medicamentos"
+(datapackage: JSON de descrição + ZIPs de dados). Bulk primeiro; a API de consulta do
+Bulário (consultas.anvisa.gov.br) fica atrás de WAF (403 p/ cliente não-navegador,
+verificado 28/09/2026) e NÃO é usada como fonte primária — via incremental opcional,
+só se os headers permitirem, sem bypass de WAF.
+
+As bulas vêm em PDF dentro dos ZIPs — mantidas íntegras p/ citação por página.
+
+uso: python3 coletor_anvisa_bulas.py [--max-resources N] [--raiz URL]
+"""
+import argparse
+import io
+import json
+import re
+import sys
+import zipfile
+
+from ragmed_common import PAUSE_S, extrair_links, fetch, fonte_dir, save
+
+RAIZ = "https://dados.anvisa.gov.br/dados/"
+ALLOW = (".anvisa.gov.br", "dados.anvisa.gov.br")
+
+
+def descobrir_bulas(raiz):
+    """Localiza o diretório do pacote de bulas no listing de /dados/."""
+    html = fetch(raiz, allowlist=ALLOW)
+    links = extrair_links(html, re.compile(r"bula", re.I), base_url=raiz)
+    # listing de diretório: hrefs sem extensão primeiro
+    dirs = [u for u, _ in links if not re.search(r"\.[a-z0-9]{2,4}($|\?)", u, re.I)]
+    return dirs
+
+
+def coletar(max_resources, raiz):
+    d = fonte_dir("anvisa-bulas")
+    novos, erros = 0, []
+    dirs = descobrir_bulas(raiz)
+    if not dirs:
+        print(f"nada com 'bula' em {raiz} — verificar estrutura do portal")
+        return 1
+    pkg_url = dirs[0].rstrip("/") + "/datapackage.json"
+    print(f"datapackage: {pkg_url}")
+    try:
+        pkg = json.loads(fetch(pkg_url, allowlist=ALLOW))
+    except (RuntimeError, ValueError) as e:
+        erros.append(f"datapackage: {e}")
+        pkg = None
+    recursos = []
+    if pkg:
+        for r in pkg.get("resources", []):
+            u = r.get("path") or r.get("url")
+            if u:
+                recursos.append(u if u.startswith("http") else dirs[0].rstrip("/") + "/" + u.lstrip("/"))
+    else:
+        # fallback: listing direto do diretório de bulas
+        html = fetch(dirs[0], allowlist=ALLOW)
+        recursos = [u for u, _ in extrair_links(html, re.compile(r"\.(zip|csv)(\?|$)", re.I), base_url=dirs[0])]
+    recursos = recursos[:max_resources]
+    for url in recursos:
+        nome = url.rstrip("/").split("/")[-1].split("?")[0]
+        try:
+            data = fetch(url, allowlist=ALLOW, binary=True)
+            if nome.lower().endswith(".zip"):
+                # extrai apenas os PDFs internos, mantendo nomes estáveis
+                with zipfile.ZipFile(io.BytesIO(data)) as z:
+                    for info in z.infolist():
+                        if info.filename.lower().endswith(".pdf"):
+                            base = info.filename.split("/")[-1]
+                            path, novo = save("anvisa-bulas", f"{nome}__{base}", z.read(info),
+                                              {"url": url, "titulo": f"bula {base}", "tipo": "bula-pdf"})
+                            novos += 1 if novo else 0
+            else:
+                path, novo = save("anvisa-bulas", nome, data, {"url": url, "titulo": nome, "tipo": "dados"})
+                novos += 1 if novo else 0
+            print(f"  ok: {nome} ({len(data)} bytes)")
+        except (RuntimeError, ValueError, zipfile.BadZipFile) as e:
+            erros.append(f"{url[:100]}: {e}")
+        import time
+        time.sleep(PAUSE_S)
+    print(f"anvisa-bulas: {novos} novos objetos, {len(erros)} erros → {d}")
+    for e in erros[:20]:
+        print(f"  ERRO {e}")
+    return 0 if novos else 1
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--max-resources", type=int, default=200)
+    ap.add_argument("--raiz", default=RAIZ)
+    a = ap.parse_args()
+    sys.exit(coletar(a.max_resources, a.raiz))

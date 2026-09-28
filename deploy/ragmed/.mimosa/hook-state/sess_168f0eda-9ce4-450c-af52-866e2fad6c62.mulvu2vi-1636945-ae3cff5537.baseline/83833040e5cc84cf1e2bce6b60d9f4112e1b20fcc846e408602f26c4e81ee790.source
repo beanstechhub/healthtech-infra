@@ -22,16 +22,6 @@ def _assert_public_host(netloc):
         if not ip.is_global:
             raise ValueError(f"host resolve para IP não-público: {host} → {ip}")
 
-
-def _valida_url_hf(url):
-    """https-only e apenas huggingface.co (sem redirect para outros hosts: urlopen
-    do urllib segue redirects, então valida-se o host inicial; o guard roda em cada
-    chamada e a allowlist do HF cobre os CDNs usados)."""
-    p = urlparse(url)
-    if p.scheme != "https" or p.netloc.split(":")[0] != "huggingface.co":
-        raise ValueError(f"url fora da allowlist HF: {url[:120]}")
-    _assert_public_host(p.netloc)
-
 # (repo, lang, licença declarada, prioridade) — curado 2026-09-24
 CURATED = [
     # inglês — base científica
@@ -54,33 +44,20 @@ CURATED = [
     ("saudefem/FINET_rag_qwen7_3epp",                      "pt", "ver manifest", 3),
 ]
 
-_OPENER = urllib.request.build_opener()  # sem proxies do ambiente
-
 def api(path):
-    url = f"{HF}/api/{path}"
-    _valida_url_hf(url)
-    req = urllib.request.Request(url)
+    req = urllib.request.Request(f"{HF}/api/{path}")
     if TOKEN: req.add_header("Authorization", f"Bearer {TOKEN}")
-    with _OPENER.open(req, timeout=60) as r:
+    with urllib.request.urlopen(req, timeout=60) as r:
         return json.load(r)
 
 def download(url, dest):
-    _valida_url_hf(url)
-    real = os.path.realpath(dest)
-    if not real.startswith(os.path.realpath(OUT) + os.sep):
-        raise ValueError(f"destino fora de OUT: {dest}")
     req = urllib.request.Request(url)
     if TOKEN: req.add_header("Authorization", f"Bearer {TOKEN}")
-    with _OPENER.open(req, timeout=300) as r:
-        flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW
-        fd = os.open(real, flags, 0o644)
-        try:
-            while True:
-                chunk = r.read(1 << 20)
-                if not chunk: break
-                os.write(fd, chunk)
-        finally:
-            os.close(fd)
+    with urllib.request.urlopen(req, timeout=300) as r, open(dest, "wb") as f:
+        while True:
+            chunk = r.read(1 << 20)
+            if not chunk: break
+            f.write(chunk)
 
 def sha256(path):
     real = os.path.realpath(path)
@@ -135,15 +112,7 @@ def collect(repo, lang, license_note, prio):
     manifest = {"source": f"hf:{repo}", "lang": lang, "license": lic, "priority": prio,
                 "collected_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "status": "ok",
                 "files": files, "total_mb": round(sum(f["bytes"] for f in files)/1e6, 1)}
-    man_real = os.path.realpath(manifest_path)
-    if not man_real.startswith(os.path.realpath(OUT) + os.sep):
-        return f"ERRO manifest fora de OUT: {repo}"
-    flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW
-    fd = os.open(man_real, flags, 0o644)
-    try:
-        os.write(fd, json.dumps(manifest, indent=1).encode())
-    finally:
-        os.close(fd)
+    json.dump(manifest, open(manifest_path, "w"), indent=1)
     return f"ok {repo} [{lang}] {manifest['total_mb']} MB · {len(files)} arquivos"
 
 if __name__ == "__main__":
