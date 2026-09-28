@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "mimosa-hook-status/v1",
+  "recordedAt": "2026-09-28T16:28:59.113Z",
+  "sessionId": "sess_168f0eda-9ce4-450c-af52-866e2fad6c62",
+  "event": "PostToolUse",
+  "toolName": "Write",
+  "file": "/mnt/ARQUIVOS/Projetos/Projetos Ativos/healthtech/deploy/guardian-team/ROADMAP.md",
+  "outcome": "clear",
+  "coverage": "complete",
+  "findingCount": 0,
+  "durationMs": 2,
+  "hostState": "hook_complete",
+  "reportHint": ".mimosa/reports/"
+}

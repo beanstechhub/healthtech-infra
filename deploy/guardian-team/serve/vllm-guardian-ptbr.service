@@ -1,0 +1,32 @@
+[Unit]
+# Guiardiao de injecao/jailbreak PT-BR — camada 1 da cadeia (entrada)
+# Servido com vLLM (mesmo contrato OpenAI-compatible do resto da frota).
+# 86M: cabe ao lado de qualquer modelo — reserva minima de VRAM.
+Description=vLLM — guardiao PT-BR (prompt-injection/jailbreak, 86M) :8010
+After=docker.service network-online.target
+Requires=docker.service
+[Service]
+EnvironmentFile=/etc/guardian/env
+Restart=always
+RestartSec=10
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker rm -f vllm-guardian-ptbr
+ExecStart=/usr/bin/docker run --name vllm-guardian-ptbr --gpus all --ipc=host -p 0.0.0.0:8010:8000 \
+  -v /data/models:/models:ro -e VLLM_API_KEY=${GUARDIAN_TOKEN} \
+  vllm/vllm-openai:latest --model /models/guardian-ptbr-86M --served-model-name guardian-ptbr \
+  --max-model-len 512 --gpu-memory-utilization 0.05 --trust-remote-code
+ExecStop=/usr/bin/docker stop vllm-guardian-ptbr
+[Install]
+WantedBy=multi-user.target
+
+# ---------------------------------------------------------------------------
+# Portas dos guardioes na frota de Virginia (elite-va / flash-va):
+#   8003  Granite-Guardian-3.2  (ja em producao — camada 2/3 atual)
+#   8010  guardian-ptbr-86M     (NOVO — camada 1, injecao PT-BR)      [este]
+#   8011  Granite-Guardian-4.1-8B (NOVO — politica/harm + groundedness)
+#   8012  GLiNER2-PII-multi     (NOVO — PII/LGPD na entrada)
+#
+# Deploy: copiar o modelo para /data/models, criar /etc/guardian/env com
+# GUARDIAN_TOKEN do KMS, e: systemctl enable --now vllm-guardian-ptbr
+# Liberar 8010/8011/8012 no security group APENAS para 43.118.160.51 (br-apps) e o IP dev.
+# ---------------------------------------------------------------------------

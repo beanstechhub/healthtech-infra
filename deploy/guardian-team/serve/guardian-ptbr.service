@@ -1,0 +1,26 @@
+[Unit]
+# Guardiao de injecao/jailbreak PT-BR — CPU, sem GPU (86M roda em ~30ms).
+# Camada 1 da cadeia (entrada) — serve junto do br-apps, não consome VRAM da frota.
+Description=guardian-ptbr (classificador de injecao/jailbreak, CPU)
+After=network-online.target
+[Service]
+Environment=GUARDIAN_MODEL=/data/models/guardian-ptbr-86M
+Environment=GUARDIAN_THRESHOLD=0.5
+WorkingDirectory=/opt/guardian
+ExecStart=/opt/guardian/venv/bin/uvicorn guard_service:app --host 0.0.0.0 --port 8010
+Restart=always
+RestartSec=10
+[Install]
+WantedBy=multi-user.target
+
+# ---------------------------------------------------------------------------
+# Deploy (br-apps, CPU):
+#   1. python3 -m venv /opt/guardian/venv && /opt/guardian/venv/bin/pip install fastapi uvicorn torch transformers
+#   2. copiar guard_service.py para /opt/guardian/
+#   3. modelo treinado em /data/models/guardian-ptbr-86M
+#   4. systemctl enable --now guardian-ptbr
+#   Liberar 8010 apenas para 43.118.160.51 (br-apps) + IP dev.
+#
+# Variante GPU (opcional, se quiser latência menor): mesma unidade com
+#   vllm/vllm-openai:latest --model /models/Llama-Prompt-Guard-2-86M (porta 8010).
+# ---------------------------------------------------------------------------
