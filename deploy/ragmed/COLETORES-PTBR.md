@@ -8,10 +8,10 @@ do RagJur — manifest auditável, incremental por sha256, sync para o OSS (`syn
 
 | Script | Fonte oficial | O que baixa | Status verificado 28/09/2026 |
 |---|---|---|---|
-| `coletor_sus_protocolos.py` | gov.br/saude → `/assuntos/pcdt` (árvore a–z) | **~300+ PCDT completos em PDF** | ✅ **funcional** — 6 PDFs no teste local (acromegalia, brucelose, HAS…), 0 erros |
+| `coletor_sus_protocolos.py` | gov.br/saude → `/assuntos/pcdt` (árvore a–z) | **~300+ PCDT completos em PDF** | ✅ **funcional** — 8 PDFs no teste local, 0 erros |
 | `coletor_anvisa_bulas.py` | dados.anvisa.gov.br `/dados/CONSULTAS/` | **catálogos bulk de bulas** (TA_CONSULTA_BULA_DOCUMENTO 14,3 MB · BULA_PRODUTO 1,7 MB · MEDICAMENTOS 17,9 MB · PARECERES) | ✅ **funcional** — 4 CSVs (~34 MB) no teste |
-| `coletor_pcdt_conitec.py` | gov.br/conitec (índice PCDT) | PDFs de PCDT + relatórios de recomendação | ⚠ índice renderiza por JS → usar `--seeds` (crawler serve p/ páginas server-side) |
-| `coletor_cfm_resolucoes.py` | portal.cfm.org.br + sistemas.cfm.org.br/normas | PDFs das resoluções CFM | ⚠ listagem é JS e o gerenciador de normas exige login → usar `--seeds` |
+| `coletor_pcdt_conitec.py` | gov.br/conitec (Plone REST `++api++`) | **PDFs de PCDT + relatórios de recomendação** | ✅ **funcional server-side** — 3.757 arquivos no índice, API JSON pública |
+| `coletor_cfm_resolucoes.py` | portal.cfm.org.br / sistemas.cfm.org.br | PDFs das resoluções CFM | ⚠ **só via `--seeds`** — ver "Descobertas" abaixo |
 | `build_pares_evidence_br.py` | — | transforma chunks ingeridos em **pares de treino com citação obrigatória** | ✅ funcional — gate verbatim testado (1 candidato, 1 reprovado) |
 
 ## Descobertas de 28/09 (evitar re-probing)
@@ -21,12 +21,15 @@ do RagJur — manifest auditável, incremental por sha256, sync para o OSS (`syn
   atrás do WAF do Bulário Eletrônico (403 p/ cliente não-navegador) — coleta em massa de
   PDF de bula não é viável por lá; os mirrors do `collect_github.sh` (aleckyann/bulario)
   cobrem essa parte.
-- O índice do CONITEC e o portal CFM renderizam a lista por JavaScript (0 PDFs no HTML).
-  Padrão adotado: crawler server-side onde existe + `--seeds` (URLs oficiais mantidas
-  à mão/sincronizadas do mirror) onde não existe.
+- **CONITEC é Plone/Volto, não Liferay.** A REST API server-side `++api++` é pública e
+  dispensa JS: `@querystring-search` lista 3.757 arquivos PCDT; cada item convertido p/
+  `++api++` traz `file.download`. O coletor usa isso direto (sem seeds).
 - A árvore PCDT do Ministério da Saúde (`gov.br/saude/pt-br/assuntos/pcdt/{a..z}`) é
   100% server-side: cada protocolo é `/{letra}/{slug}.pdf/view`; o PDF real vem em
   `<url>/@@download/file` (o `fetch_pdf_doc` do `ragmed_common` já resolve esse fallback).
+- **CFM não tem fonte server-side automática**: portal.cfm.org.br é WordPress (listagem
+  em JS, REST de conteúdo restrita com 401) e os PDFs de `sistemas.cfm.org.br/normas/`
+  só são servidos pelo viewer PDF.js — GET direto dá timeout. Por isso `--seeds`.
 - `apidadosabertos.saude.gov.br` responde, mas é Swagger-UI em JS sem spec em rota
   padrão — não útil para varredura server-side.
 

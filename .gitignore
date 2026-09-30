@@ -15,6 +15,11 @@
 !pesquisas-ia/**
 !estudo-datacenter-beanstech/
 !estudo-datacenter-beanstech/**
+# BeansCore: gateway (Python) + harness (TS) — código-fonte versionado, deps não
+!beanscore/
+!beanscore/**
+!verticais/
+!verticais/**
 # nunca, mesmo dentro das pastas permitidas
 **/.env
 **/.env.*
@@ -82,3 +87,5 @@ videos/serie/*.mp4
 videos/serie/*.wav
 videos/hero-*.mp4
 videos/serie/vod-urls-serie.txt
+deploy/ragmed/.mimosa/
+*/.mimosa/
