@@ -268,7 +268,7 @@ async def stripe_webhook(request: Request):
             return _credit(oid)
     return {"received": True}
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def index():
     packs = "".join(
         f'<div class=pack><div class=nome>{p["nome"]}</div><div class=tok>{p["tokens"]} tokens</div>'
