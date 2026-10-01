@@ -155,7 +155,9 @@ def fetch_pdf_doc(fonte, url, titulo, allowlist=(".gov.br",)):
     seg = [s for s in p.path.split("/") if s]
     base = next((s for s in reversed(seg) if s.lower().endswith(".pdf")), "")
     if not base:
-        base = (seg[-1] if seg else "documento") + ".pdf"
+        # página /view (sem .pdf na URL): usa o slug do protocolo, não "view"
+        sem_view = [s for s in seg if s.lower() not in ("view", "@@download", "file")]
+        base = (sem_view[-1] if sem_view else "documento") + ".pdf"
     base = base[-190:]
     data = fetch(url, allowlist=allowlist, binary=True)
     if not data.startswith(b"%PDF"):

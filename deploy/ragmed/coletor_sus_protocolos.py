@@ -25,6 +25,9 @@ SEMENTES = [
 LETRAS = [f"https://www.gov.br/saude/pt-br/assuntos/pcdt/{c}" for c in "abcdefghijklmnopqrstuvwxyz"]
 ALLOW = (".gov.br",)
 PADRAO_PDF = re.compile(r"\.pdf(/view)?($|\?)", re.I)
+# páginas de protocolo são HTML /view (sem .pdf na URL); o PDF real fica em
+# <url>/@@download/file — fetch_pdf_doc já resolve esse fallback.
+PADRAO_VIEW = re.compile(r"/assuntos/pcdt/[a-z]/[^/]+/view/?$", re.I)
 PADRAO_TEMA = re.compile(
     r"protocolo|diretriz|pcdt|atencao-basica|linhas-de-cuidado|guia", re.I
 )
@@ -79,6 +82,12 @@ def coletar(max_docs, com_api):
                 baixa(pdf_url, titulo)
                 if baixados >= max_docs:
                     return
+        # páginas de protocolo HTML /view (sem .pdf na URL) — o PDF real está em
+        # <url>/@@download/file; fetch_pdf_doc resolve o fallback.
+        for view_url, titulo in extrair_links(html, PADRAO_VIEW, base_url=url):
+            baixa(view_url, titulo or view_url.rstrip("/").split("/")[-2])
+            if baixados >= max_docs:
+                return
         for sub, _ in extrair_links(html, PADRAO_TEMA, base_url=url):
             if not PADRAO_PDF.search(sub):
                 varre(sub, prof + 1)
