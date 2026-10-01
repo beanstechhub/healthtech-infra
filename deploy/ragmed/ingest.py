@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ragmed.ai — ipest: ingestor de documentos oficiais → Elasticsearch (br-es).
+"""ragmed.ai — ingest: ingestor de documentos oficiais → Elasticsearch (br-es).
 
 Fecha o ciclo dos coletores: lê os PDFs/CSVs de RAGMED_RAW/<fonte>/, extrai texto
 POR PÁGINA (PyMuPDF — a numeração de página sustenta a citação Evidence-BR),
@@ -10,7 +10,7 @@ e a camada RAG dos portais esperam:
   {"chunk_id","doc_id","fonte","titulo","versao","pagina","url","texto"}
 
 Auth: mesmo padrão do healthdash — RAGMED_ES_URL + RAGMED_ES_USER/PASSWORD (+ CA).
-uso: python3 ipest.py [--fonte pcdt-conitec] [--indice ragmed-docs] [--dry-run]
+uso: python3 ingest.py [--fonte pcdt-conitec] [--indice ragmed-docs] [--dry-run]
 """
 import argparse
 import hashlib
@@ -43,8 +43,8 @@ def ler_manifest(fonte_dir):
 
 def pdf_para_paginas(path):
     """Lista de (num_pagina, texto) de um PDF via PyMuPDF."""
-    import fitz  # PyMuPDF
-    doc = fitz.open(path)
+    import pymupdf  # PyMuPDF (import novo; 'fitz' está deprecado)
+    doc = pymupdf.open(path)
     return [(i + 1, p.get_text("text")) for i, p in enumerate(doc)]
 
 
@@ -79,7 +79,6 @@ def gerar_docs(fonte, path, meta):
     url = m.get("url", "")
     for num_pagina, texto in pdf_para_paginas(path):
         for i, chunk in enumerate(dividir_chunk(texto)):
-            cid = hashlib.sha256(f"{doc_id}|{num_pagina}|{i}".encode()).hexdigest()[:16]
             yield {
                 "chunk_id": f"{doc_id}-p{num_pagina}-{i}",
                 "doc_id": doc_id,
@@ -113,7 +112,7 @@ def bulk_indexar(docs, indice, dry_run):
         r.raise_for_status()
         res = r.json()
         errs = [i for i in res.get("items", []) if i.get("index", {}).get("error")]
-        print(f"bulk: {res.get('items') and len(res['items'])} docs, {len(errs)} erros")
+        print(f"bulk: {len(res.get('items', []))} docs, {len(errs)} erros")
         return len(res.get("items", []))
 
 
@@ -147,7 +146,7 @@ def main():
                 print(f"  ERRO {pdf}: {e}")
         if lote:
             total_chunks += bulk_indexar(lote, a.indice, a.dry_run)
-    print(f"ipest: {total_docs} documentos → {total_chunks} chunks indexados em '{a.indice}'")
+    print(f"ingest: {total_docs} documentos → {total_chunks} chunks indexados em '{a.indice}'")
 
 
 if __name__ == "__main__":

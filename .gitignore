@@ -89,3 +89,5 @@ videos/hero-*.mp4
 videos/serie/vod-urls-serie.txt
 deploy/ragmed/.mimosa/
 */.mimosa/
+deploy/guardian-team/corpus/.mimosa/
+__pycache__/

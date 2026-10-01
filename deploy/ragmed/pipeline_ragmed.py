@@ -3,7 +3,7 @@
 
 Roda as três fases em sequência, com log, SEM subprocess: os coletores são
 importados e chamados como função. Pensado para cron no br-es:
-  coletores (PT-BR nativos) → sync_oss.sh → ipest.py (chunks no Elasticsearch)
+  coletores (PT-BR nativos) → sync_oss.sh → ingest.py (chunks no Elasticsearch)
 
 uso: python3 pipeline_ragmed.py [--fases coleta,oss,ingest] [--fontes pcdt-conitec,sus-protocolos]
 Cron sugerido (br-es, 1×/semana, 3h da manhã):
@@ -48,11 +48,10 @@ def fase_oss():
 def fase_ingest():
     log("FASE ingest — chunks → Elasticsearch (ragmed-docs)")
     try:
-        m = importlib.import_module("ipest")
-        # ipest.main lê argparse; aqui chamamos a lógica direta
-        log("  (rodar: python3 ipest.py para a ingestão completa)")
+        importlib.import_module("ingest")
+        log("  (rodar: python3 ingest.py para a ingestão completa)")
     except Exception as e:
-        log(f"  ERRO ipest: {e}")
+        log(f"  ERRO ingest: {e}")
 
 
 def main():
